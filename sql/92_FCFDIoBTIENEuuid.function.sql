@@ -11,11 +11,15 @@ as
 --
 return
 (
-	select cfdi.uuid
-	from dbo.vwCfdTransaccionesDeVenta cfdi
-	where cfdi.soptype = @soptype
-	and cfdi.sopnumbe = @sopnumbe
-	
+	select tv.docid, dx.uuid, tv.voidstts, dx.FormaPago
+	from vwSopTransaccionesVenta tv
+		left join cfdlogfacturaxml lf
+			on lf.soptype = tv.SOPTYPE
+			and lf.sopnumbe = tv.sopnumbe
+			and lf.estado = 'emitido'
+		outer apply dbo.fCfdiDatosXmlParaImpresion(lf.archivoXML) dx
+	where tv.soptype = @soptype
+	and tv.sopnumbe = @sopnumbe
 )
 go
 
@@ -26,6 +30,5 @@ GO
 
 -------------------------------------------------------------------------------------------------------------
 --select *
---from fCfdiObtieneUUID('000011658                      ', 'tipoAddenda', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO')
+--from dbo.fCfdiObtieneUUID(3, '00000002')
 
---sp_columns vwCfdTransaccionesDeVenta

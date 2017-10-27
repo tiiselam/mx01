@@ -1,13 +1,12 @@
-IF OBJECT_ID ('dbo.fCfdDatosXmlParaImpresion') IS NOT NULL
-   drop function dbo.fCfdDatosXmlParaImpresion
+IF OBJECT_ID ('dbo.fCfdiDatosXmlParaImpresion') IS NOT NULL
+   drop function dbo.fCfdiDatosXmlParaImpresion
 go
 
-create function dbo.fCfdDatosXmlParaImpresion(@archivoXml xml)
+create function dbo.fCfdiDatosXmlParaImpresion(@archivoXml xml)
 --Propósito. Obtiene los datos de la factura electrónica
 --Usado por. vwCfdTransaccionesDeVenta
 --Requisitos. CFDI
---05/10/10 jcf Creación
---10/07/12 jcf Agrega metodoDePago, NumCtaPago
+--25/10/17 jcf Creación cfdi 3.3
 --
 returns table
 return(
@@ -19,13 +18,10 @@ return(
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@noCertificadoSAT)[1]', 'varchar(20)') noCertificadoSAT,
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@version)[1]', 'varchar(5)') [version],
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@selloSAT)[1]', 'varchar(8000)') selloSAT,
-	@archivoXml.value('(//@sello)[1]', 'varchar(8000)') sello,
-	@archivoXml.value('(//@noCertificado)[1]', 'varchar(20)') noCertificado,
-	@archivoXml.value('(//@noAprobacion)[1]', 'integer') noAprobacion,
-	@archivoXml.value('(//@anoAprobacion)[1]', 'integer') anoAprobacion,
-	@archivoXml.value('(//@formaDePago)[1]', 'varchar(50)') formaDePago,
-	@archivoXml.value('(//@metodoDePago)[1]', 'varchar(21)') metodoDePago,
-	@archivoXml.value('(//@NumCtaPago)[1]', 'varchar(21)') NumCtaPago
+	@archivoXml.value('(//@Sello)[1]', 'varchar(8000)') sello,
+	@archivoXml.value('(//@NoCertificado)[1]', 'varchar(20)') noCertificado,
+	@archivoXml.value('(//@FormaPago)[1]', 'varchar(50)') FormaPago,
+	@archivoXml.value('(//@MetodoPago)[1]', 'varchar(21)') MetodoPago
 	)
 	go
 --------------------------------------------------------------------------------------

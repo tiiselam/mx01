@@ -17,6 +17,7 @@ create view dbo.vwSopTransaccionesVenta
 --14/02/13 jcf Agrega descripción de país cCodeDesc (GETTY)
 --27/08/13 jcf Agrega campo cstponbr 
 --12/07/16 jcf Modifica método de pago predeterminado a NA
+--25/10/17 jcf Ajuste cfdi 3.3
 --
 AS
 SELECT	'contabilizado' estadoContabilizado,
@@ -34,11 +35,11 @@ SELECT	'contabilizado' estadoContabilizado,
 				case when substring(cab.DOCNCORR, 3, 1) = ':' then rtrim(LEFT(cab.docncorr, 8)) --+'.'+ right(rtrim(cab.docncorr), 3) 
 				else '00:00:00' end,
 				126) fechaHora,
-		cast(cab.ORDOCAMT as numeric(19,6)) total,														--se requieren 6 decimales fijos para generar el código de barras
+		cab.ORDOCAMT total,														--se requieren 6 decimales fijos para generar el código de barras
 		cab.ORSUBTOT + cab.ORMRKDAM subtotal, 
 		cab.ORTAXAMT impuesto, cab.ORMRKDAM, cab.ORTDISAM, cab.ORMRKDAM + cab.ORTDISAM descuento, 
 --		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,
-		cab.orpmtrvd, rtrim(cab.curncyid) curncyid,
+		cab.orpmtrvd, rtrim(mo.isocurrc) curncyid,
 		case when cab.xchgrate <= 0 then 1 else cab.xchgrate end xchgrate, 
 		cab.voidStts + isnull(rmx.voidstts, 0) voidstts, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address1), 10)) address1, 
@@ -49,11 +50,12 @@ SELECT	'contabilizado' estadoContabilizado,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(isnull(cc.cCodeDesc, cab.country)), 10)) country, 
 		right('00000'+dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10), 5) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
-		isnull(da.nroOrden, '') nroOrden,
-		isnull(da.NumCtaPago , 'no identificado') NumCtaPago,
-		'Pago en una sola exhibición' formaDePago,
-		isnull(da.metodoDePago, 'NA') metodoDePago,
-		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr
+		--isnull(da.nroOrden, '') nroOrden,
+		--isnull(da.NumCtaPago , 'no identificado') NumCtaPago,
+		--'Pago en una sola exhibición' formaDePago,
+		--isnull(da.metodoDePago, 'NA') metodoDePago,
+		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
+		da.USRDEF05
   from	sop30200 cab							--sop_hdr_hist
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID
@@ -64,7 +66,10 @@ SELECT	'contabilizado' estadoContabilizado,
             and rmx.bchsourc = 'Sales Entry'	-- incluye sop
             and (cab.sopType-2 = rmx.rmdTypAl or cab.sopType+4 = rmx.rmdTypAl) --elimina la posibilidad de repetidos
             and cab.sopnumbe = rmx.DOCNUMBR
-		OUTER APPLY dbo.fCfdDatosAdicionales(cab.orpmtrvd, cab.soptype, cab.sopnumbe, cab.custnmbr, cab.prbtadcd) da
+		OUTER APPLY dbo.fCfdiDatosAdicionales(cab.soptype, cab.sopnumbe) da
+		--OUTER APPLY dbo.fCfdDatosAdicionales(cab.orpmtrvd, cab.soptype, cab.sopnumbe, cab.custnmbr, cab.prbtadcd) da
+		left outer join dynamics..mc40200 mo
+			on mo.CURNCYID = cab.curncyid
         left outer join vat10001 cc				--vat_country_code_mstr
 			on cc.ccode = cab.country
  where cab.soptype in (3, 4)					--3 invoice, 4 return
@@ -78,10 +83,11 @@ SELECT	'contabilizado' estadoContabilizado,
 		cab.xchgrate, 
 		cab.voidStts, cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
-		ctrl.USERDEF1, ctrl.userdef2,
-		'Pago en una sola exhibición' formaDePago,
-		isnull(ctrl.usrtab01, 'NA') metodoDePago,
-		cab.cstponbr
+		--ctrl.USERDEF1, ctrl.userdef2,
+		--'Pago en una sola exhibición' formaDePago,
+		--isnull(ctrl.usrtab01, 'NA') metodoDePago,
+		cab.cstponbr,
+		ctrl.USRDEF05
  from  SOP10100 cab								--sop_hdr_work
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID
