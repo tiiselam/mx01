@@ -35,7 +35,7 @@ SELECT	'contabilizado' estadoContabilizado,
 				case when substring(cab.DOCNCORR, 3, 1) = ':' then rtrim(LEFT(cab.docncorr, 8)) --+'.'+ right(rtrim(cab.docncorr), 3) 
 				else '00:00:00' end,
 				126) fechaHora,
-		cab.ORDOCAMT total,														--se requieren 6 decimales fijos para generar el código de barras
+		cab.ORDOCAMT total,														--omitir los ceros no significativos
 		cab.ORSUBTOT + cab.ORMRKDAM subtotal, 
 		cab.ORTAXAMT impuesto, cab.ORMRKDAM, cab.ORTDISAM, cab.ORMRKDAM + cab.ORTDISAM descuento, 
 --		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,

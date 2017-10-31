@@ -210,7 +210,7 @@ begin
 					dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) '@Descripcion', 
 					@p_subtotal				'@ValorUnitario',
 					@p_subtotal				'@Importe',
-					dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0)
+					dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0) 'cfdi:Impuestos'
 				from vwSopLineasTrxVentas Concepto
 				where Concepto.CMPNTSEQ = 0					--a nivel kit
 				and Concepto.soptype = @p_soptype
@@ -237,7 +237,7 @@ begin
 				cast(Concepto.importe  as numeric(19, 2))				'@Importe',
 				cast(Concepto.descuento as numeric(19, 2))				'@Descuento',
 
-				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ),
+				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) 'cfdi:Impuestos',
 
 				dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SERLTNUM),
 			
@@ -375,7 +375,7 @@ begin
 
 		case when tv.curncyid in ('MXN', 'XXX')
 			then null
-			else tv.xchgrate
+			else cast(tv.xchgrate as numeric(19,6))
 		end													'@TipoCambio',
 
 		cast(tv.total  as numeric(19, 2))					'@Total',
@@ -405,8 +405,8 @@ begin
 		END													'cfdi:Receptor/@UsoCFDI',
 
 		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal),
-
-		tv.impuesto											'cfdi:Impuestos/@TotalImpuestosTrasladados',		
+		
+		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
 		isnull(dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0), ' ')	'cfdi:Impuestos',
 
 		''													'cfdi:Complemento'
@@ -427,11 +427,11 @@ IF (@@Error = 0) PRINT 'Creación exitosa de la función: fCfdiGeneraDocumentoDeVe
 ELSE PRINT 'Error en la creación de la función: fCfdiGeneraDocumentoDeVentaXML ()'
 GO
 -----------------------------------------------------------------------------------------
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdTransaccionesDeVenta]') AND OBJECTPROPERTY(id,N'IsView') = 1)
-    DROP view dbo.[vwCfdTransaccionesDeVenta];
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdiTransaccionesDeVenta]') AND OBJECTPROPERTY(id,N'IsView') = 1)
+    DROP view dbo.[vwCfdiTransaccionesDeVenta];
 GO
 
-create view dbo.vwCfdTransaccionesDeVenta as
+create view dbo.vwCfdiTransaccionesDeVenta as
 --Propósito. Todos los documentos de venta: facturas y notas de crédito. 
 --			Incluye la cadena original para el cfdi.
 --			Si el documento no fue emitido, genera el comprobante xml en el campo comprobanteXml
@@ -449,7 +449,7 @@ create view dbo.vwCfdTransaccionesDeVenta as
 --25/10/17 jcf Ajuste para cfdi 3.3
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
-	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, tv.total, tv.voidstts, 
+	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.voidstts, 
 
 	isnull(lf.estado, isnull(fv.estado, 'inconsistente')) estado,
 	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'inconsistente' 
@@ -471,17 +471,17 @@ select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora,
 	isnull(dx.FormaPago, '') formaDePago,
 	isnull(dx.sello, '') sello, 
 	isnull(dx.noCertificado, '') noCertificado, 
---	isnull(dx.noAprobacion, '') noAprobacion, 
---	convert(varchar(5), isnull(dx.anoAprobacion, 0)) anoAprobacion,
-	'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
+
+	'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.RfcPAC + 
+	case when isnull(dx.Leyenda, '') = '' then '' else '|'+dx.Leyenda end
+	+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
 	
 	fv.ID_Certificado, fv.ruta_certificado, fv.ruta_clave, fv.contrasenia_clave, 
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 
-	emi.rfc, emi.regimen, emi.rutaXml, --tv.nroOrden USERDEF1,
+	emi.rfc, emi.regimen, emi.rutaXml, 
 	isnull(lf.estadoActual, '000000') estadoActual, 
 	isnull(lf.mensajeEA, tv.estadoContabilizado) mensajeEA,
 	isnull(dx.MetodoPago, '') metodoDePago,
---	isnull(dx.NumCtaPago, '') NumCtaPago,
 	tv.curncyid isocurrc,
 	dbo.fCfdAddendaXML(tv.custnmbr,  tv.soptype, tv.sopnumbe, tv.docid, tv.cstponbr, tv.curncyid, tv.docdate, tv.xchgrate, tv.subtotal, tv.total, emi.incluyeAddendaDflt) addenda
 from vwSopTransaccionesVenta tv
@@ -495,19 +495,19 @@ from vwSopTransaccionesVenta tv
 	outer apply dbo.fCfdiDatosXmlParaImpresion(lf.archivoXML) dx
 go
 
-IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdTransaccionesDeVenta'
-ELSE PRINT 'Error en la creación de la vista: vwCfdTransaccionesDeVenta'
+IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdiTransaccionesDeVenta'
+ELSE PRINT 'Error en la creación de la vista: vwCfdiTransaccionesDeVenta'
 GO
 
 -----------------------------------------------------------------------------------------
---IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdDocumentosAImprimir]') AND OBJECTPROPERTY(id,N'IsView') = 1)
---    DROP view dbo.[vwCfdDocumentosAImprimir];
+--IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdiDocumentosAImprimir]') AND OBJECTPROPERTY(id,N'IsView') = 1)
+--    DROP view dbo.[vwCfdiDocumentosAImprimir];
 --GO
-IF (OBJECT_ID ('dbo.vwCfdDocumentosAImprimir', 'V') IS NULL)
-   exec('create view dbo.vwCfdDocumentosAImprimir as SELECT 1 as t');
+IF (OBJECT_ID ('dbo.vwCfdiDocumentosAImprimir', 'V') IS NULL)
+   exec('create view dbo.vwCfdiDocumentosAImprimir as SELECT 1 as t');
 go
 
-alter view dbo.vwCfdDocumentosAImprimir as
+alter view dbo.vwCfdiDocumentosAImprimir as
 --Propósito. Lista los documentos de venta que están listos para imprimirse: facturas y notas de crédito. 
 --			Incluye los datos del cfdi.
 --07/05/12 jcf Creación
@@ -531,14 +531,14 @@ select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision, tv.regi
 	tv.rutaxml								+ 'cbb\' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaYNomArchivoNet,
 	'file://c:\getty' + substring(tv.rutaxml, charindex('\', tv.rutaxml, 3), 250) 
 											+ 'cbb\' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaFileDrive
-from dbo.vwCfdTransaccionesDeVenta tv
+from dbo.vwCfdiTransaccionesDeVenta tv
 left join dbo.cfdiCatalogo ca
 	on ca.tipo = 'MTDPG'
 	and ca.clave = tv.metodoDePago
 where estado = 'emitido'
 go
-IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdDocumentosAImprimir  '
-ELSE PRINT 'Error en la creación de la vista: vwCfdDocumentosAImprimir '
+IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdiDocumentosAImprimir  '
+ELSE PRINT 'Error en la creación de la vista: vwCfdiDocumentosAImprimir '
 GO
 -----------------------------------------------------------------------------------------
 
