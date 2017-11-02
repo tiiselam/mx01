@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Comun
 {
-    public class SopDocument
+    public class CfdiDocumentoId
     {
         private string _idDoc;
         private short _soptype;
         private string _sopnumbe;
 
-        public SopDocument(string idDoc, short soptype, string sopnumbe)
+        public CfdiDocumentoId(string idDoc, short soptype, string sopnumbe)
         {
             this._idDoc = idDoc;
             this._soptype = soptype;

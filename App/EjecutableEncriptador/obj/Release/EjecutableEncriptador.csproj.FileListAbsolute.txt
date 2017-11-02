@@ -104,3 +104,4 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Release\EjecutableEncriptador.winformGeneraFE.resources
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Release\EjecutableEncriptador.Properties.Resources.resources
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Release\EjecutableEncriptador.csproj.GenerateResource.Cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\EjecutableEncriptador.exe.config

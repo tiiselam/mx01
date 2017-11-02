@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EjecutableEncriptador", "EjecutableEncriptador\EjecutableEncriptador.csproj", "{355BFAC1-5E11-452B-ACD1-E29D96F11B12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encriptador", "Encriptador\Encriptador.csproj", "{0969F8B3-EDCE-46AA-A7B2-01A10B99D7EF}"

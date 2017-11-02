@@ -120,6 +120,14 @@ namespace EjecutableEncriptador
 				}
 			}
 			
+			public static SqlParameter MontoActualOriginal
+			{
+				get
+				{
+					return new SqlParameter("@MontoActualOriginal", SqlDbType.Decimal, 0);
+				}
+			}
+			
 			public static SqlParameter Voidstts
 			{
 				get
@@ -367,6 +375,7 @@ namespace EjecutableEncriptador
             public const string NombreCliente = "nombreCliente";
             public const string IdImpuestoCliente = "idImpuestoCliente";
             public const string Total = "total";
+            public const string MontoActualOriginal = "montoActualOriginal";
             public const string Voidstts = "voidstts";
             public const string Estado = "estado";
             public const string Mensaje = "mensaje";
@@ -412,6 +421,7 @@ namespace EjecutableEncriptador
 					ht[NombreCliente] = vwCfdiTransaccionesDeVenta.PropertyNames.NombreCliente;
 					ht[IdImpuestoCliente] = vwCfdiTransaccionesDeVenta.PropertyNames.IdImpuestoCliente;
 					ht[Total] = vwCfdiTransaccionesDeVenta.PropertyNames.Total;
+					ht[MontoActualOriginal] = vwCfdiTransaccionesDeVenta.PropertyNames.MontoActualOriginal;
 					ht[Voidstts] = vwCfdiTransaccionesDeVenta.PropertyNames.Voidstts;
 					ht[Estado] = vwCfdiTransaccionesDeVenta.PropertyNames.Estado;
 					ht[Mensaje] = vwCfdiTransaccionesDeVenta.PropertyNames.Mensaje;
@@ -462,6 +472,7 @@ namespace EjecutableEncriptador
             public const string NombreCliente = "NombreCliente";
             public const string IdImpuestoCliente = "IdImpuestoCliente";
             public const string Total = "Total";
+            public const string MontoActualOriginal = "MontoActualOriginal";
             public const string Voidstts = "Voidstts";
             public const string Estado = "Estado";
             public const string Mensaje = "Mensaje";
@@ -507,6 +518,7 @@ namespace EjecutableEncriptador
 					ht[NombreCliente] = vwCfdiTransaccionesDeVenta.ColumnNames.NombreCliente;
 					ht[IdImpuestoCliente] = vwCfdiTransaccionesDeVenta.ColumnNames.IdImpuestoCliente;
 					ht[Total] = vwCfdiTransaccionesDeVenta.ColumnNames.Total;
+					ht[MontoActualOriginal] = vwCfdiTransaccionesDeVenta.ColumnNames.MontoActualOriginal;
 					ht[Voidstts] = vwCfdiTransaccionesDeVenta.ColumnNames.Voidstts;
 					ht[Estado] = vwCfdiTransaccionesDeVenta.ColumnNames.Estado;
 					ht[Mensaje] = vwCfdiTransaccionesDeVenta.ColumnNames.Mensaje;
@@ -557,6 +569,7 @@ namespace EjecutableEncriptador
             public const string NombreCliente = "s_NombreCliente";
             public const string IdImpuestoCliente = "s_IdImpuestoCliente";
             public const string Total = "s_Total";
+            public const string MontoActualOriginal = "s_MontoActualOriginal";
             public const string Voidstts = "s_Voidstts";
             public const string Estado = "s_Estado";
             public const string Mensaje = "s_Mensaje";
@@ -696,6 +709,18 @@ namespace EjecutableEncriptador
 			set
 	        {
 				base.Setdecimal(ColumnNames.Total, value);
+			}
+		}
+
+		public virtual decimal MontoActualOriginal
+	    {
+			get
+	        {
+				return base.Getdecimal(ColumnNames.MontoActualOriginal);
+			}
+			set
+	        {
+				base.Setdecimal(ColumnNames.MontoActualOriginal, value);
 			}
 		}
 
@@ -1184,6 +1209,21 @@ namespace EjecutableEncriptador
 					this.SetColumnNull(ColumnNames.Total);
 				else
 					this.Total = base.SetdecimalAsString(ColumnNames.Total, value);
+			}
+		}
+
+		public virtual string s_MontoActualOriginal
+	    {
+			get
+	        {
+				return this.IsColumnNull(ColumnNames.MontoActualOriginal) ? string.Empty : base.GetdecimalAsString(ColumnNames.MontoActualOriginal);
+			}
+			set
+	        {
+				if(string.Empty == value)
+					this.SetColumnNull(ColumnNames.MontoActualOriginal);
+				else
+					this.MontoActualOriginal = base.SetdecimalAsString(ColumnNames.MontoActualOriginal, value);
 			}
 		}
 
@@ -1745,6 +1785,16 @@ namespace EjecutableEncriptador
 					}
 				}
 
+				public WhereParameter MontoActualOriginal
+				{
+					get
+					{
+							WhereParameter where = new WhereParameter(ColumnNames.MontoActualOriginal, Parameters.MontoActualOriginal);
+							this._clause._entity.Query.AddWhereParameter(where);
+							return where;
+					}
+				}
+
 				public WhereParameter Voidstts
 				{
 					get
@@ -2148,6 +2198,18 @@ namespace EjecutableEncriptador
 				}
 			}
 
+			public WhereParameter MontoActualOriginal
+		    {
+				get
+		        {
+					if(_MontoActualOriginal_W == null)
+	        	    {
+						_MontoActualOriginal_W = TearOff.MontoActualOriginal;
+					}
+					return _MontoActualOriginal_W;
+				}
+			}
+
 			public WhereParameter Voidstts
 		    {
 				get
@@ -2505,6 +2567,7 @@ namespace EjecutableEncriptador
 			private WhereParameter _NombreCliente_W = null;
 			private WhereParameter _IdImpuestoCliente_W = null;
 			private WhereParameter _Total_W = null;
+			private WhereParameter _MontoActualOriginal_W = null;
 			private WhereParameter _Voidstts_W = null;
 			private WhereParameter _Estado_W = null;
 			private WhereParameter _Mensaje_W = null;
@@ -2546,6 +2609,7 @@ namespace EjecutableEncriptador
 				_NombreCliente_W = null;
 				_IdImpuestoCliente_W = null;
 				_Total_W = null;
+				_MontoActualOriginal_W = null;
 				_Voidstts_W = null;
 				_Estado_W = null;
 				_Mensaje_W = null;
@@ -2716,6 +2780,16 @@ namespace EjecutableEncriptador
 					get
 					{
 							AggregateParameter aggregate = new AggregateParameter(ColumnNames.Total, Parameters.Total);
+							this._clause._entity.Query.AddAggregateParameter(aggregate);
+							return aggregate;
+					}
+				}
+
+				public AggregateParameter MontoActualOriginal
+				{
+					get
+					{
+							AggregateParameter aggregate = new AggregateParameter(ColumnNames.MontoActualOriginal, Parameters.MontoActualOriginal);
 							this._clause._entity.Query.AddAggregateParameter(aggregate);
 							return aggregate;
 					}
@@ -3124,6 +3198,18 @@ namespace EjecutableEncriptador
 				}
 			}
 
+			public AggregateParameter MontoActualOriginal
+		    {
+				get
+		        {
+					if(_MontoActualOriginal_W == null)
+	        	    {
+						_MontoActualOriginal_W = TearOff.MontoActualOriginal;
+					}
+					return _MontoActualOriginal_W;
+				}
+			}
+
 			public AggregateParameter Voidstts
 		    {
 				get
@@ -3481,6 +3567,7 @@ namespace EjecutableEncriptador
 			private AggregateParameter _NombreCliente_W = null;
 			private AggregateParameter _IdImpuestoCliente_W = null;
 			private AggregateParameter _Total_W = null;
+			private AggregateParameter _MontoActualOriginal_W = null;
 			private AggregateParameter _Voidstts_W = null;
 			private AggregateParameter _Estado_W = null;
 			private AggregateParameter _Mensaje_W = null;
@@ -3522,6 +3609,7 @@ namespace EjecutableEncriptador
 				_NombreCliente_W = null;
 				_IdImpuestoCliente_W = null;
 				_Total_W = null;
+				_MontoActualOriginal_W = null;
 				_Voidstts_W = null;
 				_Estado_W = null;
 				_Mensaje_W = null;

@@ -1,8 +1,8 @@
-IF OBJECT_ID ('dbo.fCfdiPagoSimultaneo') IS NOT NULL
-   DROP FUNCTION dbo.fCfdiPagoSimultaneo
+IF OBJECT_ID ('dbo.fCfdiPagoSimultaneoMayor') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiPagoSimultaneoMayor
 GO
 
-create function dbo.fCfdiPagoSimultaneo(@soptype smallint, @sopnumbe varchar(21))
+create function dbo.fCfdiPagoSimultaneoMayor(@soptype smallint, @sopnumbe varchar(21))
 returns table
 --Propósito. Obtiene la forma de pago del pago más grande. Este pago ha sido ingresado simultáneamente con la factura.
 --24/10/17 jcf Creación
@@ -27,8 +27,8 @@ return(
 )
 
 go
-IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiPagoSimultaneo()'
-ELSE PRINT 'Error en la creación de: fCfdiPagoSimultaneo()'
+IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiPagoSimultaneoMayor()'
+ELSE PRINT 'Error en la creación de: fCfdiPagoSimultaneoMayor()'
 GO
 --------------------------------------------------------------------------------------------------------
 

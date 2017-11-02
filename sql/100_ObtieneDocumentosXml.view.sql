@@ -410,9 +410,9 @@ begin
 		isnull(dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0), ' ')	'cfdi:Impuestos',
 
 		''													'cfdi:Complemento'
-	from vwSopTransaccionesVenta tv
+	from dbo.vwSopTransaccionesVenta tv
 		cross join dbo.fCfdEmisor() emi
-		outer apply dbo.fCfdiPagoSimultaneo(tv.soptype, tv.sopnumbe) pg
+		outer apply dbo.fCfdiPagoSimultaneoMayor(tv.soptype, tv.sopnumbe) pg
 		outer apply dbo.fCfdiDatosDeUnaRelacion(tv.soptype, tv.sopnumbe, tv.docid) tr
 		outer apply dbo.fCfdiParametrosCliente(tv.CUSTNMBR, 'UsoCFDI', 'na', 'na', 'na', 'na', 'na', 'PREDETERMINADO') pc
 	where tv.sopnumbe =	@sopnumbe		
@@ -449,7 +449,7 @@ create view dbo.vwCfdiTransaccionesDeVenta as
 --25/10/17 jcf Ajuste para cfdi 3.3
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
-	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.voidstts, 
+	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.montoActualOriginal, tv.voidstts, 
 
 	isnull(lf.estado, isnull(fv.estado, 'inconsistente')) estado,
 	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'inconsistente' 
@@ -484,7 +484,7 @@ select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora,
 	isnull(dx.MetodoPago, '') metodoDePago,
 	tv.curncyid isocurrc,
 	dbo.fCfdAddendaXML(tv.custnmbr,  tv.soptype, tv.sopnumbe, tv.docid, tv.cstponbr, tv.curncyid, tv.docdate, tv.xchgrate, tv.subtotal, tv.total, emi.incluyeAddendaDflt) addenda
-from vwSopTransaccionesVenta tv
+from vwCfdiSopTransaccionesVenta tv
 	cross join dbo.fCfdEmisor() emi
 	outer apply dbo.fCfdCertificadoVigente(tv.fechahora) fv
 	outer apply dbo.fCfdCertificadoPAC(tv.fechahora) pa

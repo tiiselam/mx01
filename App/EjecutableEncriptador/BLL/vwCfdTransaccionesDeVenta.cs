@@ -7,11 +7,14 @@ namespace EjecutableEncriptador
     class vwCfdTransaccionesDeVenta : vwCfdiTransaccionesDeVenta
     {
 
-        public vwCfdTransaccionesDeVenta(string connstr)
+        public vwCfdTransaccionesDeVenta(string connstr, string nombreVista)
         {
             this.ConnectionString = connstr;
-            this.QuerySource = "vwCfdiTransaccionesDeVenta";
-            this.MappingName = "vwCfdiTransaccionesDeVenta";
+            this.QuerySource = nombreVista;
+            this.MappingName = nombreVista;
+
+            //this.QuerySource = "vwCfdiTransaccionesDeVenta";
+            //this.MappingName = "vwCfdiTransaccionesDeVenta";
         }
 
     }

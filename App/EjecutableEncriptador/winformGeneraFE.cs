@@ -19,8 +19,12 @@ namespace EjecutableEncriptador
     public partial class winformGeneraFE : Form
     {
         static winVisorDeReportes FrmVisorDeReporte;
-        vwCfdTransaccionesDeVenta trxVenta;     //todos los documentos de venta
+        //vwCfdTransaccionesDeVenta trxVenta;     //todos los documentos de venta
+        cfdReglasFacturaXml regla;
         vwCfdInformeMensualVentas infMes;       //documentos de venta para informe mensual
+        DataGridView dGridActivo;
+        String vistaActiva = String.Empty;
+
         DateTime fechaIni = DateTime.Now;
         DateTime fechaFin = DateTime.Now;
         string ultimoMensaje = "";
@@ -34,7 +38,7 @@ namespace EjecutableEncriptador
         short idxEstadoContab = 10;             //columna estado contabilizado del grid
         short idxAnulado = 11;                  //columna anulado del grid
         short idxEstadoDoc = 13;                //columna estado del documento (en números) del grid
-        List<SopDocument> LDocsNoSeleccionados = new List<SopDocument>();   //Docs no marcados del grid
+        List<CfdiDocumentoId> LDocsNoSeleccionados = new List<CfdiDocumentoId>();   //Docs no marcados del grid
         private ConexionDB DatosConexionDB = new ConexionDB();  //Lee la configuración del archivo xml y obtiene los datos de conexión.
 
         public winformGeneraFE()
@@ -42,13 +46,33 @@ namespace EjecutableEncriptador
             InitializeComponent();
         }
 
+        private void ObtieneGrid(string nombreTab)
+        {
+            switch (nombreTab)
+            {
+                case "tabFacturas":
+                    dGridActivo = dgridTrxFacturas;
+                    vistaActiva = "vwCfdiTransaccionesDeVenta";
+                    break;
+                case "tabCobros":
+                    dGridActivo = dgridTrxCobros;
+                    vistaActiva = "vwCfdiTrxCobros";
+                    break;
+                default:
+                    dGridActivo = dgridTrxFacturas;
+                    vistaActiva = "vwCfdiTransaccionesDeVenta";
+                    break;
+            }
+        }
+
         /// <summary>
-        /// Aplica los criterios de filtro, actualiza la pantalla e inicializa los checkboxes del grid.
+        /// Aplica los criterios de filtro, actualiza la pantalla e inicializa los checkboxes del grid
         /// </summary>
         /// <param name=""></param>
         /// <returns>bool</returns>
-        private bool AplicaFiltroYActualizaPantalla()
+        private bool AplicaFiltroYActualizaPantalla(string nombreTab)
         {
+            ObtieneGrid(nombreTab);
             txtbxMensajes.AppendText("Explorando...\r\n");
             txtbxMensajes.Refresh();
 
@@ -57,18 +81,18 @@ namespace EjecutableEncriptador
             if (!Compannia.ultimoMensaje.Equals(string.Empty))
                 return false;
 
-            cfdReglasFacturaXml regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
-            regla.AplicaFiltroAFacturas(checkBoxFecha.Checked, dtPickerDesde.Value, dtPickerHasta.Value, fechaIni, fechaFin,
+            regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
+            regla.AplicaFiltroADocumentos(checkBoxFecha.Checked, dtPickerDesde.Value, dtPickerHasta.Value, fechaIni, fechaFin,
                          checkBoxNDoc.Checked, txtBNumDocDesde.Text, txtBNumDocHasta.Text,
                          checkBoxIdDoc.Checked, cmbBIdDoc.Text, 
                          checkBoxEstado.Checked, cmbBEstado.Text,
                          checkBoxCliente.Checked, textBCliente.Text,
-                         out trxVenta);
+                         vistaActiva);
 
             if (regla.numMensajeError == 0)
             {
-                vwCfdTransaccionesDeVentaBindingSource.DataSource = trxVenta.DefaultView;
-                txtbxMensajes.AppendText("Completado: " + trxVenta.RowCount.ToString() + " documento(s) consultado(s).\r\n");
+                vwCfdTransaccionesDeVentaBindingSource.DataSource = regla.CfdiTransacciones.DefaultView;
+                txtbxMensajes.AppendText("Completado: " + regla.CfdiTransacciones.RowCount.ToString() + " documento(s) consultado(s).\r\n");
             }
             else
             {
@@ -76,35 +100,35 @@ namespace EjecutableEncriptador
                 txtbxMensajes.AppendText(regla.ultimoMensaje);
             }
             txtbxMensajes.Refresh();
-            dgridTrxFacturas.Refresh();
+            dGridActivo.Refresh();
 
             //Restituir las filas marcadas usando la lista de docs no seleccionados
-            InicializaCheckBoxDelGrid(idxChkBox, LDocsNoSeleccionados);
+            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, LDocsNoSeleccionados);
 
             return regla.numMensajeError == 0;
         }
-        
-        void InicializaCheckBoxDelGrid(short idxChkBox, bool marca)
+
+        void InicializaCheckBoxDelGrid(DataGridView dataGrid, short idxChkBox, bool marca)
         {
-            for (int r = 0; r < dgridTrxFacturas.RowCount; r++)
+            for (int r = 0; r < dataGrid.RowCount; r++)
             {
-                dgridTrxFacturas[idxChkBox, r].Value = marca; 
+                dataGrid[idxChkBox, r].Value = marca; 
             }
-            dgridTrxFacturas.EndEdit();
+            dataGrid.EndEdit();
         }
 
-        void InicializaCheckBoxDelGrid(short idxChkBox, List<SopDocument> LNoSeleccionados)
+        void InicializaCheckBoxDelGrid(DataGridView dataGrid, short idxChkBox, List<CfdiDocumentoId> LNoSeleccionados)
         {
-            for (int r = 0; r < dgridTrxFacturas.RowCount; r++)
+            for (int r = 0; r < dataGrid.RowCount; r++)
             {
-                dgridTrxFacturas[idxChkBox, r].Value = !LNoSeleccionados.Exists(delegate(SopDocument match)
+                dataGrid[idxChkBox, r].Value = !LNoSeleccionados.Exists(delegate(CfdiDocumentoId match)
                                             {
-                                                return (match.idDoc == dgridTrxFacturas[idxIdDoc, r].Value.ToString()
-                                                    && match.sopnumbe == dgridTrxFacturas[idxSopnumbe, r].Value.ToString());
+                                                return (match.idDoc == dataGrid[idxIdDoc, r].Value.ToString()
+                                                    && match.sopnumbe == dataGrid[idxSopnumbe, r].Value.ToString());
                                             });
             }
-            dgridTrxFacturas.EndEdit();
-            dgridTrxFacturas.Refresh();
+            dataGrid.EndEdit();
+            dataGrid.Refresh();
         }
 
         private bool cargaIdDocumento()
@@ -166,34 +190,34 @@ namespace EjecutableEncriptador
         {
             int i = 1;
             object[] llaveDocumento = new object[2];
-            LDocsNoSeleccionados = new List<SopDocument>();
+            LDocsNoSeleccionados = new List<CfdiDocumentoId>();
             try
             {
-                dgridTrxFacturas.EndEdit();
+                dGridActivo.EndEdit();
                 progressBar1.Value = 0;
                 //cargar lista de no seleccionados
-                foreach (DataGridViewRow dgvr in dgridTrxFacturas.Rows)
+                foreach (DataGridViewRow dgvr in dGridActivo.Rows)
                 {
                     if (!(dgvr.Cells[idxChkBox].Value != null && (dgvr.Cells[idxChkBox].Value.Equals(true) || dgvr.Cells[idxChkBox].Value.ToString().Equals("1"))))  
-                        LDocsNoSeleccionados.Add(new SopDocument(dgvr.Cells[idxIdDoc].Value.ToString(), 
+                        LDocsNoSeleccionados.Add(new CfdiDocumentoId(dgvr.Cells[idxIdDoc].Value.ToString(), 
                                                                 Convert.ToInt16(dgvr.Cells[idxSoptype].Value.ToString()),
                                                                 dgvr.Cells[idxSopnumbe].Value.ToString()));
-                    progressBar1.Value = Convert.ToInt32( i * 100 / dgridTrxFacturas.RowCount);
+                    progressBar1.Value = Convert.ToInt32( i * 100 / dGridActivo.RowCount);
                     i++;
                 }
                 progressBar1.Value = 0;
-                bool vacio = dgridTrxFacturas.RowCount == LDocsNoSeleccionados.Count;
+                bool vacio = dGridActivo.RowCount == LDocsNoSeleccionados.Count;
                 if (vacio)
                     ultimoMensaje = "[filtraListaSeleccionada] No ha marcado ningún documento. Marque al menos una casilla en la primera columna para continuar con el proceso.\r\n";
                 else
                 {
                     //eliminar del datasource los registros no seleccionados
-                    trxVenta.DefaultView.Sort = vwCfdTransaccionesDeVenta.ColumnNames.Docid + ", " + vwCfdTransaccionesDeVenta.ColumnNames.Sopnumbe;
-                    foreach (SopDocument registro in LDocsNoSeleccionados)
+                    regla.CfdiTransacciones.DefaultView.Sort = vwCfdTransaccionesDeVenta.ColumnNames.Docid + ", " + vwCfdTransaccionesDeVenta.ColumnNames.Sopnumbe;
+                    foreach (CfdiDocumentoId registro in LDocsNoSeleccionados)
                     {
                         llaveDocumento[0] = registro.idDoc;     //idDoc
                         llaveDocumento[1] = registro.sopnumbe;  //sopnumbe
-                        trxVenta.DefaultView.Delete(trxVenta.DefaultView.Find(llaveDocumento));
+                        regla.CfdiTransacciones.DefaultView.Delete(regla.CfdiTransacciones.DefaultView.Find(llaveDocumento));
                     }
                 }
                 return (!vacio);
@@ -266,14 +290,14 @@ namespace EjecutableEncriptador
                 tsComboDestinoRep.Text = "Impresora";
 
             HabilitarVentana(configCfd.emite, configCfd.anula, configCfd.imprime, configCfd.publica, configCfd.envia, true);
-            AplicaFiltroYActualizaPantalla();
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             txtbxMensajes.Text = "";
-            LDocsNoSeleccionados = new List<SopDocument>();
-            AplicaFiltroYActualizaPantalla();
+            LDocsNoSeleccionados = new List<CfdiDocumentoId>();
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
         /// <summary>
@@ -291,12 +315,12 @@ namespace EjecutableEncriptador
                 txtbxMensajes.Text = Param.ultimoMensaje;
                 errores++;
             }
-            if (trxVenta.RowCount == 0)
+            if (regla.CfdiTransacciones.RowCount == 0)
             {
                 txtbxMensajes.Text = "No hay documentos para generar. Verifique los criterios de búsqueda.";
                 errores++;
             }
-            if (!filtraListaSeleccionada()) //Filtra trxVenta sólo con docs marcados
+            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
             {
                 txtbxMensajes.Text = ultimoMensaje;
                 errores++;
@@ -308,7 +332,7 @@ namespace EjecutableEncriptador
                 HabilitarVentana(false, false, false, false, false, false);
                 _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
                 _bw.ProgressChanged += new ProgressChangedEventHandler(bw_Progress);
-                object[] arguments = { trxVenta }; 
+                object[] arguments = { regla.CfdiTransacciones }; 
                 _bw.RunWorkerAsync(arguments);
             }
         }
@@ -340,7 +364,7 @@ namespace EjecutableEncriptador
             //Actualiza la pantalla
             Parametros Cia = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
             HabilitarVentana(Cia.emite, Cia.anula, Cia.imprime, Cia.publica, Cia.envia, true);
-            AplicaFiltroYActualizaPantalla();
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
             progressBar1.Value = 0;
             pBarProcesoActivo.Visible = false;
 
@@ -410,117 +434,116 @@ namespace EjecutableEncriptador
         private void tsDDButtonFiltroF_TextChanged(object sender, EventArgs e)
         {
             txtbxMensajes.Text = "";
-            AplicaFiltroYActualizaPantalla();
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
         public bool ExistenFacturasNoEmitidas()
         {
-            int i = 0; 
-            progressBar1.Value = 0;
-            foreach (DataGridViewRow dgvr in dgridTrxFacturas.Rows)
-            {
-                if (!dgvr.Cells[idxEstado].Value.Equals("emitido"))
-                {
-                    dgvr.DefaultCellStyle.ForeColor = Color.Red;
-                    dgridTrxFacturas.CurrentCell = dgvr.Cells[idxEstado];
-                    progressBar1.Value = 0;
-                    return true;
-                }
-                progressBar1.Value = i * 100 / dgridTrxFacturas.RowCount;
-                i++;
-            }
-            progressBar1.Value = 0;
+            //int i = 0; 
+            //progressBar1.Value = 0;
+            //foreach (DataGridViewRow dgvr in dgridTrxFacturas.Rows)
+            //{
+            //    if (!dgvr.Cells[idxEstado].Value.Equals("emitido"))
+            //    {
+            //        dgvr.DefaultCellStyle.ForeColor = Color.Red;
+            //        dgridTrxFacturas.CurrentCell = dgvr.Cells[idxEstado];
+            //        progressBar1.Value = 0;
+            //        return true;
+            //    }
+            //    progressBar1.Value = i * 100 / dgridTrxFacturas.RowCount;
+            //    i++;
+            //}
+            //progressBar1.Value = 0;
             return false;
         }
 
         public void GuardaArchivoMensual()
         {
-            try
-            {
-                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            //try
+            //{
+            //    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-                // Default file extension
-                saveFileDialog1.DefaultExt = "txt";
-                saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-                saveFileDialog1.FilterIndex = 2;
-                saveFileDialog1.RestoreDirectory = true;
-                saveFileDialog1.Title = "Dónde desea guardar el Informe mensual?";
-                saveFileDialog1.InitialDirectory = @"C:/";
-                saveFileDialog1.FileName = "1" + trxVenta.Rfc.Trim() + dtPickerDesde.Value.Month.ToString().PadLeft(2, '0') + dtPickerDesde.Value.Year.ToString() + ".TXT";
+            //    // Default file extension
+            //    saveFileDialog1.DefaultExt = "txt";
+            //    saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            //    saveFileDialog1.FilterIndex = 2;
+            //    saveFileDialog1.RestoreDirectory = true;
+            //    saveFileDialog1.Title = "Dónde desea guardar el Informe mensual?";
+            //    saveFileDialog1.InitialDirectory = @"C:/";
+            //    saveFileDialog1.FileName = "1" + regla.CfdiTransacciones.Rfc.Trim() + dtPickerDesde.Value.Month.ToString().PadLeft(2, '0') + dtPickerDesde.Value.Year.ToString() + ".TXT";
 
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Stream stm = new FileStream(saveFileDialog1.FileName, FileMode.Create);
-                    TextWriter tw = new StreamWriter(stm);
-                    int i = 0;
-                    progressBar1.Value = 0;
-                    infMes.Rewind();          //move to first record
-                    do
-                    {
-                        tw.WriteLine(infMes.ComprobanteEmitido);
-                        tw.Flush(); // Ensure the TextWriter buffer is empty
+            //    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            //    {
+            //        Stream stm = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+            //        TextWriter tw = new StreamWriter(stm);
+            //        int i = 0;
+            //        progressBar1.Value = 0;
+            //        infMes.Rewind();          //move to first record
+            //        do
+            //        {
+            //            tw.WriteLine(infMes.ComprobanteEmitido);
+            //            tw.Flush(); // Ensure the TextWriter buffer is empty
 
-                        txtbxMensajes.AppendText("Doc:" + infMes.Sopnumbe + "\r\n");
-                        txtbxMensajes.Refresh();
-                        progressBar1.Value = i * 100 / infMes.RowCount;
-                        i++;
-                    } while (infMes.MoveNext());
-                    progressBar1.Value = 0;
+            //            txtbxMensajes.AppendText("Doc:" + infMes.Sopnumbe + "\r\n");
+            //            txtbxMensajes.Refresh();
+            //            progressBar1.Value = i * 100 / infMes.RowCount;
+            //            i++;
+            //        } while (infMes.MoveNext());
+            //        progressBar1.Value = 0;
 
-                    stm.Close();
-                    ultimoMensaje = "El informe mensual fue almacenado satisfactoriamente en: " + saveFileDialog1.FileName;
-                }
-                else
-                {
-                    ultimoMensaje = "Operación cancelada a pedido del usuario.";
-                }
-            }
-            catch (Exception eFile)
-            {
-                ultimoMensaje = "Error al almacenar el archivo. " + eFile.Message;
-            }
+            //        stm.Close();
+            //        ultimoMensaje = "El informe mensual fue almacenado satisfactoriamente en: " + saveFileDialog1.FileName;
+            //    }
+            //    else
+            //    {
+            //        ultimoMensaje = "Operación cancelada a pedido del usuario.";
+            //    }
+            //}
+            //catch (Exception eFile)
+            //{
+            //    ultimoMensaje = "Error al almacenar el archivo. " + eFile.Message;
+            //}
 
         }
 
         private void tsConfirmaAnulaXml_MouseLeave(object sender, EventArgs e)
         {
             tsConfirmaAnulaXml.Visible = false;
-            //txtbxMensajes.Text = "";
 
         }
 
         private void tsButtonConfirmaAnulaXml_Click(object sender, EventArgs e)
         {
-            tsConfirmaAnulaXml.Visible = false;
-            progressBar1.Value = 0;
-            txtbxMensajes.Text = "Procesando...";
-            if (trxVenta.RowCount > 0)
-            {
-                trxVenta.Rewind();          //move to first record
-                cfdReglasFacturaXml regla = null;
-                Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
-                ReglasME maquina = new ReglasME(Param);
-                int i = 1;
-                do
-                {
-                    regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Param);
-                    if (trxVenta.Estado.Equals("emitido") 
-                        && maquina.ValidaTransicion(Param.tipoDoc, "ELIMINA XML", trxVenta.EstadoActual, "anulado"))
-                    {
-                        //Anular el archivo xml en la bitácora de la factura emitida
-                        regla.ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, DatosConexionDB.Elemento.Usuario, "emitido", "anulado", maquina.eBinarioNuevo, "Xml eliminado.");
-                        txtbxMensajes.AppendText("Doc:" + trxVenta.Sopnumbe + " " + regla.ultimoMensaje + "\r\n");
-                        txtbxMensajes.Refresh();
-                    }
-                    progressBar1.Value = i * 100 / trxVenta.RowCount;
-                    i++;
-                } while (trxVenta.MoveNext());
+            //tsConfirmaAnulaXml.Visible = false;
+            //progressBar1.Value = 0;
+            //txtbxMensajes.Text = "Procesando...";
+            //if (regla.CfdiTransacciones.RowCount > 0)
+            //{
+            //    trxVenta.Rewind();          //move to first record
+            //    cfdReglasFacturaXml regla = null;
+            //    Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            //    ReglasME maquina = new ReglasME(Param);
+            //    int i = 1;
+            //    do
+            //    {
+            //        regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Param);
+            //        if (trxVenta.Estado.Equals("emitido") 
+            //            && maquina.ValidaTransicion(Param.tipoDoc, "ELIMINA XML", trxVenta.EstadoActual, "anulado"))
+            //        {
+            //            //Anular el archivo xml en la bitácora de la factura emitida
+            //            regla.ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, DatosConexionDB.Elemento.Usuario, "emitido", "anulado", maquina.eBinarioNuevo, "Xml eliminado.");
+            //            txtbxMensajes.AppendText("Doc:" + trxVenta.Sopnumbe + " " + regla.ultimoMensaje + "\r\n");
+            //            txtbxMensajes.Refresh();
+            //        }
+            //        progressBar1.Value = i * 100 / trxVenta.RowCount;
+            //        i++;
+            //    } while (trxVenta.MoveNext());
 
-                //Actualizar la pantalla
-                AplicaFiltroYActualizaPantalla();
+            //    //Actualizar la pantalla
+            //    AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
 
-                progressBar1.Value = 0;
-            }
+            //    progressBar1.Value = 0;
+            //}
         }
 
         /// <summary>
@@ -605,34 +628,34 @@ namespace EjecutableEncriptador
 
         private void tsBtnAnulaElimina_Click(object sender, EventArgs e)
         {
-            int i = 0;
-            int errores = 0;
-            if (!filtraListaSeleccionada()) //Filtra trxVenta sólo con docs marcados
-            {
-                txtbxMensajes.Text = ultimoMensaje;
-                errores++;
-            }
+            //int i = 0;
+            //int errores = 0;
+            //if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
+            //{
+            //    txtbxMensajes.Text = ultimoMensaje;
+            //    errores++;
+            //}
 
-            txtbxMensajes.Text = "No hay documentos para anular. Verifique los criterios de búsqueda.";
-            if (errores == 0 && trxVenta.RowCount > 0)
-            {
-                Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
-                ReglasME maquina = new ReglasME(Param);
-                trxVenta.Rewind();          //move to first record
-                do
-                {
-                    if (trxVenta.Estado.Equals("emitido") 
-                        && maquina.ValidaTransicion(Param.tipoDoc, "ELIMINA XML", trxVenta.EstadoActual, "anulado"))
-                        i++;
-                } while (trxVenta.MoveNext());
+            //txtbxMensajes.Text = "No hay documentos para anular. Verifique los criterios de búsqueda.";
+            //if (errores == 0 && regla.CfdiTransacciones.RowCount > 0)
+            //{
+            //    Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            //    ReglasME maquina = new ReglasME(Param);
+            //    regla.CfdiTransacciones.Rewind();          //move to first record
+            //    do
+            //    {
+            //        if (regla.CfdiTransacciones.Estado.Equals("emitido") 
+            //            && maquina.ValidaTransicion(Param.tipoDoc, "ELIMINA XML", regla.CfdiTransacciones.EstadoActual, "anulado"))
+            //            i++;
+            //    } while (regla.CfdiTransacciones.MoveNext());
 
-                if (i > 0)
-                {
-                    tsLabelConfirma.Text = "Confirmar la anulación de \r\n" + i.ToString() + " documento(s):";
-                    txtbxMensajes.Text = "Se anulará(n) " + i.ToString() + " documento(s)";
-                    tsConfirmaAnulaXml.Visible = true;
-                }
-            }
+            //    if (i > 0)
+            //    {
+            //        tsLabelConfirma.Text = "Confirmar la anulación de \r\n" + i.ToString() + " documento(s):";
+            //        txtbxMensajes.Text = "Se anulará(n) " + i.ToString() + " documento(s)";
+            //        tsConfirmaAnulaXml.Visible = true;
+            //    }
+            //}
         }
 
         private void tsBtnAbrirXML_Click(object sender, EventArgs e)
@@ -640,10 +663,11 @@ namespace EjecutableEncriptador
             try
             {
                 txtbxMensajes.Text = "";
-                string ruta = dgridTrxFacturas.CurrentRow.Cells[idxMensaje].Value.ToString().Replace("Almacenado en ", "").Trim();
+                
+                string ruta = dGridActivo.CurrentRow.Cells[idxMensaje].Value.ToString().Replace("Almacenado en ", "").Trim();
                 string archivo = ".XML";
 
-                if (dgridTrxFacturas.CurrentRow.Cells[idxEstado].Value.ToString().Equals("emitido"))
+                if (dGridActivo.CurrentRow.Cells[idxEstado].Value.ToString().Equals("emitido"))
                     Help.ShowHelp(this, ruta + archivo);
                 else
                     txtbxMensajes.Text = "No se ha emitido el archivo XML para este documento.";
@@ -657,54 +681,54 @@ namespace EjecutableEncriptador
 
         private void tsBtnArchivoMensual_Click(object sender, EventArgs e)
         {
-            txtbxMensajes.Text = "";
-            ultimoMensaje = "OK";
-            Parametros Compannia = new Parametros(DatosConexionDB.Elemento.Intercompany);
-            if (!Compannia.ultimoMensaje.Equals(string.Empty))
-                ultimoMensaje = Compannia.ultimoMensaje;
-            if (!(checkBoxFecha.Checked && !checkBoxNDoc.Checked && !checkBoxIdDoc.Checked && !checkBoxEstado.Checked))
-                ultimoMensaje = "Debe indicar el periodo a generar. Marque únicamente la opción Fecha.";
-            if (dtPickerDesde.Value.Year * 100 + dtPickerDesde.Value.Month != dtPickerHasta.Value.Year * 100 + dtPickerHasta.Value.Month)
-                ultimoMensaje = "El rango de fechas De/A debe estar en el mismo mes. Verifique el rango de fechas.";
+            //txtbxMensajes.Text = "";
+            //ultimoMensaje = "OK";
+            //Parametros Compannia = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            //if (!Compannia.ultimoMensaje.Equals(string.Empty))
+            //    ultimoMensaje = Compannia.ultimoMensaje;
+            //if (!(checkBoxFecha.Checked && !checkBoxNDoc.Checked && !checkBoxIdDoc.Checked && !checkBoxEstado.Checked))
+            //    ultimoMensaje = "Debe indicar el periodo a generar. Marque únicamente la opción Fecha.";
+            //if (dtPickerDesde.Value.Year * 100 + dtPickerDesde.Value.Month != dtPickerHasta.Value.Year * 100 + dtPickerHasta.Value.Month)
+            //    ultimoMensaje = "El rango de fechas De/A debe estar en el mismo mes. Verifique el rango de fechas.";
 
-            if (ultimoMensaje.Equals("OK"))
-            {
-                //Define inicio y fin de mes
-                DateTime _fechaIni = new DateTime(dtPickerDesde.Value.Year, dtPickerDesde.Value.Month, 1);
-                dtPickerDesde.Value = _fechaIni;
-                DateTime _fechaFin = _fechaIni.AddMonths(1);
-                int ultimoDia = _fechaFin.Day;
-                dtPickerHasta.Value = _fechaFin.AddDays(-ultimoDia);
+            //if (ultimoMensaje.Equals("OK"))
+            //{
+            //    //Define inicio y fin de mes
+            //    DateTime _fechaIni = new DateTime(dtPickerDesde.Value.Year, dtPickerDesde.Value.Month, 1);
+            //    dtPickerDesde.Value = _fechaIni;
+            //    DateTime _fechaFin = _fechaIni.AddMonths(1);
+            //    int ultimoDia = _fechaFin.Day;
+            //    dtPickerHasta.Value = _fechaFin.AddDays(-ultimoDia);
 
-                cfdReglasFacturaXml regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
+            //    cfdReglasFacturaXml regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
 
-                if (!AplicaFiltroYActualizaPantalla())
-                    return;
+            //    if (!AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name))
+            //        return;
 
-                if (!regla.AplicaFiltroParaInformeMes(dtPickerDesde.Value, dtPickerHasta.Value, out infMes))
-                {
-                    txtbxMensajes.AppendText(regla.ultimoMensaje);
-                    return;
-                }
-                txtbxMensajes.AppendText("Consulta de documentos del mes completado.");
-                txtbxMensajes.Refresh();
+            //    if (!regla.AplicaFiltroParaInformeMes(dtPickerDesde.Value, dtPickerHasta.Value, out infMes))
+            //    {
+            //        txtbxMensajes.AppendText(regla.ultimoMensaje);
+            //        return;
+            //    }
+            //    txtbxMensajes.AppendText("Consulta de documentos del mes completado.");
+            //    txtbxMensajes.Refresh();
 
-                if (ExistenFacturasNoEmitidas())
-                {
-                    if (MessageBox.Show("Existen facturas que todavía no fueron emitidas. Desea continuar?",
-                        "Advertencia",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning) == DialogResult.No)
-                        return;
-                    txtbxMensajes.Text = "Advertencia: Existen facturas que todavía no fueron emitidas. Revise el archivo luego de generarlo.\r\n";
-                }
+            //    if (ExistenFacturasNoEmitidas())
+            //    {
+            //        if (MessageBox.Show("Existen facturas que todavía no fueron emitidas. Desea continuar?",
+            //            "Advertencia",
+            //            MessageBoxButtons.YesNo,
+            //            MessageBoxIcon.Warning) == DialogResult.No)
+            //            return;
+            //        txtbxMensajes.Text = "Advertencia: Existen facturas que todavía no fueron emitidas. Revise el archivo luego de generarlo.\r\n";
+            //    }
 
-                //Guarda el archivo mensual en disco
-                if (infMes.RowCount > 0)
-                    GuardaArchivoMensual();
-            }
-            txtbxMensajes.AppendText(ultimoMensaje);
-            txtbxMensajes.Refresh();
+            //    //Guarda el archivo mensual en disco
+            //    if (infMes.RowCount > 0)
+            //        GuardaArchivoMensual();
+            //}
+            //txtbxMensajes.AppendText(ultimoMensaje);
+            //txtbxMensajes.Refresh();
 
         }
 
@@ -724,12 +748,12 @@ namespace EjecutableEncriptador
                 txtbxMensajes.Text = Param.ultimoMensaje;
                 errores++;
             }
-            if (trxVenta.RowCount == 0)
+            if (regla.CfdiTransacciones.RowCount == 0)
             {
                 txtbxMensajes.Text = "No hay documentos para generar. Verifique los criterios de búsqueda.";
                 errores++;
             }
-            if (!filtraListaSeleccionada()) //Filtra trxVenta sólo con docs marcados
+            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
             {
                 txtbxMensajes.Text = ultimoMensaje;
                 errores++;
@@ -741,7 +765,7 @@ namespace EjecutableEncriptador
                 HabilitarVentana(false, false, false, false, false, false);
                 _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
                 _bw.ProgressChanged += new ProgressChangedEventHandler(bw_Progress);
-                object[] arguments = { trxVenta };
+                object[] arguments = { regla.CfdiTransacciones };
                 _bw.RunWorkerAsync(arguments);
             }
         }
@@ -762,12 +786,12 @@ namespace EjecutableEncriptador
                 txtbxMensajes.Text = Param.ultimoMensaje;
                 errores++;
             }
-            if (trxVenta.RowCount == 0)
+            if (regla.CfdiTransacciones.RowCount == 0)
             {
                 txtbxMensajes.Text = "No hay documentos para generar. Verifique los criterios de búsqueda.";
                 errores++;
             }
-            if (!filtraListaSeleccionada()) //Filtra trxVenta sólo con docs marcados
+            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
             {
                 txtbxMensajes.Text = ultimoMensaje;
                 errores++;
@@ -779,7 +803,7 @@ namespace EjecutableEncriptador
                 HabilitarVentana(false, false, false, false, false, false);
                 _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
                 _bw.ProgressChanged += new ProgressChangedEventHandler(bw_Progress);
-                object[] arguments = { trxVenta };
+                object[] arguments = { regla.CfdiTransacciones };
                 _bw.RunWorkerAsync(arguments);
             }
         }
@@ -794,16 +818,16 @@ namespace EjecutableEncriptador
             if (e.RowIndex >= 0)
             {
                 //Está completo
-                int estadoDoc = Convert.ToInt32(dgridTrxFacturas.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
+                int estadoDoc = Convert.ToInt32(dGridActivo.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
                 if (estadoDoc == estadoCompletadoCia)
                 {
-                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
+                    dGridActivo.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
                 }
 
                 //Está en proceso
                 if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
                 {
-                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
+                    dGridActivo.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
                 }
             }
         }
@@ -813,7 +837,7 @@ namespace EjecutableEncriptador
             if (filtraListaSeleccionada())
             {
                 txtbxMensajes.AppendText("Documentos seleccionados listos para procesar...proceso...\r\n");
-                AplicaFiltroYActualizaPantalla();
+                AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
             }
             else
                 txtbxMensajes.Text = ultimoMensaje;
@@ -821,7 +845,7 @@ namespace EjecutableEncriptador
 
         private void checkBoxMark_CheckedChanged(object sender, EventArgs e)
         {
-            InicializaCheckBoxDelGrid(idxChkBox, checkBoxMark.Checked);
+            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, checkBoxMark.Checked);
         }
 
         private void tsButtonConsultaTimbre_Click(object sender, EventArgs e)
@@ -910,18 +934,29 @@ namespace EjecutableEncriptador
             tsComboDestinoRep.Enabled = false;
             if (!configCfd.emite && configCfd.reporteador.Equals("CRYSTAL"))    //Se habilitó esta opción porque el visor de crystal no puede imprimir. 
                 tsComboDestinoRep.Enabled = true;
-
-            if (dgridTrxFacturas.CurrentRow != null)
+            
+            if (dGridActivo.CurrentRow != null)
             {
-                if (dgridTrxFacturas.CurrentCell.Selected)
+                if (dGridActivo.CurrentCell.Selected)
                 {
-                    tsTextDesde.Text = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
-                    tsTextHasta.Text = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
+                    tsTextDesde.Text = dGridActivo.CurrentRow.Cells[idxSopnumbe].Value.ToString();
+                    tsTextHasta.Text = dGridActivo.CurrentRow.Cells[idxSopnumbe].Value.ToString();
 
                 }
                 else
                     txtbxMensajes.Text = "No seleccionó ninguna factura. Debe marcar la factura que desea imprimir y luego presionar el botón de impresión.";
             }
+
+        }
+
+        private void tabCfdi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
+        }
+
+        private void cBoxMarcCobros_CheckedChanged(object sender, EventArgs e)
+        {
+            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, cBoxMarcCobros.Checked);
 
         }
     }

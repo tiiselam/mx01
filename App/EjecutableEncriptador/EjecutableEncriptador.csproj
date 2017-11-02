@@ -13,7 +13,7 @@
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
     <StartupObject>EjecutableEncriptador.Program</StartupObject>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -34,6 +34,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -127,6 +128,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <BaseApplicationManifest Include="Properties\app.manifest" />
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\vwCfdiTrxCobros.datasource" />
     <None Include="Properties\DataSources\vwCfdTransaccionesDeVenta.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -144,7 +147,7 @@
       <Name>MyGeneration.dOOdads_2005</Name>
     </ProjectReference>
     <ProjectReference Include="..\Comun\Comun.csproj">
-      <Project>{D43004BD-E235-41BE-B272-A05FC4FB9A96}</Project>
+      <Project>{d43004bd-e235-41be-b272-a05fc4fb9a96}</Project>
       <Name>Comun</Name>
     </ProjectReference>
     <ProjectReference Include="..\EMailManejador\EMailManejador.csproj">
@@ -153,7 +156,7 @@
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Encriptador\Encriptador.csproj">
-      <Project>{0969F8B3-EDCE-46AA-A7B2-01A10B99D7EF}</Project>
+      <Project>{0969f8b3-edce-46aa-a7b2-01a10b99d7ef}</Project>
       <Name>Encriptador</Name>
     </ProjectReference>
     <ProjectReference Include="..\MaquinaDeEstados\MaquinaDeEstados.csproj">

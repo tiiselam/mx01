@@ -19,11 +19,25 @@ namespace cfd.FacturaElectronica
     class cfdReglasFacturaXml
     {
         public string ultimoMensaje = "";
-        public int numMensajeError=0;
+        public int numMensajeError = 0;
         private ConexionAFuenteDatos _Conexion = null;
         private Parametros _Param = null;
         CodigoDeBarras codigobb;
         Documento reporte;
+        vwCfdTransaccionesDeVenta cfdiTransacciones;
+
+        public vwCfdTransaccionesDeVenta CfdiTransacciones
+        {
+            get
+            {
+                return cfdiTransacciones;
+            }
+
+            set
+            {
+                cfdiTransacciones = value;
+            }
+        }
 
         public cfdReglasFacturaXml(ConexionAFuenteDatos conex, Parametros param)
         {
@@ -36,16 +50,16 @@ namespace cfd.FacturaElectronica
             ultimoMensaje = codigobb.strMensajeErr + reporte.mensajeErr;
         }
 
-        public void AplicaFiltroAFacturas(bool filtroFecha, DateTime desdeF, DateTime hastaF, DateTime deFDefault, DateTime aFDefault,
-                                    bool filtroNumDoc, string numDocDe, string numDocA,
-                                    bool filtroIdDoc, string idDoc, 
-                                    bool filtroEstado, string estado,
-                                    bool filtroCliente, string cliente,
-                                    out vwCfdTransaccionesDeVenta trxVenta)
+        public void AplicaFiltroADocumentos(bool filtroFecha, DateTime desdeF, DateTime hastaF, DateTime deFDefault, DateTime aFDefault,
+                            bool filtroNumDoc, string numDocDe, string numDocA,
+                            bool filtroIdDoc, string idDoc,
+                            bool filtroEstado, string estado,
+                            bool filtroCliente, string cliente, 
+                            string nombreVista)
         {
-            trxVenta = new vwCfdTransaccionesDeVenta(_Conexion.ConnStr);
-            trxVenta.Query.AddOrderBy(vwCfdTransaccionesDeVenta.ColumnNames.ID_Certificado, WhereParameter.Dir.ASC);
-            trxVenta.Query.AddOrderBy(vwCfdTransaccionesDeVenta.ColumnNames.Sopnumbe, WhereParameter.Dir.ASC);
+            cfdiTransacciones = new vwCfdTransaccionesDeVenta(_Conexion.ConnStr, nombreVista);
+            cfdiTransacciones.Query.AddOrderBy(vwCfdTransaccionesDeVenta.ColumnNames.ID_Certificado, WhereParameter.Dir.ASC);
+            cfdiTransacciones.Query.AddOrderBy(vwCfdTransaccionesDeVenta.ColumnNames.Sopnumbe, WhereParameter.Dir.ASC);
 
             DateTime desdeFecha = new DateTime(deFDefault.Year, deFDefault.Month, deFDefault.Day, 0, 0, 0);
             DateTime hastaFecha = new DateTime(aFDefault.Year, aFDefault.Month, aFDefault.Day, 23, 59, 59);
@@ -53,40 +67,40 @@ namespace cfd.FacturaElectronica
             {
                 //Filtro personalizado
                 desdeFecha = new DateTime(desdeF.Year, desdeF.Month, desdeF.Day, 0, 0, 0); ;
-                hastaFecha = new DateTime(hastaF.Year, hastaF.Month, hastaF.Day, 23, 59, 59); 
+                hastaFecha = new DateTime(hastaF.Year, hastaF.Month, hastaF.Day, 23, 59, 59);
                 //desdeFecha = desdeF;
                 //hastaFecha = hastaF;
             }
             if ((!filtroNumDoc && !filtroIdDoc && !filtroEstado && !filtroCliente) || filtroFecha)
             {   //Filtra los documentos por fecha. De forma predeterminada es la fecha de hoy.
-                trxVenta.Where.Fechahora.BetweenBeginValue = desdeFecha;
-                trxVenta.Where.Fechahora.BetweenEndValue = hastaFecha; 
-                trxVenta.Where.Fechahora.Operator = WhereParameter.Operand.Between;
+                cfdiTransacciones.Where.Fechahora.BetweenBeginValue = desdeFecha;
+                cfdiTransacciones.Where.Fechahora.BetweenEndValue = hastaFecha;
+                cfdiTransacciones.Where.Fechahora.Operator = WhereParameter.Operand.Between;
             }
             if (filtroNumDoc)
             {
-                trxVenta.Where.Sopnumbe.BetweenBeginValue = numDocDe.Trim();
-                trxVenta.Where.Sopnumbe.BetweenEndValue = numDocA.Trim();
-                trxVenta.Where.Sopnumbe.Operator = WhereParameter.Operand.Between;
+                cfdiTransacciones.Where.Sopnumbe.BetweenBeginValue = numDocDe.Trim();
+                cfdiTransacciones.Where.Sopnumbe.BetweenEndValue = numDocA.Trim();
+                cfdiTransacciones.Where.Sopnumbe.Operator = WhereParameter.Operand.Between;
             }
             if (filtroIdDoc)
             {
-                trxVenta.Where.Docid.Value = idDoc.Trim();
-                trxVenta.Where.Docid.Operator = WhereParameter.Operand.Equal;
+                cfdiTransacciones.Where.Docid.Value = idDoc.Trim();
+                cfdiTransacciones.Where.Docid.Operator = WhereParameter.Operand.Equal;
             }
             if (filtroEstado)
             {
-                trxVenta.Where.Estado.Value = estado;
-                trxVenta.Where.Estado.Operator = WhereParameter.Operand.Equal;
+                cfdiTransacciones.Where.Estado.Value = estado;
+                cfdiTransacciones.Where.Estado.Operator = WhereParameter.Operand.Equal;
             }
             if (filtroCliente)
             {
-                trxVenta.Where.NombreCliente.Value = "%" + cliente + "%";
-                trxVenta.Where.NombreCliente.Operator = WhereParameter.Operand.Like;
+                cfdiTransacciones.Where.NombreCliente.Value = "%" + cliente + "%";
+                cfdiTransacciones.Where.NombreCliente.Operator = WhereParameter.Operand.Like;
             }
             try
             {
-                if (!trxVenta.Query.Load())
+                if (!cfdiTransacciones.Query.Load())
                 {
                     ultimoMensaje = "No hay datos para el filtro seleccionado.";
                     numMensajeError++;
@@ -99,6 +113,7 @@ namespace cfd.FacturaElectronica
             }
 
         }
+
 
         public bool AplicaFiltroParaInformeMes(DateTime deFecha, DateTime aFecha,
                                             out vwCfdInformeMensualVentas infMes)
@@ -229,6 +244,8 @@ namespace cfd.FacturaElectronica
                 //Registra log de la emisión del xml antes de imprimir el pdf, sino habrá error al imprimir
                 RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, comprobante.InnerXml,
                                         "emitido", mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo));
+
+                //si la factura está simultáneamente pagada, ingresar el cobro en el log en estado emitido
 
                 if (numMensajeError == 0)
                 {

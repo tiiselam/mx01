@@ -1,23 +1,12 @@
-IF OBJECT_ID ('dbo.vwSopTransaccionesVenta') IS NOT NULL
-   DROP view dbo.vwSopTransaccionesVenta
+IF OBJECT_ID ('dbo.vwCfdiSopTransaccionesVenta') IS NOT NULL
+   DROP view dbo.vwCfdiSopTransaccionesVenta
 GO
 
-create view dbo.vwSopTransaccionesVenta
+create view dbo.vwCfdiSopTransaccionesVenta
 --Propósito. Obtiene las transacciones de venta SOP. 
 --Utiliza:	vwRmTransaccionesTodas
 --Requisitos. No muestra facturas registradas en cuentas por cobrar. 
---23/04/12 JCF Modificaciones CFDI v3.2
---11/05/12 jcf Ajusta descuento, debe ser comercial y por línea. 
---			Ajusta subtotal, debe ser antes de descuentos e impuestos.
---12/06/12 jcf Agrega userdef2
---02/07/12 jcf Cambia el modo de obtener datos adicionales para la factura. 
---			Usa la función fCfdDatosAdicionales() para obtener los datos correctos.
---09/11/12 JCF xchgrate debe ser mayor que cero
---23/11/12 jcf Retira los milisegundos del campo fechaHora
---14/02/13 jcf Agrega descripción de país cCodeDesc (GETTY)
---27/08/13 jcf Agrega campo cstponbr 
---12/07/16 jcf Modifica método de pago predeterminado a NA
---25/10/17 jcf Ajuste cfdi 3.3
+--25/10/17 jcf Creación cfdi 3.3
 --
 AS
 SELECT	'contabilizado' estadoContabilizado,
@@ -41,7 +30,7 @@ SELECT	'contabilizado' estadoContabilizado,
 --		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,
 		cab.orpmtrvd, rtrim(mo.isocurrc) curncyid,
 		case when cab.xchgrate <= 0 then 1 else cab.xchgrate end xchgrate, 
-		cab.voidStts + isnull(rmx.voidstts, 0) voidstts, 
+		cab.voidStts + isnull(rmx.voidstts, 0) voidstts, rmx.montoActualOriginal,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address1), 10)) address1, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address2), 10)) address2, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address3), 10)) address3, 
@@ -50,10 +39,6 @@ SELECT	'contabilizado' estadoContabilizado,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(isnull(cc.cCodeDesc, cab.country)), 10)) country, 
 		right('00000'+dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10), 5) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
-		--isnull(da.nroOrden, '') nroOrden,
-		--isnull(da.NumCtaPago , 'no identificado') NumCtaPago,
-		--'Pago en una sola exhibición' formaDePago,
-		--isnull(da.metodoDePago, 'NA') metodoDePago,
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
 		da.USRDEF05
   from	sop30200 cab							--sop_hdr_hist
@@ -81,11 +66,9 @@ SELECT	'contabilizado' estadoContabilizado,
 --		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,
 		cab.orpmtrvd, rtrim(cab.curncyid) curncyid, 
 		cab.xchgrate, 
-		cab.voidStts, cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
+		cab.voidStts, cab.ORDOCAMT, 
+		cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
-		--ctrl.USERDEF1, ctrl.userdef2,
-		--'Pago en una sola exhibición' formaDePago,
-		--isnull(ctrl.usrtab01, 'NA') metodoDePago,
 		cab.cstponbr,
 		ctrl.USRDEF05
  from  SOP10100 cab								--sop_hdr_work
@@ -97,8 +80,8 @@ SELECT	'contabilizado' estadoContabilizado,
  where cab.SOPTYPE in (3, 4)					--3 invoice, 4 return
 go
 
-IF (@@Error = 0) PRINT 'Creación exitosa de: vwSopTransaccionesVenta'
-ELSE PRINT 'Error en la creación de: vwSopTransaccionesVenta'
+IF (@@Error = 0) PRINT 'Creación exitosa de: vwCfdiSopTransaccionesVenta'
+ELSE PRINT 'Error en la creación de: vwCfdiSopTransaccionesVenta'
 GO
 
 -------------------------------------------------------------------------------------------------------
