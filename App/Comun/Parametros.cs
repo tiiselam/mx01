@@ -59,6 +59,10 @@ namespace Comun
         private string _URLConsulta = "";
         private string _URLwebServPAC = "";
         private string _reporteador = "";
+        private string _extFactura;
+        private string _extCobro;
+        private string _extTraslado;
+        private string _extDefault="";
         private string _rutaReporteCrystal = "";
         private string _bottomMargin = "";
         private string _topMargin = "";
@@ -136,6 +140,9 @@ namespace Comun
                 _envia = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/envia/text()").Value;
                 _zip = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/zip/text()").Value;
                 _reporteador = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteador/text()").Value;
+                _extFactura = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Factura/text()").Value;
+                _extCobro = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Cobro/text()").Value;
+                _extTraslado = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Traslado/text()").Value;
 
                 _rutaReporteCrystal = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Ruta/text()").Value;
                 _bottomMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/bottomMargin/text()").Value;
@@ -274,9 +281,82 @@ namespace Comun
             set { _reporteador = value; }
         }
 
+        public string ExtDefault
+        {
+            get
+            {
+                return _extDefault;
+            }
+
+            set
+            {
+                _extDefault = value;
+            }
+        }
+
+        public string ExtFactura
+        {
+            get
+            {
+                return _extFactura;
+            }
+
+            set
+            {
+                _extFactura = value;
+            }
+        }
+
+        public string ExtCobro
+        {
+            get
+            {
+                return _extCobro;
+            }
+
+            set
+            {
+                _extCobro = value;
+            }
+        }
+
+        public string ExtTraslado
+        {
+            get
+            {
+                return _extTraslado;
+            }
+
+            set
+            {
+                _extTraslado = value;
+            }
+        }
+
         public string rutaReporteCrystal
         {
-            get { return _rutaReporteCrystal; }
+            get {
+                string _ext = String.Empty;
+                switch (ExtDefault)
+                {
+                    case "tabFacturas":
+                        _ext = _extFactura == null ? String.Empty : _extFactura;
+                        break;
+                    case "tabCobros":
+                        _ext = _extCobro == null ? String.Empty : _extCobro;
+                        break;
+                    case "tabTraslados":
+                        _ext = _extTraslado == null ? String.Empty : _extTraslado;
+                        break;
+                    default:
+                        _ext = _extFactura == null ? String.Empty : _extFactura;
+                        break;
+                }
+
+                return _rutaReporteCrystal + _ext;
+            }
+            set { _rutaReporteCrystal = value; }
+
         }
 
         public int bottomMargin
@@ -337,10 +417,30 @@ namespace Comun
                 _nombreImpresora = value;
             }
         }
-
+        
         public string rutaReporteSSRS
         {
-            get { return _rutaReporteSSRS; }
+            get
+            {
+                string _ext = String.Empty;
+                switch (ExtDefault)
+                {
+                    case "tabFacturas":
+                        _ext = _extFactura==null?String.Empty:_extFactura;
+                        break;
+                    case "tabCobros":
+                        _ext = _extCobro==null?String.Empty:_extCobro;
+                        break;
+                    case "tabTraslados":
+                        _ext = _extTraslado == null?String.Empty: _extTraslado;
+                        break;
+                    default:
+                        _ext = _extFactura == null ? String.Empty : _extFactura;
+                        break;
+                }
+
+                return _rutaReporteSSRS + _ext;
+            }
             set { _rutaReporteSSRS = value; }
         }
 

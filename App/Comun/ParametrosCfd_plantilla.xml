@@ -12,8 +12,13 @@
       <urlWebService>[URL del servicio web del PAC]</urlWebService>
     </PAC>
     <reporteador>[valor: CRYSTAL o SSRS]</reporteador>
+    <reporteExtensiones>
+       <Factura>EJ: .rpt</Factura>
+	     <Cobro>ej: .COB.rpt</Cobro>
+	     <Traslado>ej: .REM.rpt</Traslado>
+    </reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>[RUTA DEL ARCHIVO CRYSTAL RPT]</Ruta>
+      <Ruta>[RUTA DEL ARCHIVO CRYSTAL RPT. Indicar la extensión en el tag reporteExtensiones]</Ruta>
       <Margenes>
         <bottomMargin>[INDICAR UN VALOR]</bottomMargin>
         <topMargin>[INDICAR UN VALOR]</topMargin>
@@ -28,7 +33,7 @@
 	    <nombreImpresora>[Nombre de la impresora predeterminada]</nombreImpresora>
     </rutaReporteCrystal>
     <ReporteSSRS tipo="default">
-      <Ruta>[ruta y nombre del reporte en reporting services Ej: /xpress/factura]</Ruta>
+      <Ruta>[ruta y nombre del reporte en reporting services Ej: /xpress/factura. Indicar la extensión en el tag reporteExtensiones]</Ruta>
       <SSRSServer>[URL reporting services server]</SSRSServer>
       <Parametro>
         <Nombre>soptype</Nombre>

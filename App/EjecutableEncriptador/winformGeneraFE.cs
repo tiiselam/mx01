@@ -72,10 +72,10 @@ namespace EjecutableEncriptador
         /// <returns>bool</returns>
         private bool AplicaFiltroYActualizaPantalla(string nombreTab)
         {
-            ObtieneGrid(nombreTab);
             txtbxMensajes.AppendText("Explorando...\r\n");
             txtbxMensajes.Refresh();
 
+            ObtieneGrid(nombreTab);
             Parametros Compannia = new Parametros(DatosConexionDB.Elemento.Intercompany);
             txtbxMensajes.AppendText (Compannia.ultimoMensaje);
             if (!Compannia.ultimoMensaje.Equals(string.Empty))
@@ -558,6 +558,8 @@ namespace EjecutableEncriptador
             string prmTabla = "SOP30200";
             int prmSopType = 0;
             Parametros configCfd = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
+            configCfd.ExtDefault = this.tabCfdi.SelectedTab.Name;
+            
             txtbxMensajes.Text = "";
             txtbxMensajes.Refresh();
             configCfd.ImprimeEnImpresora = false;
@@ -743,6 +745,8 @@ namespace EjecutableEncriptador
             txtbxMensajes.Text = "";
 
             Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            Param.ExtDefault = this.tabCfdi.SelectedTab.Name;
+
             if (!Param.ultimoMensaje.Equals(string.Empty))
             {
                 txtbxMensajes.Text = Param.ultimoMensaje;
@@ -860,6 +864,8 @@ namespace EjecutableEncriptador
             string prmTabla = "SOP30200";
             int prmSopType = 0;
             Parametros configCfd = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
+            configCfd.ExtDefault = this.tabCfdi.SelectedTab.Name;
+
             txtbxMensajes.Text = "";
             txtbxMensajes.Refresh();
             configCfd.ImprimeEnImpresora = false;

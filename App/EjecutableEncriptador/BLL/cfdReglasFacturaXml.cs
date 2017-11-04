@@ -141,6 +141,39 @@ namespace cfd.FacturaElectronica
         }
 
         /// <summary>
+        /// si la factura está simultáneamente pagada, ingresa el cobro en el log en estado emitido
+        /// </summary>
+        public void RegistraLogDePagosSimultaneos(short Soptype, string Sopnumbe, string eBinarioNuevo, string eBinarioNuevoExplicado, string eBinActualConError, string eBinActualConErrorExplicado)
+        {
+            ultimoMensaje = "";
+            numMensajeError = 0;
+            vwCfdiPagosSimultaneos_wrapper pgSiml = new vwCfdiPagosSimultaneos_wrapper(_Conexion.ConnStr);
+            pgSiml.Where.APTODCTY.Value = Soptype;
+            pgSiml.Where.APTODCTY.Operator = WhereParameter.Operand.Equal;
+            pgSiml.Where.APTODCNM.Conjuction = WhereParameter.Conj.And;
+            pgSiml.Where.APTODCNM.Value = Sopnumbe;
+            pgSiml.Where.APTODCNM.Operator = WhereParameter.Operand.Equal;
+            try
+            {
+                if (pgSiml.Query.Load())
+                {
+                    pgSiml.Rewind();
+                    for (int i = 1; i <= pgSiml.RowCount; i++)
+                    {
+                        RegistraLogDeArchivoXML(pgSiml.Apfrdcty, pgSiml.Apfrdcnm, pgSiml.APTODCNM, "0", _Conexion.Usuario, "", "emitido", eBinarioNuevo, eBinarioNuevoExplicado);
+                    }
+                }
+            }
+            catch (Exception eGen)
+            {
+                ultimoMensaje = "Excepción al ingresar los pagos simultáneos en el log. [RegistraLogDePagosSimultaneos] " + eGen.Message + " " + eGen.Source;
+                ActualizaFacturaEmitida(Soptype, Sopnumbe, _Conexion.Usuario, "emitido", "emitido", eBinActualConError, eBinActualConErrorExplicado + ultimoMensaje.Trim());
+                numMensajeError++;
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Inserta datos de una factura en el log de facturas. 
         /// </summary>
         /// <returns></returns>
@@ -172,8 +205,9 @@ namespace cfd.FacturaElectronica
            }
            catch (Exception eLog)
            {
-                ultimoMensaje = "Contacte a su administrador. No se puede registrar la tarea en la Bitácora. [RegistraLogDeArchivoXML] " + eLog.Message;
+                ultimoMensaje = "Excepción. No se puede ingresar el doc. " + sopnumbe+ " en la Bitácora. [RegistraLogDeArchivoXML] " + eLog.Message + " " + eLog.Source;
                 numMensajeError++;
+                throw;
            }
         }
 
@@ -244,32 +278,31 @@ namespace cfd.FacturaElectronica
                 //Registra log de la emisión del xml antes de imprimir el pdf, sino habrá error al imprimir
                 RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, comprobante.InnerXml,
                                         "emitido", mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo));
-
-                //si la factura está simultáneamente pagada, ingresar el cobro en el log en estado emitido
-
+                
                 if (numMensajeError == 0)
                 {
+                    RegistraLogDePagosSimultaneos(trxVenta.Soptype, trxVenta.Sopnumbe, mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo), mEstados.eBinActualConError, mEstados.EnLetras(mEstados.eBinActualConError));
+
                     //Genera y guarda código de barras bidimensional
                     codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + uuid.Trim() + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + trxVenta.Total.ToString() + "&fe=" + Utiles.Derecha(sello, 8)
-                                                    , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
+                                                        , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
                     //Genera pdf
-                    if (codigobb.iErr == 0)
-                        reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
+                        if (codigobb.iErr == 0)
+                            reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
 
                     //Comprime el archivo xml
-                    if (_Param.zip)
-                        Utiles.Zip(rutaYNomArchivo, ".xml");
+                        if (_Param.zip)
+                            Utiles.Zip(rutaYNomArchivo, ".xml");
 
                     numMensajeError = codigobb.iErr + reporte.numErr + Utiles.numErr;
                     ultimoMensaje = codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr;
 
                     //Si hay error en cbb o pdf o zip anota en la bitácora
                     if (numMensajeError != 0)
-                        ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, _Conexion.Usuario,
-                                                "emitido", "emitido", mEstados.eBinActualConError,
+                        ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, _Conexion.Usuario, "emitido", "emitido", mEstados.eBinActualConError,
                                                 mEstados.EnLetras(mEstados.eBinActualConError) + ultimoMensaje.Trim());
                 }
-                return numMensajeError==0;
+                return numMensajeError == 0;
             }
             catch (DirectoryNotFoundException)
             {
@@ -327,8 +360,7 @@ namespace cfd.FacturaElectronica
                 ultimoMensaje = reporte.mensajeErr + codigobb.strMensajeErr;
 
                 if (reporte.numErr==0 && codigobb.iErr==0)
-                    RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", 
-                                        _Conexion.Usuario, "", eBase, eBinario, enLetras);
+                    RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, "", eBase, eBinario, enLetras);
 
                 return ultimoMensaje.Equals(string.Empty);
             }

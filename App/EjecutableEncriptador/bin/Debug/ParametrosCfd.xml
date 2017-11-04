@@ -12,8 +12,13 @@
       <urlWebService>https://qa2.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
     </PAC>
     <reporteador>CRYSTAL</reporteador>
+	<reporteExtensiones>
+       <Factura>.rpt</Factura>
+	   <Cobro>.COB.rpt</Cobro>
+	   <Traslado>.REM.rpt</Traslado>
+	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\GMOPE_FACTURA_ELECT.rpt</Ruta>
+      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\GMOPE_FACTURA_ELECT</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>
@@ -68,9 +73,18 @@
   </compannia>
   <compannia bd="PER10">
     <URLArchivoXSD>na</URLArchivoXSD>
-    <rutaFacturaCrystal>na</rutaFacturaCrystal>
+    <URLArchivoXSLT>na</URLArchivoXSLT>
+    <PAC>
+      <urlWebService>na</urlWebService>
+    </PAC>
+    <reporteador>CRYSTAL</reporteador>
+	<reporteExtensiones>
+       <Factura>.rpt</Factura>
+	   <Cobro>.COB.rpt</Cobro>
+	   <Traslado>.REM.rpt</Traslado>
+	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Perú\PER10_FACTURA_UNICA.rpt</Ruta>
+      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Perú\PER10_FACTURA_UNICA</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>
@@ -116,6 +130,11 @@
       <urlWebService>na</urlWebService>
     </PAC>
     <reporteador>CRYSTAL</reporteador>
+	<reporteExtensiones>
+       <Factura>.rpt</Factura>
+	   <Cobro>.COB.rpt</Cobro>
+	   <Traslado>.REM.rpt</Traslado>
+	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
       <Ruta>\\10.1.1.22\Integraciones Getty\Factura Colombia\COL10_FACTURA_UNICA.rpt</Ruta>
       <Margenes>
