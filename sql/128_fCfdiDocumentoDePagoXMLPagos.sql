@@ -1,7 +1,10 @@
-USE [MEX10]
+/****** Object:  UserDefinedFunction [dbo].[fCfdiDocumentoDePagoXMLPagos]    Script Date: 11/09/2017 21:16:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
 GO
 
-alter function [dbo].fCfdiDocumentoDePagoXMLPagos (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
+CREATE function [dbo].[fCfdiDocumentoDePagoXMLPagos] (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
 returns xml 
 as
 --Propósito. Obtiene nodo Pagos

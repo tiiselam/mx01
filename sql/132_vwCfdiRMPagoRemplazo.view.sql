@@ -1,28 +1,20 @@
 USE [MEX10]
 GO
 
-/****** Object:  View [dbo].[vwCfdiRMFacturas]    Script Date: 11/09/2017 21:21:07 ******/
+/****** Object:  View [dbo].[vwCfdiRMPagoRemplazo]    Script Date: 11/09/2017 21:22:18 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE VIEW [dbo].[vwCfdiRMFacturas]
+CREATE VIEW [dbo].[vwCfdiRMPagoRemplazo]
 AS
-SELECT     d .ORTRXAMT AS Monto, cuf.ISOCURRC AS MonedaDR, CASE WHEN cup.isocurrc = cuf.isocurrc THEN NULL 
-                      ELSE CASE WHEN cuf.ISOCURRC = 'MXN' THEN 1 ELSE a.oraptoam / a.apptoamt END END TipoCambioDR, CASE WHEN LEFT(UPPER(d .TRXDSCRN), 1) = 'C' AND 
-                      isnumeric(substring(d .TRXDSCRN, 2, 2)) = 1 THEN CAST(substring(D .TRXDSCRN, 2, 2) AS int) ELSE pcm.numCuota END NumParcialidad, 
-                      F.ORTRXAMT - pcm.sumaDePagosAplicados + a.oraptoam ImpSaldoAnt, a.ORAPTOAM AS ImpPagado, F.ORTRXAMT - pcm.sumaDePagosAplicados ImpSaldoInsoluto, 
-                      d .DOCNUMBR, a.APTODCNM, d .TRXDSCRN, d .RMDTYPAL, d .VOIDSTTS, uf.uuid AS IdDocumento,a.oraptoam,a.apptoamt
-FROM         dbo.vwRmTransaccionesTodas AS d INNER JOIN
-                      dbo.vwCfdiRmTrxAplicadas AS a ON d .RMDTYPAL = a.APFRDCTY AND d .DOCNUMBR = a.APFRDCNM LEFT JOIN
-                      dbo.vwRmTransaccionesTodas AS F ON F.RMDTYPAL = a.APTODCTY AND F.DOCNUMBR = a.APTODCNM AND F.voidstts = 0 LEFT OUTER JOIN
-                      DYNAMICS.dbo.MC40200 AS cup ON cup.CURNCYID = d .CURNCYID LEFT OUTER JOIN
-                      DYNAMICS.dbo.MC40200 AS cuf ON cuf.CURNCYID = F.CURNCYID OUTER apply dbo.fCfdiParametros('VERSION', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') 
-                      pa OUTER apply dbo.fCfdiParametrosCliente(d .CUSTNMBR, 'ResidenciaFiscal', 'NumRegIdTrib', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') pac OUTER 
-                      apply dbo.fCfdiObtieneUUID(CASE WHEN f.soptype = 0 THEN a.aptodcty ELSE f.soptype END, a.APTODCNM) uf OUTER 
-                      apply dbo.fCfdiPagosAcumulados(a.APFRDCTY, a.APFRDCNM, a.APFRDCDT, a.APTODCTY, a.APTODCNM, d .TRXDSCRN) pcm
+SELECT     pag.DOCNUMBR ,  pag.RMDTYPAL, pag.NOTEINDX, uu.uuid
+FROM         dbo.RM20101 AS pag INNER JOIN
+                      dbo.SY03900 AS rem ON rem.NOTEINDX = pag.NOTEINDX
+outer apply dbo.fCfdiObtieneUUID(9,ltrim(substring(rem.txtfield,1,30))) uu
+WHERE     (pag.RMDTYPAL = 9)
 
 GO
 
@@ -39,7 +31,7 @@ Begin DesignProperties =
       End
       Begin PaneConfiguration = 2
          NumPanes = 3
-         Configuration = "(H (1[50] 2[25] 3) )"
+         Configuration = "(H (1 [50] 2 [25] 3))"
       End
       Begin PaneConfiguration = 3
          NumPanes = 3
@@ -51,7 +43,7 @@ Begin DesignProperties =
       End
       Begin PaneConfiguration = 5
          NumPanes = 2
-         Configuration = "(H (2[66] 3) )"
+         Configuration = "(H (2 [66] 3))"
       End
       Begin PaneConfiguration = 6
          NumPanes = 2
@@ -89,15 +81,34 @@ Begin DesignProperties =
          NumPanes = 1
          Configuration = "(V (2))"
       End
-      ActivePaneConfig = 5
+      ActivePaneConfig = 0
    End
    Begin DiagramPane = 
-      PaneHidden = 
       Begin Origin = 
-         Top = -192
+         Top = 0
          Left = 0
       End
       Begin Tables = 
+         Begin Table = "pag"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 114
+               Right = 203
+            End
+            DisplayFlags = 280
+            TopColumn = 45
+         End
+         Begin Table = "rem"
+            Begin Extent = 
+               Top = 6
+               Left = 241
+               Bottom = 114
+               Right = 392
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
       End
    End
    Begin SQLPane = 
@@ -105,8 +116,9 @@ Begin DesignProperties =
    Begin DataPane = 
       Begin ParameterDefaults = ""
       End
-      Begin ColumnWidths = 23
+      Begin ColumnWidths = 74
          Width = 284
+         Width = 1695
          Width = 1500
          Width = 1500
          Width = 1500
@@ -114,7 +126,60 @@ Begin DesignProperties =
          Width = 1500
          Width = 1500
          Width = 1500
-         Width = 1770
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+    ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vwCfdiRMPagoRemplazo'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'     Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
          Width = 1500
          Width = 1500
          Width = 1500
@@ -132,7 +197,6 @@ Begin DesignProperties =
       End
    End
    Begin CriteriaPane = 
-      PaneHidden = 
       Begin ColumnWidths = 11
          Column = 1440
          Alias = 900
@@ -150,10 +214,10 @@ Begin DesignProperties =
       End
    End
 End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vwCfdiRMFacturas'
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vwCfdiRMPagoRemplazo'
 GO
 
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vwCfdiRMFacturas'
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vwCfdiRMPagoRemplazo'
 GO
 
 
