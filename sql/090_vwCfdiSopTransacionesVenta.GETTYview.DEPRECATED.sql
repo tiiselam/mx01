@@ -1,3 +1,5 @@
+--DEPRECATED. COUNTRY CODE YA NO SE USA EN XML
+
 IF OBJECT_ID ('dbo.vwCfdiSopTransaccionesVenta') IS NOT NULL
    DROP view dbo.vwCfdiSopTransaccionesVenta
 GO
@@ -9,6 +11,7 @@ create view dbo.vwCfdiSopTransaccionesVenta
 --25/10/17 jcf Creación cfdi 3.3
 --
 AS
+
 SELECT	'contabilizado' estadoContabilizado,
 		case when cn.TXRGNNUM = '' 
 			then rtrim(dbo.fCfdReemplazaCaracteresNI(replace(cab.custnmbr, '-', '')))
@@ -52,7 +55,6 @@ SELECT	'contabilizado' estadoContabilizado,
             and (cab.sopType-2 = rmx.rmdTypAl or cab.sopType+4 = rmx.rmdTypAl) --elimina la posibilidad de repetidos
             and cab.sopnumbe = rmx.DOCNUMBR
 		OUTER APPLY dbo.fCfdiDatosAdicionales(cab.soptype, cab.sopnumbe) da
-		--OUTER APPLY dbo.fCfdDatosAdicionales(cab.orpmtrvd, cab.soptype, cab.sopnumbe, cab.custnmbr, cab.prbtadcd) da
 		left outer join dynamics..mc40200 mo
 			on mo.CURNCYID = cab.curncyid
         left outer join vat10001 cc				--vat_country_code_mstr
@@ -63,7 +65,6 @@ SELECT	'contabilizado' estadoContabilizado,
 		rtrim(cab.docid) docid, cab.SOPTYPE, rtrim(cab.sopnumbe) sopnumbe, 
 		cab.docdate, cab.docdate fechaHora,
 		cab.ORDOCAMT total, cab.ORSUBTOT subtotal, cab.ORTAXAMT impuesto, 0, cab.ORTDISAM, cab.ORTDISAM descuento, 
---		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,
 		cab.orpmtrvd, rtrim(cab.curncyid) curncyid, 
 		cab.xchgrate, 
 		cab.voidStts, cab.ORDOCAMT, 

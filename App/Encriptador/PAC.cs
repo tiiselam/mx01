@@ -29,7 +29,7 @@ namespace Encriptador
             {
                 _ws = new interfactura.WebService1();
                 _ws.ClientCertificates.Add(new X509Certificate(rutaPfx, clave));
-//                _ws.ClientCertificates.Add(new X509Certificate(@"C:\GPUsuario\GPExpressCfdi\feMCLNTST\fePac\tst-0000018.cer"));
+                //_ws.ClientCertificates.Add(new X509Certificate(@"C:\GPUsuario\GPCfdi\feGettyMex\fePAC\tst-0000593\tst-0000593.pfx", clave));
                 _ws.Url = param.URLwebServPAC;
             }
             catch (Exception ti)

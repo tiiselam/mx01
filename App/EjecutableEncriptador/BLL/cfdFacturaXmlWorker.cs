@@ -75,12 +75,13 @@ namespace cfd.FacturaElectronica
                         }
 
                         comprobante.LoadXml(trxVenta.ComprobanteXml);
+                        comprobante.DocumentElement.SetAttribute("NoCertificado", criptografo.noCertificado);
+
                         if (criptografo.numErrores == 0 &&
                             loader.getCadenaOriginal(comprobante, xslCompilado))    //Obtener cadena original del CFD
                         {                                                           //Crear el archivo xml y sellarlo
                             Sello = criptografo.obtieneSello(loader.cadenaOriginal);
                             comprobante.DocumentElement.SetAttribute("Sello", Sello);
-                            comprobante.DocumentElement.SetAttribute("NoCertificado", criptografo.noCertificado);
                             comprobante.DocumentElement.SetAttribute("Certificado", criptografo.certificadoFormatoPem);
 
                             if (!_Conex.IntegratedSecurity)                         //para testeo:

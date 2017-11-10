@@ -2,14 +2,14 @@ IF OBJECT_ID ('dbo.fCfdiPagosAcumulados') IS NOT NULL
    DROP FUNCTION dbo.fCfdiPagosAcumulados
 GO
 
-create function dbo.fCfdiPagosAcumulados(@PAGOTIPO smallint, @PAGONUM varchar(21), @PAGOFECHA DATETIME, @FACTURATIPO smallint, @FACTURANUM varchar(21), @TRXDSCRN char(31))
+CREATE function dbo.fCfdiPagosAcumulados(@PAGOTIPO smallint, @PAGONUM varchar(21), @PAGOFECHA DATETIME, @FACTURATIPO smallint, @FACTURANUM varchar(21), @TRXDSCRN char(31))
 returns table
 --Propósito. Obtiene la suma de pagos aplicados a una factura y el número de cuota
 --27/10/17 jcf Creación
 --
 as
 return(
-		SELECT COUNT(*) +1 numCuota, SUM(X.ORAPTOAM) AS sumaDePagosAplicados
+		SELECT COUNT(*) numCuota, SUM(X.ORAPTOAM) AS sumaDePagosAplicados
 		FROM dbo.vwCfdiRmTrxAplicadas X
 			inner join vwRmTransaccionesTodas rm
 			on X.APFRDCNM = rm.docnumbr

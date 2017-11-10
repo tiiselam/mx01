@@ -5,11 +5,11 @@
   <usuariosql>sa</usuariosql>
   <passwordsql>sa22</passwordsql>
   <compannia bd="MEX10">
-    <URLArchivoXSD>\\10.1.1.22\GettyMX_FacturaElectronicaXml\fePlantillas\cfdv33.xsd</URLArchivoXSD>
-    <URLArchivoXSLT>\\10.1.1.22\GettyMX_FacturaElectronicaXml\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
+    <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoXSLT>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
     <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
     <PAC>
-      <urlWebService>https://qa2.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
+      <urlWebService>https://pruebas33.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
     </PAC>
     <reporteador>CRYSTAL</reporteador>
 	<reporteExtensiones>

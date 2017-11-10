@@ -1,9 +1,9 @@
------------------------------------------------------------------------------------------
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdiTrxCobros]') AND OBJECTPROPERTY(id,N'IsView') = 1)
-    DROP view dbo.[vwCfdiTrxCobros];
-GO
 
-create view dbo.vwCfdiTrxCobros as
+IF (OBJECT_ID ('dbo.vwCfdiTrxCobros', 'V') IS NULL)
+   exec('create view dbo.vwCfdiTrxCobros as SELECT 1 as t');
+go
+
+alter view dbo.vwCfdiTrxCobros as
 --Propósito. Todos los cobros 
 --			Incluye la cadena original para el cfdi.
 --			Si el documento no fue emitido, genera el comprobante xml en el campo comprobanteXml
@@ -70,8 +70,4 @@ IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdiTrxCobros'
 ELSE PRINT 'Error en la creación de la vista: vwCfdiTrxCobros'
 GO
 ----------------------------------------------------------------------------------------------------
-
---sp_columns vwRmTransaccionesTodas
---sp_statistics cfdlogfacturaxml
-
 

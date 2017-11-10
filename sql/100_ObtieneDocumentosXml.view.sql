@@ -162,11 +162,11 @@ begin
 	declare @impu xml;
 	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select @impu = (
-		select 	
+		select
 			case when @p_LNITMSEQ=0 then null else cast(imp.ortxsls as numeric(19,2)) end Base,
-			tx.NAME Impuesto,
+			rtrim(tx.NAME) Impuesto,
 			case when tx.TXDTLPCT=0 then 'Exento' else 'Tasa' end TipoFactor, 
-			case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT as numeric(19,6)) end TasaOCuota,
+			case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT/100 as numeric(19,6)) end TasaOCuota,
 			case when tx.TXDTLPCT=0 then null else cast(imp.orslstax as numeric(19,2)) end Importe
 		from sop10105 imp	--sop_tax_work_hist
 		inner join tx00201 tx
@@ -400,7 +400,7 @@ begin
 		tv.idImpuestoCliente								'cfdi:Receptor/@Rfc',
 		tv.nombreCliente									'cfdi:Receptor/@Nombre', 
 		case when tv.idImpuestoCliente != 'XEXX010101000'
-			then pc.param1
+			then case when tv.usrtab01 = '' then pc.param1 else left(upper(tv.usrtab01), 3) end
 			else 'P01'
 		END													'cfdi:Receptor/@UsoCFDI',
 

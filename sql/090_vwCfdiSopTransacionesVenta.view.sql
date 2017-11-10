@@ -31,7 +31,7 @@ SELECT	'contabilizado' estadoContabilizado,
 --		cab.docamnt total, cab.SUBTOTAL subtotal, cab.TAXAMNT impuesto, cab.trdisamt descuento,
 		cab.orpmtrvd, rtrim(mo.isocurrc) curncyid, 
 		case when cab.xchgrate <= 0 then 1 else cab.xchgrate end xchgrate, 
-		cab.voidStts + isnull(rmx.voidstts, 0) voidstts, 
+		cab.voidStts + isnull(rmx.voidstts, 0) voidstts, rmx.montoActualOriginal,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address1), 10)) address1, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address2), 10)) address2, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.address3), 10)) address3, 
@@ -41,7 +41,7 @@ SELECT	'contabilizado' estadoContabilizado,
 		right('00000'+dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10), 5) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
-		da.USRDEF05
+		da.USRDEF05, isnull(da.usrtab01, '') usrtab01
   from	sop30200 cab							--sop_hdr_hist
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID
@@ -63,10 +63,11 @@ SELECT	'contabilizado' estadoContabilizado,
 		cab.ORDOCAMT total, cab.ORSUBTOT subtotal, cab.ORTAXAMT impuesto, 0, cab.ORTDISAM, cab.ORTDISAM descuento, 
 		cab.orpmtrvd, rtrim(cab.curncyid) curncyid, 
 		cab.xchgrate, 
-		cab.voidStts, cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
+		cab.voidStts, cab.ORDOCAMT, 
+		cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		cab.cstponbr,
-		ctrl.USRDEF05
+		ctrl.USRDEF05, ctrl.usrtab01
  from  SOP10100 cab								--sop_hdr_work
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID
