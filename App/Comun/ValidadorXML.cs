@@ -12,8 +12,8 @@ namespace Comun
 
 public class ValidadorXML
 {
-    public int numErrores = 0;             // Validation Error Count
-    public string mensajeError = "";        // Validation Error Message
+    //public int numErrores = 0;             // Validation Error Count
+    //public string mensajeError = "";        // Validation Error Message
     private XmlSchemaSet sc;                // Esquema
 
     public ValidadorXML(Parametros prm)
@@ -24,11 +24,11 @@ public class ValidadorXML
         {
             // Add the schema to the collection.
             sc.Add(null, prm.URLArchivoXSD);
+            sc.Add(null, prm.URLArchivoPagosXSD);
         }
-        catch
+        catch(Exception vx)
         {
-            mensajeError = "No se encontró el esquema en el URL: " + prm.URLArchivoXSD;
-            numErrores++;
+            throw new IOException ("No existe alguno de los archivos xsd: \r\n" + prm.URLArchivoXSD + " o \r\n" + prm.URLArchivoPagosXSD + "\r\n", vx);
         }
     }
 
@@ -36,18 +36,13 @@ public class ValidadorXML
     private void ValidationCallBack(object sender, ValidationEventArgs args)
     {
         if (args.Severity == XmlSeverityType.Warning)
-            mensajeError = "No se encontró el esquema. No se pudo validar el archivo xml. Verifique la configuración. " + args.Message;
-            //Console.WriteLine("\tWarning: Matching schema not found.  No validation occurred." + args.Message);
+            throw new ArgumentException("Adventencia de validación del esquema del archivo xml. " + args.Message);
         else
-            mensajeError = args.Message;
-            //Console.WriteLine("\tValidation error: " + args.Message);
-        numErrores++;
+            throw new ArgumentException("Error de validación del esquema del archivo xml. " + args.Message);
     }
 
-    public bool ValidarXSD(XmlDocument archivoXml)
+    public void ValidarXSD(XmlDocument archivoXml)
     {
-        numErrores = 0;
-        mensajeError = "";
         XmlNodeReader nodeReader = new XmlNodeReader(archivoXml);
 
         // Set the validation settings.
@@ -62,16 +57,13 @@ public class ValidadorXML
             XmlReader reader = XmlReader.Create(nodeReader, settings);
             // Parse the file. 
             while (reader.Read()) ;
+
         }
-        catch (Exception eXsd)
+        catch 
         {
-            mensajeError = "[ValidarXSD] Contacte al administrador. Error al abrir el documento XML. " + eXsd.Message;
-            numErrores++;
+            throw;
         }
-        return numErrores == 0;
     }
 }
-
-
 
 }

@@ -55,6 +55,7 @@ namespace Comun
     {
         public string ultimoMensaje = "";
         private string _URLArchivoXSD = "";
+        private string _URLArchivoPagosXSD = String.Empty;
         private string _URLArchivoXSLT = "";
         private string _URLConsulta = "";
         private string _URLwebServPAC = "";
@@ -130,6 +131,7 @@ namespace Comun
                 XmlNode elemento = listaParametros.DocumentElement;
 
                 _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
+                _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
                 _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
                 _URLConsulta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLConsulta/text()").Value;
                 _URLwebServPAC = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/PAC/urlWebService/text()").Value;
@@ -248,6 +250,19 @@ namespace Comun
         {
             get { return _URLArchivoXSD; }
             set { _URLArchivoXSD = value; }
+        }
+
+        public string URLArchivoPagosXSD
+        {
+            get
+            {
+                return _URLArchivoPagosXSD;
+            }
+
+            set
+            {
+                _URLArchivoPagosXSD = value;
+            }
         }
 
         public string URLArchivoXSLT

@@ -11,13 +11,9 @@ namespace Comun
     {
         private Dictionary<string, XslCompiledTransform> transforms = new Dictionary<string, XslCompiledTransform>();
         public string cadenaOriginal = "";
-        public int numErrores = 0;             // Validation Error Count
-        public string mensajeError = "";        // Validation Error Message
 
         public XslCompiledTransform Load(string rutaArchivoXSLT)
         {
-            numErrores = 0;
-            mensajeError = "";
             XslCompiledTransform transform = null;
             try
             {
@@ -31,9 +27,7 @@ namespace Comun
             }
             catch (Exception lo)
             {
-                mensajeError = "Error al inicializar la plantilla de transformación de XML. Verifique la ruta:"+ rutaArchivoXSLT+ " " + lo.Message;
-                numErrores++;
-                return transform;
+                throw new IOException("Excepción al inicializar la plantilla de transformación de XML. Verifique la existencia del archivo: " + rutaArchivoXSLT, lo);
             }
 
         }
@@ -44,22 +38,17 @@ namespace Comun
         /// <param name="archivoXml">Archivo xml a transformar.</param>
         /// <param name="transformer">Objeto que aplica un xslt al archivo xml.</param>
         /// <returns>False cuando hay al menos un error</returns>
-        public bool getCadenaOriginal(XmlDocument archivoXml, XslCompiledTransform transformer)
+        public void getCadenaOriginal(XmlDocument archivoXml, XslCompiledTransform transformer)
         {
             StringWriter writer = new StringWriter();
-            mensajeError = "";
-            numErrores=0;
             try
             {
                 transformer.Transform(archivoXml, null, writer);
                 cadenaOriginal = writer.ToString();
-                return true;
             }
-            catch (Exception eXsl)
+            catch 
             {
-                mensajeError = "[getCadenaOriginal] Contacte al administrador. Error al generar la cadena original. " + eXsl.Message;
-                numErrores++;
-                return false;
+                throw;
             }
         }
     }

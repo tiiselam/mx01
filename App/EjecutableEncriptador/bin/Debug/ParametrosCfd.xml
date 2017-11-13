@@ -6,6 +6,7 @@
   <passwordsql>sa22</passwordsql>
   <compannia bd="MEX10">
     <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoPagosXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
     <URLArchivoXSLT>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
     <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
     <PAC>

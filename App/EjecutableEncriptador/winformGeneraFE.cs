@@ -822,16 +822,16 @@ namespace EjecutableEncriptador
             if (e.RowIndex >= 0)
             {
                 //Está completo
-                int estadoDoc = Convert.ToInt32(dGridActivo.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
+                int estadoDoc = Convert.ToInt32(dgridTrxFacturas.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
                 if (estadoDoc == estadoCompletadoCia)
                 {
-                    dGridActivo.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
+                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
                 }
 
                 //Está en proceso
                 if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
                 {
-                    dGridActivo.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
+                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
                 }
             }
         }
@@ -963,6 +963,26 @@ namespace EjecutableEncriptador
         private void cBoxMarcCobros_CheckedChanged(object sender, EventArgs e)
         {
             InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, cBoxMarcCobros.Checked);
+
+        }
+
+        private void dgridTrxCobros_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                //Está completo
+                int estadoDoc = Convert.ToInt32(dgridTrxCobros.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
+                if (estadoDoc == estadoCompletadoCia)
+                {
+                    dgridTrxCobros.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
+                }
+
+                //Está en proceso
+                if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
+                {
+                    dgridTrxCobros.Rows[e.RowIndex].Cells[idxSopnumbe].Style.BackColor = Color.Orange;
+                }
+            }
 
         }
     }

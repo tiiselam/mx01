@@ -14,7 +14,7 @@ alter view dbo.vwCfdiTrxCobros as
 --30/10/17 jcf Creación cfdi 3.3
 --
 select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' end estadoContabilizado, 
-	cb.rmdtypal soptype, 'COBRO' docid, cb.docnumbr sopnumbe, convert(datetime, cb.docdate, 126) fechahora,
+	cb.rmdtypal soptype, 'CBR' docid, cb.docnumbr sopnumbe, convert(datetime, cb.docdate, 126) fechahora,
  
 	cb.CUSTNMBR, custname nombreCliente, cb.txrgnnum idImpuestoCliente, cb.TotalDoc total, cb.montoActualOriginal, cb.voidstts, 
 
@@ -50,7 +50,8 @@ select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' 
 	isnull(lf.estadoActual, '000000') estadoActual, 
 	isnull(lf.mensajeEA, 'contabilizado') mensajeEA,
 	isnull(dx.MetodoPago, '') metodoDePago,
-	rtrim(mo.isocurrc) isocurrc
+	rtrim(mo.isocurrc) isocurrc,
+	null addenda
 from dbo.vwRmTransaccionesTodas cb
 	cross join dbo.fCfdEmisor() emi
 	outer apply dbo.fCfdCertificadoVigente(cb.docdate) fv

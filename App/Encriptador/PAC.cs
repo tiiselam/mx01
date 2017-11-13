@@ -10,8 +10,8 @@ namespace Encriptador
     public class PAC
     {
         private XmlDocument _comprobanteFiscal;
-        public int numErr =0;
-        public string msjError = "";
+        //public int numErr =0;
+        //public string msjError = "";
         
         interfactura.WebService1 _ws;
 
@@ -34,8 +34,7 @@ namespace Encriptador
             }
             catch (Exception ti)
             {
-                numErr++;
-                msjError = "Error en el PAC al preparar el timbrado.[PAC] " + ti.Message;
+                throw new System.IO.IOException("Exceptión al cargar el certificado. Verifique la existencia del archivo: " + rutaPfx, ti);
             }
         }
 
@@ -53,8 +52,6 @@ namespace Encriptador
         /// <returns></returns>
         public void timbraCFD()
         {
-            msjError = "";
-            numErr = 0;
             XmlDocument timbre = new XmlDocument();
             XmlNode nodoTimbre = null;
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(_comprobanteFiscal.NameTable);
@@ -79,15 +76,14 @@ namespace Encriptador
                 }
                 else
                 {
-                    msjError = timbre.SelectSingleNode("/Resultado/@IdRespuesta").Value + " " + timbre.SelectSingleNode("Resultado/@Descripcion").Value;
-                    msjError += ". Error reportado por el PAC al timbrar la factura. [timbraCFD]";
-                    numErr++;
+                    String msjError = timbre.SelectSingleNode("/Resultado/@IdRespuesta").Value + " " + timbre.SelectSingleNode("Resultado/@Descripcion").Value;
+                    msjError += ". Error reportado por el PAC al timbrar el comprobante.";
+                    throw new ArgumentException(msjError);
                 }
             }
-            catch(Exception ti)
+            catch
             {
-                numErr++;
-                msjError = "Error al timbrar la factura. [timbraCFD]" + ti.Message;
+                throw;
             }
         }
     }
