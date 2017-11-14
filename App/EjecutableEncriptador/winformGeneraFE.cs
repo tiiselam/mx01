@@ -21,7 +21,6 @@ namespace EjecutableEncriptador
         static winVisorDeReportes FrmVisorDeReporte;
         //vwCfdTransaccionesDeVenta trxVenta;     //todos los documentos de venta
         cfdReglasFacturaXml regla;
-        vwCfdInformeMensualVentas infMes;       //documentos de venta para informe mensual
         DataGridView dGridActivo;
         String vistaActiva = String.Empty;
 
@@ -70,42 +69,48 @@ namespace EjecutableEncriptador
         /// </summary>
         /// <param name=""></param>
         /// <returns>bool</returns>
-        private bool AplicaFiltroYActualizaPantalla(string nombreTab)
+        private void AplicaFiltroYActualizaPantalla(string nombreTab)
         {
             txtbxMensajes.AppendText("Explorando...\r\n");
             txtbxMensajes.Refresh();
 
-            ObtieneGrid(nombreTab);
-            Parametros Compannia = new Parametros(DatosConexionDB.Elemento.Intercompany);
-            txtbxMensajes.AppendText (Compannia.ultimoMensaje);
-            if (!Compannia.ultimoMensaje.Equals(string.Empty))
-                return false;
-
-            regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
-            regla.AplicaFiltroADocumentos(checkBoxFecha.Checked, dtPickerDesde.Value, dtPickerHasta.Value, fechaIni, fechaFin,
-                         checkBoxNDoc.Checked, txtBNumDocDesde.Text, txtBNumDocHasta.Text,
-                         checkBoxIdDoc.Checked, cmbBIdDoc.Text, 
-                         checkBoxEstado.Checked, cmbBEstado.Text,
-                         checkBoxCliente.Checked, textBCliente.Text,
-                         vistaActiva);
-
-            if (regla.numMensajeError == 0)
+            try
             {
+                ObtieneGrid(nombreTab);
+                Parametros Compannia = new Parametros(DatosConexionDB.Elemento.Intercompany);
+                txtbxMensajes.AppendText(Compannia.ultimoMensaje);
+                if (!Compannia.ultimoMensaje.Equals(string.Empty))
+                    throw new ArgumentNullException(Compannia.ultimoMensaje);
+
+                regla = new cfdReglasFacturaXml(DatosConexionDB.Elemento, Compannia);
+                regla.AplicaFiltroADocumentos(checkBoxFecha.Checked, dtPickerDesde.Value, dtPickerHasta.Value, fechaIni, fechaFin,
+                             checkBoxNDoc.Checked, txtBNumDocDesde.Text, txtBNumDocHasta.Text,
+                             checkBoxIdDoc.Checked, cmbBIdDoc.Text,
+                             checkBoxEstado.Checked, cmbBEstado.Text,
+                             checkBoxCliente.Checked, textBCliente.Text,
+                             vistaActiva);
+
                 vwCfdTransaccionesDeVentaBindingSource.DataSource = regla.CfdiTransacciones.DefaultView;
                 txtbxMensajes.AppendText("Completado: " + regla.CfdiTransacciones.RowCount.ToString() + " documento(s) consultado(s).\r\n");
+
             }
-            else
+            catch (ArgumentNullException)
+            {
+
+            }
+            catch (ArgumentException ae)
             {
                 vwCfdTransaccionesDeVentaBindingSource.DataSource = null;
-                txtbxMensajes.AppendText(regla.ultimoMensaje);
+                txtbxMensajes.AppendText(ae.Message);
             }
-            txtbxMensajes.Refresh();
-            dGridActivo.Refresh();
+            finally
+            {
+                txtbxMensajes.Refresh();
+                dGridActivo.Refresh();
 
-            //Restituir las filas marcadas usando la lista de docs no seleccionados
-            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, LDocsNoSeleccionados);
-
-            return regla.numMensajeError == 0;
+                //Restituir las filas marcadas usando la lista de docs no seleccionados
+                InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, LDocsNoSeleccionados);
+            }
         }
 
         void InicializaCheckBoxDelGrid(DataGridView dataGrid, short idxChkBox, bool marca)

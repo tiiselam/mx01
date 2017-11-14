@@ -13,8 +13,7 @@ namespace Encriptador
         // Create a new instance of the RSACryptoServiceProvider class and automatically create a new key-pair.
         private RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
         private RSAParameters Key;
-        public string ultimoMensaje = "";
-        public int numErrores = 0;             // Validation Error Count
+        private String ultimoMensaje = String.Empty;
 
         private X509Certificate2 certificado = null;
         public string noCertificado = "";
@@ -46,8 +45,9 @@ namespace Encriptador
                 //}
                 //if (rutaLlavePrivada.Contains(".key"))
                 //{
-                    RSAalg = utilOpensslkey.obtieneLlavePrivadaRSA(rutaLlavePrivada, claveLlavePrivada);
-//                }
+                //}
+
+                RSAalg = utilOpensslkey.obtieneLlavePrivadaRSA(rutaLlavePrivada, claveLlavePrivada);
                 ultimoMensaje += utilOpensslkey.ultimoMensaje;
 
                 // Export the key information to an RSAParameters object.
@@ -62,14 +62,17 @@ namespace Encriptador
 
                 certificadoFormatoPem = utilOpensslkey.leeCertificadoPEM(rutaCertificadoPem);
                 ultimoMensaje += utilOpensslkey.ultimoMensaje;
+
+                if (!ultimoMensaje.Equals(String.Empty))
+                    throw new CryptographicException(ultimoMensaje);
             }
             catch (Exception eRsa)
             {
-                ultimoMensaje += "[TecnicaDeEncriptacion] Excepción al obtener datos del certificado. Verifique la ruta de los siguientes archivos: " + Environment.NewLine +
+                ultimoMensaje += "Excepción al obtener datos del certificado. Verifique la existencia de los siguientes archivos: " + Environment.NewLine +
                             rutaLlavePrivada + Environment.NewLine + 
                             rutaCertificado + Environment.NewLine +
-                            rutaCertificadoPem + Environment.NewLine + eRsa.Message;
-                numErrores++;
+                            rutaCertificadoPem + Environment.NewLine;
+                throw new ArgumentException(ultimoMensaje, eRsa);
             }
         }
 
@@ -80,7 +83,6 @@ namespace Encriptador
         /// <returns>string</returns>
         public String obtieneSello(String cadenaADigerir)
         {
-            numErrores = 0;
             ultimoMensaje = "";
             try
             {
@@ -102,23 +104,19 @@ namespace Encriptador
                 if(!RSAalg.VerifyData(originalData, "SHA256", signedData))
                 {
                     strBase64 = "FAILED";
-                    ultimoMensaje += " [obtieneSello] El sello no corresponde a la firma.";
-                    numErrores++;
+                    ultimoMensaje += "Excepción al validar el sello. El sello no corresponde a la firma de: " + cadenaADigerir + Environment.NewLine;
+                    throw new ArgumentException(ultimoMensaje);
                 }
                 return strBase64;
 
             }
-            catch (ArgumentNullException)
+            catch (ArgumentNullException an)
             {
-                ultimoMensaje += " [obtieneSello] El sello no fue firmado o verificado.";
-                numErrores++;
-                return null;
+                throw new ArgumentNullException("La cadena original está vacía.", an);
             }
-            catch (Exception)
+            catch
             {
-                ultimoMensaje += " [obtieneSello] Error desconocido, contacte al administrador.";
-                numErrores++;
-                return null;
+                throw;
             }
         }
 
@@ -149,7 +147,6 @@ namespace Encriptador
         /// <returns></returns>
         public byte[] MD5HashAndSignBytes(byte[] DataToSign, RSAParameters Key)
         {
-            numErrores = 0;
             ultimoMensaje = "";
             try
             {
@@ -165,8 +162,6 @@ namespace Encriptador
             catch (CryptographicException e)
             {
                 ultimoMensaje += " [MD5HashAndSignBytes] Error al firmar la cadena original. " + e.Message;
-                numErrores++;
-//                Console.WriteLine(e.Message);
                 return null;
             }
         }
@@ -179,7 +174,6 @@ namespace Encriptador
         /// <returns></returns>
         public bool MD5VerifySignedHash(byte[] DataToVerify, byte[] SignedData, RSAParameters Key)
         {
-            numErrores = 0;
             ultimoMensaje = "";
             try
             {
@@ -193,8 +187,6 @@ namespace Encriptador
             catch (CryptographicException e)
             {
                 ultimoMensaje += " [MD5VerifySignedHash] Error al verificar la cadena original firmada." + e.Message;
-                numErrores++;
-//                Console.WriteLine(e.Message);
                 return false;
             }
         }
@@ -207,7 +199,6 @@ namespace Encriptador
         /// <returns></returns>
         public byte[] SHA1HashAndSignBytes(byte[] DataToSign, RSAParameters Key)
         {
-            numErrores = 0;
             ultimoMensaje = "";
             try
             {
@@ -222,7 +213,6 @@ namespace Encriptador
             catch (CryptographicException e)
             {
                 ultimoMensaje += " [SHA1HashAndSignBytes] Error al firmar la cadena original. " + e.Message;
-                numErrores++;
                 return null;
             }
         }
@@ -236,7 +226,6 @@ namespace Encriptador
         /// <returns></returns>
         public bool SHA1VerifySignedHash(byte[] DataToVerify, byte[] SignedData, RSAParameters Key)
         {
-            numErrores = 0;
             ultimoMensaje = "";
             try
             {
@@ -252,8 +241,6 @@ namespace Encriptador
             catch (CryptographicException e)
             {
                 ultimoMensaje += " [SHA1VerifySignedHash] Error al verificar la cadena original firmada." + e.Message;
-                numErrores++;
-//                Console.WriteLine(e.Message);
                 return false;
             }
         }

@@ -16,7 +16,7 @@ alter view dbo.vwCfdiTrxCobros as
 select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' end estadoContabilizado, 
 	cb.rmdtypal soptype, 'CBR' docid, cb.docnumbr sopnumbe, convert(datetime, cb.docdate, 126) fechahora,
  
-	cb.CUSTNMBR, custname nombreCliente, cb.txrgnnum idImpuestoCliente, cb.TotalDoc total, cb.montoActualOriginal, cb.voidstts, 
+	cb.CUSTNMBR, custname nombreCliente, cb.txrgnnum idImpuestoCliente, cast(cb.TotalDoc as numeric(18,2)) total, cb.montoActualOriginal, cb.voidstts, 
 
 	isnull(lf.estado, isnull(fv.estado, 'inconsistente')) estado,
 	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'inconsistente' 

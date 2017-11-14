@@ -35,7 +35,7 @@ namespace cfd.FacturaElectronica
         {
             try
             {
-                String msj;
+                String msj=String.Empty;
                 ReportProgress(0, "Iniciando proceso...\r\n");
                 object[] args = e.Argument as object[];
                 vwCfdTransaccionesDeVenta trxVenta = (vwCfdTransaccionesDeVenta)args[0];
@@ -55,15 +55,8 @@ namespace cfd.FacturaElectronica
                 PAC representanteSat = new PAC(trxVenta.Ruta_clavePac, trxVenta.Contrasenia_clavePac, _Param);
                 String Sello = string.Empty;
 
-                if (DocVenta.numMensajeError != 0 )
-                {
-                    e.Result = DocVenta.ultimoMensaje + "\r\n";
-                    ReportProgress(100, DocVenta.ultimoMensaje + "\r\n");
-                    return;
-                }
                 do
                 {
-                    msj = String.Empty;
                     try
                     {
                         if (CancellationPending) { e.Cancel = true; return; }
@@ -82,44 +75,34 @@ namespace cfd.FacturaElectronica
                                 comprobante.LoadXml(trxVenta.ComprobanteXml);
                                 comprobante.DocumentElement.SetAttribute("NoCertificado", criptografo.noCertificado);
 
-                                if (criptografo.numErrores == 0)
-                                {
-                                    loader.getCadenaOriginal(comprobante, xslCompilado);    //Obtener cadena original del CFD
-                                    Sello = criptografo.obtieneSello(loader.cadenaOriginal);//Crear el archivo xml y sellarlo
-                                    comprobante.DocumentElement.SetAttribute("Sello", Sello);
-                                    comprobante.DocumentElement.SetAttribute("Certificado", criptografo.certificadoFormatoPem);
+                                loader.getCadenaOriginal(comprobante, xslCompilado);    //Obtener cadena original del CFD
+                                Sello = criptografo.obtieneSello(loader.cadenaOriginal);//Crear el archivo xml y sellarlo
+                                comprobante.DocumentElement.SetAttribute("Sello", Sello);
+                                comprobante.DocumentElement.SetAttribute("Certificado", criptografo.certificadoFormatoPem);
 
-                                    if (!_Conex.IntegratedSecurity)                         //para testeo:
-                                        comprobante.Save(new XmlTextWriter(trxVenta.Sopnumbe + "tst.xml", Encoding.UTF8));
+                                if (!_Conex.IntegratedSecurity)                         //para testeo:
+                                    comprobante.Save(new XmlTextWriter(trxVenta.Sopnumbe.Trim() + "tst.xml", Encoding.UTF8));
+
+                                validadorxml.ValidarXSD(comprobante);                   //Validar el esquema del archivo xml
+                                representanteSat.comprobanteFiscal = comprobante;
+                                representanteSat.timbraCFD();                           //agregar sello al comprobante
+
+                                //Agregar el nodo addenda si existe
+                                if (trxVenta.Addenda != null && trxVenta.Addenda.Length > 0)
+                                {
+                                    addenda = comprobante.CreateDocumentFragment();
+                                    addenda.InnerXml = trxVenta.Addenda;
+                                    comprobante.DocumentElement.AppendChild(addenda);
                                 }
 
-                                if (criptografo.numErrores == 0)
-                                {
-                                    validadorxml.ValidarXSD(comprobante);                   //Validar el esquema del archivo xml
-                                    representanteSat.comprobanteFiscal = comprobante;
-                                    representanteSat.timbraCFD();                           //agregar sello al comprobante
-                                }
-                                else
-                                    errores++;
+                                //Guarda el archivo xml, genera el cbb y el pdf. 
+                                //Luego anota en la bitácora la factura emitida o el error al generar cbb o pdf.
+                                DocVenta.AlmacenaEnRepositorio(trxVenta, comprobante, maquina, representanteSat.Uuid, Sello);
 
-                                if (criptografo.numErrores == 0)
-                                {
-                                    //Agregar el nodo addenda si existe
-                                    //if (trxVenta.Addenda != null && trxVenta.Addenda.Length > 0)
-                                    //{
-                                    //    addenda = comprobante.CreateDocumentFragment();
-                                    //    addenda.InnerXml = trxVenta.Addenda;
-                                    //    comprobante.DocumentElement.AppendChild(addenda);
-                                    //}
+                                //CodigoDeBarras cbb = new CodigoDeBarras();
+                                //cbb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=AABBCCDDEEFFGGHHIIOOPPQQRRSSTTUU&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" + trxVenta.Total.ToString() + "&fe=QWERTYU8"
+                                //                        , trxVenta.RutaXml.Trim() + "cbb\\cbbtest.jpg");
 
-                                    //Guarda el archivo xml, genera el cbb y el pdf. 
-                                    //Luego anota en la bitácora la factura emitida o el error al generar cbb o pdf.
-                                    if (!DocVenta.AlmacenaEnRepositorio(trxVenta, comprobante, maquina, representanteSat.Uuid, Sello))
-                                        errores++;
-                                }
-                                else
-                                    errores++;
-                                msj = criptografo.ultimoMensaje + " " + DocVenta.ultimoMensaje;
                             }
                             else //si el documento está anulado en gp, agregar al log como emitido
                             {
@@ -132,7 +115,8 @@ namespace cfd.FacturaElectronica
                     catch (Exception lo)
                     {
                         string imsj = lo.InnerException == null ? "" : lo.InnerException.ToString();
-                        msj = lo.Message + " " + imsj + "\r\n" + lo.StackTrace;
+                        msj = lo.Message + " " + imsj + Environment.NewLine + lo.StackTrace;
+                        errores++;
                     }
                     finally
                     {
@@ -150,7 +134,7 @@ namespace cfd.FacturaElectronica
             {
                 ReportProgress(100, ultimoMensaje);
             }
-            e.Result = "Generación de archivos finalizado! \r\n ";
+            e.Result = "Proceso finalizado! \r\n ";
             ReportProgress(100, "");
         }
 

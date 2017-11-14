@@ -25,7 +25,7 @@ namespace QRCodeLib
                 qrCodeEncoder = new QRCodeEncoder();
                 qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;        //mode
                 qrCodeEncoder.QRCodeScale = 3;                                          //size
-                qrCodeEncoder.QRCodeVersion = 7;                                        //version
+                qrCodeEncoder.QRCodeVersion = 0; // 7;                                        //version
                 qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;    //error correction level
                 formatoImagen = ImageFormat.Jpeg;
             }

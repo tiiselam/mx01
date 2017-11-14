@@ -19,7 +19,7 @@ namespace cfd.FacturaElectronica
     class cfdReglasFacturaXml
     {
         public string ultimoMensaje = "";
-        public int numMensajeError = 0;
+        private int numMensajeError = 0;
         private ConexionAFuenteDatos _Conexion = null;
         private Parametros _Param = null;
         CodigoDeBarras codigobb;
@@ -48,6 +48,9 @@ namespace cfd.FacturaElectronica
 
             numMensajeError = codigobb.iErr + reporte.numErr;
             ultimoMensaje = codigobb.strMensajeErr + reporte.mensajeErr;
+
+            if (numMensajeError != 0)
+                throw new ArgumentException(ultimoMensaje);
         }
 
         public void AplicaFiltroADocumentos(bool filtroFecha, DateTime desdeF, DateTime hastaF, DateTime deFDefault, DateTime aFDefault,
@@ -263,7 +266,7 @@ namespace cfd.FacturaElectronica
         /// <param name="mEstados">Nuevo set de estados</param>
         /// <param name="uuid">uuid generado por el PAC</param>
         /// <returns>False cuando hay al menos un error</returns>
-        public bool AlmacenaEnRepositorio(vwCfdTransaccionesDeVenta trxVenta, XmlDocument comprobante, ReglasME mEstados, String uuid, String sello)
+        public void AlmacenaEnRepositorio(vwCfdTransaccionesDeVenta trxVenta, XmlDocument comprobante, ReglasME mEstados, String uuid, String sello)
         {   
             ultimoMensaje = "";
             numMensajeError = 0;
@@ -278,52 +281,52 @@ namespace cfd.FacturaElectronica
                 //Registra log de la emisión del xml antes de imprimir el pdf, sino habrá error al imprimir
                 RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, comprobante.InnerXml,
                                         "emitido", mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo));
-                
-                if (numMensajeError == 0)
-                {
-                    RegistraLogDePagosSimultaneos(trxVenta.Soptype, trxVenta.Sopnumbe, mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo), mEstados.eBinActualConError, mEstados.EnLetras(mEstados.eBinActualConError));
 
-                    //Genera y guarda código de barras bidimensional
-                    codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + uuid.Trim() + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + trxVenta.Total.ToString() + "&fe=" + Utiles.Derecha(sello, 8)
+                RegistraLogDePagosSimultaneos(trxVenta.Soptype, trxVenta.Sopnumbe, mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo), mEstados.eBinActualConError, mEstados.EnLetras(mEstados.eBinActualConError));
+
+                //Genera y guarda código de barras bidimensional
+                codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + uuid.Trim() + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" +  Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(sello, 8)
                                                         , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
-                    //Genera pdf
-                        if (codigobb.iErr == 0)
-                            reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
+                //Genera pdf
+                if (codigobb.iErr == 0)
+                    reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
 
-                    //Comprime el archivo xml
-                        if (_Param.zip)
-                            Utiles.Zip(rutaYNomArchivo, ".xml");
+                //Comprime el archivo xml
+                if (_Param.zip)
+                    Utiles.Zip(rutaYNomArchivo, ".xml");
 
-                    numMensajeError = codigobb.iErr + reporte.numErr + Utiles.numErr;
-                    ultimoMensaje = codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr;
+                numMensajeError = codigobb.iErr + reporte.numErr + Utiles.numErr;
+                ultimoMensaje = codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr;
 
-                    //Si hay error en cbb o pdf o zip anota en la bitácora
-                    if (numMensajeError != 0)
-                        ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, _Conexion.Usuario, "emitido", "emitido", mEstados.eBinActualConError,
-                                                mEstados.EnLetras(mEstados.eBinActualConError) + ultimoMensaje.Trim());
-                }
-                return numMensajeError == 0;
+                //Si hay error en cbb o pdf o zip anota en la bitácora
+                if (codigobb.iErr + reporte.numErr + Utiles.numErr != 0)
+                    ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, _Conexion.Usuario, "emitido", "emitido", mEstados.eBinActualConError,
+                                            mEstados.EnLetras(mEstados.eBinActualConError) + ultimoMensaje.Trim());
+
+                if (numMensajeError + codigobb.iErr + reporte.numErr + Utiles.numErr != 0)
+                    throw new ArgumentNullException(codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr + " " + ultimoMensaje);
             }
-            catch (DirectoryNotFoundException)
+            catch (DirectoryNotFoundException dn)
             {
-                ultimoMensaje = "Verifique la existencia de la ruta indicada en la configuración de Ruta de archivos Xml. La ruta no pudo ser encontrada: " + trxVenta.RutaXml;
-                numMensajeError++;
-                return false;
+                ultimoMensaje = "Verifique la existencia de la ruta: " + trxVenta.RutaXml;
+                throw new DirectoryNotFoundException(ultimoMensaje, dn);
             }
-            catch (IOException)
+            catch (IOException ioe)
             {
                 ultimoMensaje = "Verifique permisos de escritura en: " + trxVenta.RutaXml + ". No se pudo guardar el archivo xml ni registrar el documento en la bitácora. ";
-                numMensajeError++;
-                return false;
+                throw new IOException(ultimoMensaje, ioe);
+            }
+            catch (ArgumentNullException)
+            {
+                throw;
             }
             catch (Exception eAFE)
             {
                 if (eAFE.Message.Contains("denied"))
                     ultimoMensaje = "Elimine el archivo xml antes de volver a generar uno nuevo. Luego vuelva a intentar. " + eAFE.Message;
                 else
-                    ultimoMensaje = "Contacte a su administrador. No se pudo guardar el archivo XML ni registrar la Bitácora. " + eAFE.Message;
-                numMensajeError++;
-                return false;
+                    ultimoMensaje = "Contacte al administrador. No se pudo guardar el archivo XML ni registrar la Bitácora. " + eAFE.Message;
+                throw new Exception(ultimoMensaje, eAFE);
             }
         }
 
