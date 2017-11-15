@@ -4,15 +4,22 @@
   <seguridadIntegrada>1</seguridadIntegrada>
   <usuariosql>sa</usuariosql>
   <passwordsql>-</passwordsql>
-  <compannia bd="TPOPE">
-    <URLArchivoXSD>na</URLArchivoXSD>
-    <URLArchivoXSLT>na</URLArchivoXSLT>
+  <compannia bd="MEX10">
+    <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoPagosXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
+    <URLArchivoXSLT>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
+    <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
     <PAC>
-      <urlWebService>na</urlWebService>
+      <urlWebService>https://pruebas33.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
     </PAC>
-    <reporteador>SSRS</reporteador>
+    <reporteador>CRYSTAL</reporteador>
+    <reporteExtensiones>
+      <Factura>.rpt</Factura>
+      <Cobro>.COB.rpt</Cobro>
+      <Traslado>.REM.rpt</Traslado>
+    </reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>na</Ruta>
+      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\GMOPE_FACTURA_ELECT</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>
@@ -31,41 +38,37 @@
         <Nombre>sTabla</Nombre>
         <Tipo>string</Tipo>
       </Parametro>
-      <imprime>1</imprime>
-      <nombreImpresora>Microsoft XPS Document Writer</nombreImpresora>
+      <Parametro>
+        <Nombre>Comprobante</Nombre>
+        <Tipo>int</Tipo>
+      </Parametro>
+      <imprime>0</imprime>
+      <nombreImpresora>na</nombreImpresora>
     </rutaReporteCrystal>
     <ReporteSSRS tipo="default">
-      <Ruta>/SOPINVOICE</Ruta>
-      <SSRSServer>http://tp-gp/ReportServer_GPTP</SSRSServer>
+      <Ruta>na</Ruta>
+      <SSRSServer>na</SSRSServer>
       <Parametro>
-        <Nombre>SOPTYPE</Nombre>
-        <Tipo>integer</Tipo>
-      </Parametro>
-      <Parametro>
-        <Nombre>SOPNUMBE</Nombre>
-        <Tipo>string</Tipo>
-      </Parametro>
-      <Parametro>
-        <Nombre>COMPANNIA</Nombre>
-        <Tipo>string</Tipo>
+        <Nombre>na</Nombre>
+        <Tipo>na</Tipo>
       </Parametro>
     </ReporteSSRS>
-    <emite>0</emite>
-    <anula>0</anula>
+    <emite>1</emite>
+    <anula>1</anula>
     <imprime>1</imprime>
     <publica>0</publica>
     <envia>1</envia>
-    <zip>0</zip>
+    <zip>1</zip>
     <emailSetup>
       <smtp>smtp.gmail.com</smtp>
       <puerto>587</puerto>
-      <cuenta>na</cuenta>
-      <usuario>na</usuario>
-      <clave>na</clave>
+      <cuenta>billing@gettyimageslatam.com</cuenta>
+      <usuario>billing@gettyimageslatam.com</usuario>
+      <clave></clave>
       <ssl>true</ssl>
-      <replyto>na</replyto>
+      <replyto>billing@gettyimageslatam.com</replyto>
       <carta>FACTURA_ELECTRONICA</carta>
-      <adjuntoEmite>na</adjuntoEmite>
+      <adjuntoEmite>zip</adjuntoEmite>
       <adjuntoImprime>pdf</adjuntoImprime>
     </emailSetup>
   </compannia>

@@ -117,32 +117,6 @@ namespace cfd.FacturaElectronica
 
         }
 
-
-        public bool AplicaFiltroParaInformeMes(DateTime deFecha, DateTime aFecha,
-                                            out vwCfdInformeMensualVentas infMes)
-        {
-            infMes = new vwCfdInformeMensualVentas(_Conexion.ConnStr);
-            infMes.Query.AddOrderBy(vwCfdInformeMensualVentas.ColumnNames.Sopnumbe, WhereParameter.Dir.ASC);
-
-            //Filtra los documentos por fecha. De forma predeterminada es la fecha de hoy.
-            infMes.Where.Fechahora.BetweenBeginValue = string.Format("{0:yyyy-MM-dd}", deFecha) + " 00:00:00.0"; //"2010-08-01 00:00:00.0";
-            infMes.Where.Fechahora.BetweenEndValue = string.Format("{0:yyyy-MM-dd}", aFecha) + " 23:59:59.9";
-            infMes.Where.Fechahora.Operator = WhereParameter.Operand.Between;
-
-            try
-            {
-                if (infMes.Query.Load())
-                    return true;
-                else
-                    ultimoMensaje = "No hay datos para el filtro seleccionado.";
-            }
-            catch (Exception eFiltroMes)
-            {
-                ultimoMensaje = "[AplicaFiltroInformeMes] No se pudo consultar la base de datos. " + eFiltroMes.Message;
-            }
-            return false;
-        }
-
         /// <summary>
         /// si la factura está simultáneamente pagada, ingresa el cobro en el log en estado emitido
         /// </summary>

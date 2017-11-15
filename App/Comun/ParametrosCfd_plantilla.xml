@@ -5,7 +5,8 @@
   <usuariosql>[valor: indicar na si la seguridad es integrada]</usuariosql>
   <passwordsql>na</passwordsql>
   <compannia bd="[NOMBRE BD DE LA COMPAÑIA]">
-    <URLArchivoXSD>[RUTA Y ARCHIVO XSD]</URLArchivoXSD>
+    <URLArchivoXSD>[RUTA Y ARCHIVO XSD DE FACTURAS]</URLArchivoXSD>
+    <URLArchivoPagosXSD>[RUTA Y ARCHIVO XSD DE PAGOS]</URLArchivoPagosXSD>
     <URLArchivoXSLT>[RUTA Y ARCHIVO XSLT]</URLArchivoXSLT>
     <URLConsulta>[url de verificación de cfdi. Se usa para generar el código de barras]</URLConsulta>
     <PAC>
