@@ -6,7 +6,7 @@
   <Product Id="F79551E3-DFE3-4C13-AD17-447BD890B12C" Name="GP Factura Digital"
            Language="1033" Version="6.3.0" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
-    <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\EjecutableEncriptador\Recursos\banner.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />
 
     <!--Actualiza una versión anterior-->
     <Upgrade Id='44281eba-a31e-4e51-92b8-ff8327561a96'>
@@ -101,8 +101,8 @@
             <Directory Id="DesktopFolder" Name="Desktop" />
         </Directory>
 
-        <!--<Icon Id="GPFDigital.exe" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\EjecutableEncriptador\bin\Release\EjecutableEncriptador.exe" />-->
-        <Icon Id="GPFDigital.exe" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\EjecutableEncriptador\Recursos\invoice.ico"/>
+        <!--<Icon Id="GPFDigital.exe" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\EjecutableEncriptador.exe" />-->
+        <Icon Id="GPFDigital.exe" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\invoice.ico"/>
         <Property Id="ARPPRODUCTICON" Value="invoice.ico" />
     </Fragment>
 
@@ -120,7 +120,7 @@
               <File Id="Comun" Name="$(var.Comun.TargetFileName)" Source="$(var.Comun.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Parametros" Guid="803CC646-A468-47e3-9FDF-36935BCA4D89">
-              <File Id="ParametrosCfd" Name="ParametrosCfd.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Comun\ParametrosCfd.xml" DiskId="1" KeyPath="no"/>
+              <File Id="ParametrosCfd" Name="ParametrosCfd.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\ParametrosCfd.xml" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="EMailManejador" Guid="2C73E2CE-2A0B-4358-8E28-10201B86B693">
               <File Id="EMailManejador" Name="$(var.EMailManejador.TargetFileName)" Source="$(var.EMailManejador.TargetPath)" DiskId="1" KeyPath="yes"/>
@@ -130,28 +130,28 @@
             </Component>
             <Component Id="Encriptador" Guid="AE9D4AE3-A494-44b5-BF8A-45B5FA987BB8">
               <File Id="Encriptador" Name="$(var.Encriptador.TargetFileName)" Source="$(var.Encriptador.TargetPath)" DiskId="1" KeyPath="yes"/>
-              <File Id="Encriptador.XmlSerializers" Name="Encriptador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Encriptador\bin\Release\Encriptador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Encriptador.XmlSerializers" Name="Encriptador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Encriptador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="MyGeneration.dOOdads_2005" Guid="336CAF4D-F98E-45e0-AE15-DF23EAB24D75">
               <File Id="MyGeneration.dOOdads_2005" Name="$(var.MyGeneration.dOOdads_2005.TargetFileName)" Source="$(var.MyGeneration.dOOdads_2005.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Reporteador" Guid="B6471120-14DB-43c4-A784-7C6DB1531489">
               <File Id="Reporteador" Name="$(var.Reporteador.TargetFileName)" Source="$(var.Reporteador.TargetPath)" DiskId="1" KeyPath="yes"/>
-              <File Id="Reporteador.XmlSerializers" Name="Reporteador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Reporteador\bin\Release\Reporteador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.Common" Name="Microsoft.ReportViewer.Common.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Reporteador\bin\Release\Microsoft.ReportViewer.Common.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.WinForms" Name="Microsoft.ReportViewer.WinForms.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.WinForms.xml" Name="Microsoft.ReportViewer.WinForms.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.xml" DiskId="1" KeyPath="no"/>
+              <File Id="Reporteador.XmlSerializers" Name="Reporteador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Reporteador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.Common" Name="Microsoft.ReportViewer.Common.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.Common.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.WinForms" Name="Microsoft.ReportViewer.WinForms.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.WinForms.xml" Name="Microsoft.ReportViewer.WinForms.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.xml" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="QRCodeLib" Guid="CC0250EC-B886-42e4-9CDB-B570C71CB385">
               <File Id="QRCodeLib" Name="$(var.QRCodeLib.TargetFileName)" Source="$(var.QRCodeLib.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Compresor" Guid="FC22CA1D-4E4F-47e5-AE5C-8D6AD882E1DD">
-              <File Id="Compresor" Name="Ionic.Zip.Reduced.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\Comun\bin\Release\Ionic.Zip.Reduced.dll" DiskId="1" KeyPath="yes"/>
+              <File Id="Compresor" Name="Ionic.Zip.Reduced.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Ionic.Zip.Reduced.dll" DiskId="1" KeyPath="yes"/>
             </Component>
 
             <Component Id="Documentacion" Guid="6495A0D2-610D-49e5-99E2-E6EB3F0357C5">
-              <File Id="DocInstalacion" Name="Instalación de GP factura digital cfdi.pdf" Source="C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\G. Deployment\Instalación de GP factura digital cfdi.pdf" DiskId="1" KeyPath="yes"/>
-              <File Id="ManualUsuario" Name="Manual de Usuario GP Factura Digital cfdi.pdf" Source="C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\G. Deployment\Manual de Usuario GP Factura Digital cfdi.pdf" DiskId="1" KeyPath="no"/>
+              <File Id="DocInstalacion" Name="Instalación de GP factura digital cfdi.pdf" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Instalación de GP factura digital cfdi.pdf" DiskId="1" KeyPath="yes"/>
+              <File Id="ManualUsuario" Name="Manual de Usuario GP Factura Digital cfdi.pdf" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Manual de Usuario GP Factura Digital cfdi.pdf" DiskId="1" KeyPath="no"/>
             </Component>
 
             <Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">

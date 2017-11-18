@@ -7,3 +7,5 @@ obj\Debug\cfdiSetup.wixproj.BindOutputsFileListnull.txt
 obj\Debug\cfdiSetup.wixproj.BindBuiltOutputsFileListnull.txt
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_App\cfdiSetup\bin\Debug\cfdiSetup.msi
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_App\cfdiSetup\bin\Debug\cfdiSetup.wixpdb
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Debug\cfdiSetup.msi
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Debug\cfdiSetup.wixpdb

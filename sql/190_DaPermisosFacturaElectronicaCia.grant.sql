@@ -26,3 +26,5 @@ grant select on dbo.vwCfdCartasReclamacionDeuda to rol_cfdigital, dyngrp;
 
 grant select on dbo.vwRmCfdFacturasConFolioFiscal to rol_cfdigital, dyngrp;
 grant select on dbo.fCfdiParametros to rol_cfdigital;
+
+grant select on dbo.vwCfdiTrxCobros to rol_cfdigital;

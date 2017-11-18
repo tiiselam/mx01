@@ -225,7 +225,7 @@ begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
 			select 
-				Concepto.uscatvls_6				'@ClaveProdServ',
+				rtrim(Concepto.uscatvls_6)		'@ClaveProdServ',
 				case when Concepto.ITMTRKOP = 2 then --tracking option: serie
 					dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
 					else null
@@ -333,7 +333,7 @@ IF OBJECT_ID ('dbo.fCfdiGeneraDocumentoDeVentaXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiGeneraDocumentoDeVentaXML
 GO
 
-create function dbo.fCfdiGeneraDocumentoDeVentaXML (@soptype smallint, @sopnumbe varchar(21))
+CREATE function dbo.fCfdiGeneraDocumentoDeVentaXML (@soptype smallint, @sopnumbe varchar(21))
 returns xml 
 as
 --Propósito. Elabora un comprobante xml para factura electrónica cfdi
@@ -400,7 +400,7 @@ begin
 		tv.idImpuestoCliente								'cfdi:Receptor/@Rfc',
 		tv.nombreCliente									'cfdi:Receptor/@Nombre', 
 		case when tv.idImpuestoCliente != 'XEXX010101000'
-			then case when tv.usrtab01 = '' then pc.param1 else left(upper(tv.usrtab01), 3) end
+			then case when tv.usrtab01 = '' then isnull(pc.param1, 'P01') else left(upper(tv.usrtab01), 3) end
 			else 'P01'
 		END													'cfdi:Receptor/@UsoCFDI',
 
@@ -410,7 +410,7 @@ begin
 		isnull(dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0), ' ')	'cfdi:Impuestos',
 
 		''													'cfdi:Complemento'
-	from dbo.vwSopTransaccionesVenta tv
+	from dbo.vwCfdiSopTransaccionesVenta tv
 		cross join dbo.fCfdEmisor() emi
 		outer apply dbo.fCfdiPagoSimultaneoMayor(tv.soptype, tv.sopnumbe) pg
 		outer apply dbo.fCfdiDatosDeUnaRelacion(tv.soptype, tv.sopnumbe, tv.docid) tr
@@ -523,7 +523,7 @@ alter view dbo.vwCfdiDocumentosAImprimir as
 --
 select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision, tv.regimen regimenFiscal, 
 	tv.idImpuestoCliente rfcReceptor, tv.nombreCliente, tv.total, formaDePago, tv.isocurrc,
-	tv.metodoDePago,
+	tv.metodoDePago, 
 	--tv.NumCtaPago, tv.USERDEF1, 
 	UUID folioFiscal, noCertificado noCertificadoCSD, [version], selloCFD, selloSAT, cadenaOriginalSAT, noCertificadoSAT, FechaTimbrado, 
 	--tv.rutaxml								+ 'cbb\' + replace(tv.mensaje, 'Almacenado en '+tv.rutaxml, '')+'.jpg' rutaYNomArchivoNet,
