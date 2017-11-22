@@ -10,9 +10,9 @@ select
 	rm.rmdtypal, rm.tipoDoc, rm.soptype, rm.docdate, rm.docnumbr, rm.voidstts, case when rm.voidstts = 1 then 'SI' else 'NO' end anulado, 
 	rm.custnmbr, rm.custname, rm.txrgnnum, rm.totalImpuesto, rm.totalDoc, rm.duedate, 
 	rm.curncyid, rm.curtrxam, rm.ortrxamt, rm.slsamnt, rm.cashamnt, rm.orctrxam, rm.ororgtrx, rm.xchgrate,
-	cfdi.uuid, cfdi.docid, cfdi.mensajeEA
+	cfdi.folioFiscal uuid, cfdi.docid, cfdi.mensajeEA
 from vwRmTransaccionesTodas rm
-left join vwCfdiTransaccionesDeVenta cfdi
+left join vwCfdiDocumentosAImprimir cfdi
 	on cfdi.soptype = rm.soptype
 	and cfdi.sopnumbe = rm.docnumbr
 where rmdtypal in (1, 8)	--facturas, devoluciones

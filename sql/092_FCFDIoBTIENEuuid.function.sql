@@ -12,12 +12,11 @@ as
 return
 (
 	select tv.docid, dx.uuid, tv.voidstts, dx.FormaPago
-	from vwSopTransaccionesVenta tv
-		left join cfdlogfacturaxml lf
-			on lf.soptype = tv.SOPTYPE
-			and lf.sopnumbe = tv.sopnumbe
-			and lf.estado = 'emitido'
-		outer apply dbo.fCfdiDatosXmlParaImpresion(lf.archivoXML) dx
+	from dbo.vwCfdiSopTransaccionesVenta tv
+		left join dbo.vwCfdiDatosDelXml dx
+		on dx.soptype = tv.SOPTYPE
+		and dx.sopnumbe = tv.sopnumbe
+		and dx.estado = 'emitido'
 	where tv.soptype = @soptype
 	and tv.sopnumbe = @sopnumbe
 )

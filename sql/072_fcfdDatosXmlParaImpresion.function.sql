@@ -10,26 +10,66 @@ create function dbo.fCfdiDatosXmlParaImpresion(@archivoXml xml)
 --
 returns table
 return(
-	WITH XMLNAMESPACES('http://www.sat.gob.mx/TimbreFiscalDigital' as "tfd")
+	WITH XMLNAMESPACES('http://www.sat.gob.mx/TimbreFiscalDigital' as "tfd", 
+						'http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select 
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@Version)[1]', 'varchar(5)') [version],
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@UUID)[1]', 'varchar(50)') UUID,
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@FechaTimbrado)[1]', 'varchar(20)') FechaTimbrado,
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@RfcProvCertif)[1]', 'varchar(20)') RfcPAC,
 	@archivoXml.value('(//tfd:TimbreFiscalDigital/@Leyenda)[1]', 'varchar(150)') Leyenda,
-	@archivoXml.value('(//tfd:TimbreFiscalDigital/@SelloCFD)[1]', 'varchar(8000)') selloCFD,
-	@archivoXml.value('(//tfd:TimbreFiscalDigital/@NoCertificadoSAT)[1]', 'varchar(20)') noCertificadoSAT,
-	@archivoXml.value('(//tfd:TimbreFiscalDigital/@SelloSAT)[1]', 'varchar(8000)') selloSAT,
-	@archivoXml.value('(//@Sello)[1]', 'varchar(8000)') sello,
-	@archivoXml.value('(//@NoCertificado)[1]', 'varchar(20)') noCertificado,
+	@archivoXml.value('(//tfd:TimbreFiscalDigital/@SelloCFD)[1]', 'varchar(8000)') SelloCFD,
+	@archivoXml.value('(//tfd:TimbreFiscalDigital/@NoCertificadoSAT)[1]', 'varchar(20)') NoCertificadoSAT,
+	@archivoXml.value('(//tfd:TimbreFiscalDigital/@SelloSAT)[1]', 'varchar(8000)') SelloSAT,
+	@archivoXml.value('(//@Sello)[1]', 'varchar(8000)') Sello,
+	@archivoXml.value('(//@NoCertificado)[1]', 'varchar(20)') NoCertificado,
 	@archivoXml.value('(//@FormaPago)[1]', 'varchar(50)') FormaPago,
-	@archivoXml.value('(//@MetodoPago)[1]', 'varchar(21)') MetodoPago
+	@archivoXml.value('(//@MetodoPago)[1]', 'varchar(21)') MetodoPago,
+	@archivoXml.value('(//cfdi:Receptor/@UsoCFDI)[1]', 'varchar(4)') UsoCFDI,
+	@archivoXml.value('(//cfdi:CfdiRelacionados/@TipoRelacion)[1]', 'varchar(4)') TipoRelacion,
+	@archivoXml.value('(//cfdi:CfdiRelacionados/CfdiRelacionado/@UUID)[1]', 'varchar(60)') UUIDrelacionado
 	)
 	go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: [fCfdiDatosXmlParaImpresion]()'
+ELSE PRINT 'Error en la creación de: [fCfdiDatosXmlParaImpresion]()'
+GO
+
 --------------------------------------------------------------------------------------
+
+IF OBJECT_ID ('dbo.fCfdiPagosDatosXmlParaImpresion') IS NOT NULL
+   drop function dbo.fCfdiPagosDatosXmlParaImpresion
+go
+
+create function dbo.fCfdiPagosDatosXmlParaImpresion(@archivoXml xml)
+--Propósito. Obtiene los datos del complemento de pago
+--Usado por. vwCfdiCobrosAImprimir
+--Requisitos. CFDI
+--21/11/17 jcf Creación cfdi 3.3
+--
+returns table
+return(
+	WITH XMLNAMESPACES('http://www.sat.gob.mx/Pagos' as "pago10")
+	select 
+	@archivoXml.value('(//pago10:Pagos/Pago/@TipoCambioP)[1]', 'varchar(12)') TipoCambioP,
+	@archivoXml.value('(//pago10:Pagos/Pago/@NumOperacion)[1]', 'varchar(30)') NumOperacion,
+	@archivoXml.value('(//pago10:Pagos/Pago/@RfcEmisorCtaOrd)[1]', 'varchar(15)') RfcEmisorCtaOrd,
+	@archivoXml.value('(//pago10:Pagos/Pago/@NomBancoOrdExt)[1]', 'varchar(50)') NomBancoOrdExt,
+	@archivoXml.value('(//pago10:Pagos/Pago/@CtaOrdenante)[1]', 'varchar(50)') CtaOrdenante,
+	@archivoXml.value('(//pago10:Pagos/Pago/@RfcEmisorCtaBen)[1]', 'varchar(15)') RfcEmisorCtaBen,
+	@archivoXml.value('(//pago10:Pagos/Pago/@CtaBeneficiario)[1]', 'varchar(50)') CtaBeneficiario
+	)
+	go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: [fCfdiPagosDatosXmlParaImpresion]()'
+ELSE PRINT 'Error en la creación de: [fCfdiPagosDatosXmlParaImpresion]()'
+GO
+
+--------------------------------------------------------------------------------------
+
 --PRUEBAS--
 
---select dx.*
+--select lf.*, dx.*
 --from vwSopTransaccionesVenta tv
 --	cross join dbo.fCfdEmisor() emi
 --	outer apply dbo.fCfdCertificadoVigente(tv.fechahora) fv

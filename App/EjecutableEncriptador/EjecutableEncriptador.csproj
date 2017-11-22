@@ -98,6 +98,8 @@
     <Compile Include="BLL\cfdReglasFacturaXml.cs" />
     <Compile Include="BLL\vwCfdClienteDireccionesCorreo.cs" />
     <Compile Include="BLL\vwCfdCompannias.cs" />
+    <Compile Include="BLL\vwCfdiDatosDelXml.cs" />
+    <Compile Include="BLL\vwCfdiDatosDelXml_wrapper.cs" />
     <Compile Include="BLL\vwCfdIdDocumentos.cs" />
     <Compile Include="BLL\vwCfdiPagosSimultaneos.cs" />
     <Compile Include="BLL\vwCfdiTransaccionesDeVenta.cs" />

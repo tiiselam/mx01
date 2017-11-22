@@ -29,27 +29,30 @@ select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' 
 		else cast('' as xml) 
 	end comprobanteXml,
 	
-	--Datos del xml sellado por el PAC:
-	isnull(dx.selloCFD, '') selloCFD, 
-	isnull(dx.FechaTimbrado, '') FechaTimbrado, 
-	isnull(dx.UUID, '') UUID, 
-	isnull(dx.noCertificadoSAT, '') noCertificadoSAT, 
-	isnull(dx.[version], '') [version], 
-	isnull(dx.selloSAT, '') selloSAT, 
-	isnull(dx.FormaPago, '') formaDePago,
-	isnull(dx.sello, '') sello, 
-	isnull(dx.noCertificado, '') noCertificado, 
+	----Datos del xml sellado por el PAC:
+	--isnull(dx.selloCFD, '') selloCFD, 
+	--isnull(dx.FechaTimbrado, '') FechaTimbrado, 
+	--isnull(dx.UUID, '') UUID, 
+	--isnull(dx.noCertificadoSAT, '') noCertificadoSAT, 
+	--isnull(dx.[version], '') [version], 
+	--isnull(dx.selloSAT, '') selloSAT, 
+	--isnull(dx.FormaPago, '') formaDePago,
+	--isnull(dx.sello, '') sello, 
+	--isnull(dx.noCertificado, '') noCertificado, 
+	--isnull(dx.MetodoPago, '') metodoDePago,
+	--isnull(dx.usoCfdi, '') usoCfdi,
+	--isnull(dx.RfcPAC, '') RfcPAC,
+	--isnull(dx.Leyenda, '') Leyenda,
 
-	'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.RfcPAC + 
-	case when isnull(dx.Leyenda, '') = '' then '' else '|'+dx.Leyenda end
-	+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
+	--'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.RfcPAC + 
+	--case when isnull(dx.Leyenda, '') = '' then '' else '|'+dx.Leyenda end
+	--+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
 	
 	fv.ID_Certificado, fv.ruta_certificado, fv.ruta_clave, fv.contrasenia_clave, 
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 
-	emi.rfc, emi.regimen, emi.rutaXml, 
+	emi.rfc, emi.regimen, emi.rutaXml, emi.codigoPostal,
 	isnull(lf.estadoActual, '000000') estadoActual, 
 	isnull(lf.mensajeEA, 'contabilizado') mensajeEA,
-	isnull(dx.MetodoPago, '') metodoDePago,
 	rtrim(mo.isocurrc) isocurrc,
 	null addenda
 from dbo.vwRmTransaccionesTodas cb
@@ -62,7 +65,7 @@ from dbo.vwRmTransaccionesTodas cb
 		and lf.estado = 'emitido'
 	left outer join dynamics..mc40200 mo
 		on mo.CURNCYID = cb.curncyid
-	outer apply dbo.fCfdiDatosXmlParaImpresion(lf.archivoXML) dx
+--	outer apply dbo.fCfdiDatosXmlParaImpresion(lf.archivoXML) dx
 where cb.rmdtypal = 9
 
 go
@@ -72,3 +75,73 @@ ELSE PRINT 'Error en la creación de la vista: vwCfdiTrxCobros'
 GO
 ----------------------------------------------------------------------------------------------------
 
+IF (OBJECT_ID ('dbo.vwCfdiCobrosAImprimir', 'V') IS NULL)
+   exec('create view dbo.vwCfdiCobrosAImprimir as SELECT 1 as t');
+go
+
+alter view dbo.vwCfdiCobrosAImprimir as
+--Propósito. Lista los cobros que están listos para imprimir
+--			Incluye los datos del cfdi.
+--20/11/17 jcf Creación cfdi 3.3
+--
+select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision, 
+	tv.regimen regimenFiscal, isnull(rgfs.descripcion, 'NA') rgfs_descripcion, tv.codigoPostal, 
+	tv.idImpuestoCliente rfcReceptor, tv.nombreCliente, tv.total, tv.isocurrc,
+	'P'	TipoDeComprobante,
+	'Pago' tdcmp_descripcion,
+	--tv.formaDePago, isnull(frpg.descripcion, 'NA') frpg_descripcion,
+	--tv.metodoDePago, isnull(mtdpg.descripcion, 'NA') mtdpg_descripcion,
+	pa.param1 ClaveProdServ, pa.param2 ClaveUnidad, 1 cantidad, 'Pago' ITEMDESC, 0 ORUNTPRC, 0 XTNDPRCE,
+
+	--Datos del xml sellado por el PAC:
+	dx.SelloCFD, 
+	dx.FechaTimbrado, 
+	dx.UUID folioFiscal, 
+	dx.NoCertificadoSAT, 
+	dx.[Version], 
+	dx.selloSAT, 
+	dx.FormaPago formaDePago,			
+	dx.Sello, 
+	dx.NoCertificadoCSD, 
+	dx.MetodoPago metodoDePago,			
+	dx.UsoCfdi,							isnull(uscf.descripcion, 'NA') uscf_descripcion,
+	dx.RfcPAC,
+	dx.Leyenda,
+	dx.TipoRelacion,					isnull(tprl.descripcion, 'NA') tprl_descripcion,
+	dx.UUIDrelacionado,
+	dx.cadenaOriginalSAT,
+
+	px.TipoCambioP,
+	px.NumOperacion,
+	px.RfcEmisorCtaOrd,
+	px.NomBancoOrdExt,
+	px.CtaOrdenante,
+	px.RfcEmisorCtaBen,
+	px.CtaBeneficiario,
+	--tv.rutaxml								+ 'cbb\' + replace(tv.mensaje, 'Almacenado en '+tv.rutaxml, '')+'.jpg' rutaYNomArchivoNet,
+	'file://'+replace(tv.rutaxml, '\', '/') + 'cbb/' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaYNomArchivo, 
+	tv.rutaxml								+ 'cbb\' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaYNomArchivoNet,
+	'file://c:\getty' + substring(tv.rutaxml, charindex('\', tv.rutaxml, 3), 250) 
+											+ 'cbb\' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaFileDrive
+from dbo.vwCfdiTrxCobros tv
+	inner join dbo.vwCfdiDatosDelXml dx
+		on dx.soptype = tv.SOPTYPE
+		and dx.sopnumbe = tv.sopnumbe
+		and dx.estado = 'emitido'
+	left join dbo.vwCfdiPagosDatosDelXml px
+		on px.soptype = tv.SOPTYPE
+		and px.sopnumbe = tv.sopnumbe
+		and px.estado = 'emitido'
+	outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','NA','NA','NA','NA','PREDETERMINADO') pa
+	outer apply dbo.fCfdiCatalogoGetDescripcion('RGFS', tv.regimen) rgfs
+	outer apply dbo.fCfdiCatalogoGetDescripcion('USCF', dx.usoCfdi) uscf
+	outer apply dbo.fCfdiCatalogoGetDescripcion('TPRL', dx.TipoRelacion) tprl
+
+go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdiCobrosAImprimir  '
+ELSE PRINT 'Error en la creación de la vista: vwCfdiCobrosAImprimir '
+GO
+-----------------------------------------------------------------------------------------
+
+-- FIN DE SCRIPT ***********************************************

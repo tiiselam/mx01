@@ -4,7 +4,7 @@
      xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
 
   <Product Id="F79551E3-DFE3-4C13-AD17-447BD890B12C" Name="GP Factura Digital"
-           Language="1033" Version="6.3.0" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
+           Language="1033" Version="7.0.0.1" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />
 
@@ -85,13 +85,13 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder" Name="PFiles">
               <Directory Id="MainDirectory" Name="Microsoft Dynamics">
-                <Directory Id="INSTALLFOLDER" Name="GP Factura Digital">
+                <Directory Id="INSTALLFOLDER" Name="GP Factura Digital v33">
                 </Directory>
               </Directory>
             </Directory>
 
             <Directory Id="ProgramMenuFolder" Name="Programs">
-              <Directory Id="ProgramMenuDir" Name="GP Factura Digital">
+              <Directory Id="ProgramMenuDir" Name="GP Factura Digital v33">
                 <Component Id="ProgramMenuDir" Guid="B7342905-BA78-4c21-9C71-EAFB383674B9">
                   <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
                   <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes"/>
@@ -156,66 +156,118 @@
 
             <Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">
               <sql:SqlDatabase Id="SqlDatabaseDyn" User="SQLUser" Server="[SQLSERVER]" Database="DYNAMICS" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes">
-                <sql:SqlScript Id="Createview01" BinaryKey="Createview01" ExecuteOnInstall="yes" Sequence="30"/>
-                <sql:SqlScript Id="Grants02" BinaryKey="Grants02" ExecuteOnInstall="yes" Sequence="1000"/>
+                <sql:SqlScript Id="Createview01" BinaryKey="Createview01" ExecuteOnInstall="yes" Sequence="30" ContinueOnError="no"/>
+                <sql:SqlScript Id="Grants02" BinaryKey="Grants02" ExecuteOnInstall="yes" Sequence="1000" ContinueOnError="no"/>
               </sql:SqlDatabase>
             </Component>
 
             <Component Id="SqlComponent" Guid="7c32cf65-e060-4c7f-b5dd-d85c181da89c" KeyPath="yes">
               <sql:SqlDatabase Id="SqlDatabase" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
-                <sql:SqlScript Id="CreateFun03" BinaryKey="CreateFun03" ExecuteOnInstall="yes" Sequence="03" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateBaseView02" BinaryKey="CreateBaseView02" ExecuteOnInstall="yes" Sequence="02" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateBaseView04" BinaryKey="CreateBaseView04" ExecuteOnInstall="yes" Sequence="04" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateBaseView06" BinaryKey="CreateBaseView06" ExecuteOnInstall="yes" Sequence="06" ExecuteOnReinstall="yes"/>
+
+                <sql:SqlScript Id="CreateFun03" BinaryKey="CreateFun03" ExecuteOnInstall="yes" Sequence="07" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj03" BinaryKey="CreateObj03" ExecuteOnInstall="yes" Sequence="08" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj10" BinaryKey="CreateObj10" ExecuteOnInstall="yes" Sequence="09" ExecuteOnReinstall="yes"/>
+
                 <sql:SqlScript Id="Createview10" BinaryKey="Createview10" ExecuteOnInstall="yes" Sequence="10" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createfun12" BinaryKey="Createfun12" ExecuteOnInstall="yes" Sequence="12" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj15" BinaryKey="CreateObj15" ExecuteOnInstall="yes" Sequence="15" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj18" BinaryKey="CreateObj18" ExecuteOnInstall="yes" Sequence="18" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createtrig35" BinaryKey="Createtrig35" ExecuteOnInstall="yes" Sequence="35" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview40" BinaryKey="Createview40" ExecuteOnInstall="yes" Sequence="40" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createfun50" BinaryKey="Createfun50" ExecuteOnInstall="yes" Sequence="50" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createtable60" BinaryKey="Createtable60" ExecuteOnInstall="yes" Sequence="60" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createtable70" BinaryKey="Createtable70" ExecuteOnInstall="yes" Sequence="70" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createfun72" BinaryKey="Createfun72" ExecuteOnInstall="yes" Sequence="72" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj75" BinaryKey="CreateObj75" ExecuteOnInstall="yes" Sequence="75" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createsp80" BinaryKey="Createsp80" ExecuteOnInstall="yes" Sequence="80" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview83" BinaryKey="Createview83" ExecuteOnInstall="yes" Sequence="83" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="Createview84" BinaryKey="Createview84" ExecuteOnInstall="yes" Sequence="84" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createfunc85" BinaryKey="Createfunc85" ExecuteOnInstall="yes" Sequence="85" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview86" BinaryKey="Createview86" ExecuteOnInstall="yes" Sequence="86" ExecuteOnReinstall="yes"/>
+
                 <sql:SqlScript Id="Createview90" BinaryKey="Createview90" ExecuteOnInstall="yes" Sequence="90" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj92" BinaryKey="CreateObj92" ExecuteOnInstall="yes" Sequence="92" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj94" BinaryKey="CreateObj94" ExecuteOnInstall="yes" Sequence="94" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createfunc98" BinaryKey="Createfunc98" ExecuteOnInstall="yes" Sequence="98" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview100" BinaryKey="Createview100" ExecuteOnInstall="yes" Sequence="100" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview101" BinaryKey="Createview101" ExecuteOnInstall="yes" Sequence="101" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Grants110" BinaryKey="Grants110" ExecuteOnInstall="yes" Sequence="110" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfunc120" BinaryKey="Createfunc120" ExecuteOnInstall="yes" Sequence="120" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview130" BinaryKey="Createview130" ExecuteOnInstall="yes" Sequence="130" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Grants140" BinaryKey="Grants140" ExecuteOnInstall="yes" Sequence="140" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj117" BinaryKey="CreateObj117" ExecuteOnInstall="yes" Sequence="117" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj120" BinaryKey="CreateObj120" ExecuteOnInstall="yes" Sequence="120" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj122" BinaryKey="CreateObj122" ExecuteOnInstall="yes" Sequence="122" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj123" BinaryKey="CreateObj123" ExecuteOnInstall="yes" Sequence="123" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj124" BinaryKey="CreateObj124" ExecuteOnInstall="yes" Sequence="124" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj125" BinaryKey="CreateObj125" ExecuteOnInstall="yes" Sequence="125" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj126" BinaryKey="CreateObj126" ExecuteOnInstall="yes" Sequence="126" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj128" BinaryKey="CreateObj128" ExecuteOnInstall="yes" Sequence="128" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj129" BinaryKey="CreateObj129" ExecuteOnInstall="yes" Sequence="129" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj130" BinaryKey="CreateObj130" ExecuteOnInstall="yes" Sequence="130" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="CreateObj140" BinaryKey="CreateObj140" ExecuteOnInstall="yes" Sequence="140" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="Grants190" BinaryKey="Grants190" ExecuteOnInstall="yes" Sequence="190" ExecuteOnReinstall="yes"/>
+
+                <!--<sql:SqlScript Id="Createfunc219" BinaryKey="Createfunc119" ExecuteOnInstall="yes" Sequence="119" ExecuteOnReinstall="yes"/>-->
+                <sql:SqlScript Id="Createfunc210" BinaryKey="Createfunc210" ExecuteOnInstall="yes" Sequence="210" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="Createview220" BinaryKey="Createview220" ExecuteOnInstall="yes" Sequence="220" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="Createview225" BinaryKey="Createview225" ExecuteOnInstall="yes" Sequence="225" ExecuteOnReinstall="yes"/>
+                <sql:SqlScript Id="Grants230" BinaryKey="Grants230" ExecuteOnInstall="yes" Sequence="230" ExecuteOnReinstall="yes"/>
               </sql:SqlDatabase>
             </Component>
 
     </ComponentGroup>
-        <Binary Id="Createview01" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\01_DynObtieneBdsQueEmitenFElectronica.view.sql"/>
-        <Binary Id="Grants02" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\02_DynDaPermisosFacturaElectronica.grant.sql"/>
-        <Binary Id="CreateFun03" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\03_fcfdiParametros.function.sql"/>
-        <Binary Id="Createview10" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\10_cfdiCatalogo.table.sql"/>      
-        <Binary Id="Createfun12" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\12_fCfdObtieneImagenC.function.sql"/>
-        <Binary Id="Createtrig35" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\35_RegistraHoradeFacturaElectronica.trigger.sql"/>
-        <Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\40_ObtieneConfiguracionCartasEmail.viewGP2015.sql"/>
-        <Binary Id="Createfun50" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\50_ObtieneDireccionesCorreoClientes.function.sql"/>
-        <Binary Id="Createtable60" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\60_OPCIONALCreaMaestroDeCertificadosYFolios.table.sql"/>
-        <Binary Id="Createtable70" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\70_CreaLogFacturaElectronica.table.sql"/>
-        <Binary Id="Createfun72" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\72_fcfdDatosXmlParaImpresion.function.sql"/>
-        <Binary Id="Createsp80" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\80_ABMcfdLogFacturaXML.sprocedure.sql"/>
-      
-        <Binary Id="Createview83" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\83_UtilesYConfiguracion.view.sql"/> 
-        <Binary Id="Createfunc85" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\85_fCfdDatosAdicionales.function.sql"/>
-        <Binary Id="Createview86" SourceFile="C:\JCTii\GPRelational\rmvwRmTransaccionesTodas.view.sql"/>
-        <Binary Id="Createview90" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\90_vwSopTransacionesVenta.view.sql"/>
-        <Binary Id="Createfunc98" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\98_Addenda.function.sql"/>
-        <Binary Id="Createview100" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\100_ObtieneDocumentosXml.view.sql"/>
-        <Binary Id="Createview101" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\101_vwRmCfdFacturasConFolioFiscal.view.sql"/>
-        <Binary Id="Grants110" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\110_DaPermisosFacturaElectronicaCia.grant.sql"/>
-        <!--Reportes y permisos-->
-        <Binary Id="Createfunc120" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MEXImprimirFactura\10_tii_invoice_amount_letters.function.igarcia120622.sql"/>
-        <Binary Id="Createview130" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MEXImprimirFactura\20_tii_sopinvoice.view.sql"/>
-        <Binary Id="Grants140" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MEXImprimirFactura\30_tii_sopinvoice.grant.sql"/>
+      <Binary Id="Createview01" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\001_DynObtieneBdsQueEmitenFElectronica.view.sql"/>
+      <Binary Id="Grants02" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\002_DynDaPermisosFacturaElectronica.grant.sql"/>
 
-      <!--<Binary Id="Grants120" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\120_DaPermisosReporteFacturaElectrónica.GETTYgrant.sql"/>
-        <Binary Id="Grants130" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_SQLScripts\130_DaPermisosAUsuariosGETTY.grant.sql"/>-->
+      <Binary Id="CreateBaseView02" SourceFile="C:\JCTii\GPRelational\rmvwRmTransaccionesTodas.view.sql"/>
+      <Binary Id="CreateBaseView04" SourceFile="C:\JCTii\GPRelational\rmVwTrxAplicadas.view.sql"/>
+      <Binary Id="CreateBaseView06" SourceFile="C:\JCTii\GPRelational\rmVwRmTrxAplicadasExtendidas.view.sql"/>
 
-	</Fragment>
+      <Binary Id="CreateFun03" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\003_fcfdiParametros.function.sql"/>
+      <Binary Id="CreateObj03" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\003_fcfdiParametrosCliente.function.sql"/>
+      <Binary Id="CreateObj10" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\010_cfdiCatalogo.table.sql"/>
+      <Binary Id="Createview10" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\010_vwCfdiRmTrxAplicadas.view.sql"/>
+      <Binary Id="Createfun12" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\012_fCfdObtieneImagenC.function.sql"/>
+      <Binary Id="CreateObj15" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\015_fCfdiPagoSimultaneoMayor.function.sql"/>
+      <Binary Id="CreateObj18" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\018_vwfCfdiPagosSimultaneos.view.sql"/>
+      <Binary Id="Createtrig35" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\035_RegistraHoradeFacturaElectronica.trigger.sql"/>
+
+      <!--Atención: Varía de acuerdo a la VERSION GP-->
+      <Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\040_ObtieneConfiguracionCartasEmail.viewgp2013oAnt.sql"/>
+
+      <Binary Id="Createfun50" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\050_ObtieneDireccionesCorreoClientes.function.sql"/>
+      <Binary Id="Createtable60" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\060_OPCIONALCreaMaestroDeCertificadosYFolios.table.sql"/>
+      <Binary Id="Createtable70" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\070_CreaLogFacturaElectronica.table.sql"/>
+      <Binary Id="Createfun72" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\072_fcfdDatosXmlParaImpresion.function.sql"/>
+      <Binary Id="CreateObj75" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\075_vwCfdiDatosDelXml.view.sql"/>
+      <Binary Id="Createsp80" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\080_ABMcfdLogFacturaXML.sprocedure.sql"/>
+      <Binary Id="Createview83" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\083_UtilesYConfiguracion.view.sql"/>
+      <Binary Id="Createview84" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\084_fCfdEmisor.function.sql"/>
+      <Binary Id="Createfunc85" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\085_fCfdDatosAdicionales.function.sql"/>
+      <Binary Id="Createview90" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\090_vwCfdiSopTransacionesVenta.view.sql"/>
+      <Binary Id="CreateObj92" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\092_FCFDIoBTIENEuuid.function.sql"/>
+      <Binary Id="CreateObj94" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\094_fCfdiRelacionados.functions.sql"/>
+      <Binary Id="Createfunc98" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\098_Addenda.function.sql"/>
+      <Binary Id="Createview100" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\100_ObtieneDocumentosXml.view.sql"/>
+      <Binary Id="Createview101" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\101_vwRmCfdiFacturasConFolioFiscal.view.sql"/>
+      <Binary Id="CreateObj117" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\117_fCfdiPagosAcumulados.function.sql"/>
+      <Binary Id="CreateObj120" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\120_vwCfdiRMFacturas.view.sql"/>
+      <Binary Id="CreateObj122" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\122_fCfdiMcpFormaPago.function.sql"/>
+      <Binary Id="CreateObj123" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\123_fCfdiDocumentoDePagoRelacionado.function.sql"/>
+      <Binary Id="CreateObj124" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\124_fCfdiDocumentoDePagoXML_Nodo_Relacionado.function.sql"/>
+      <Binary Id="CreateObj125" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\125_fCfdiDocumentoDePago.function.sql"/>
+      <Binary Id="CreateObj126" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\126_fCfdiDocumentoDePagoXMLPago.function.sql"/>
+      <Binary Id="CreateObj128" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\128_fCfdiDocumentoDePagoXMLPagos.sql"/>
+      <Binary Id="CreateObj129" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\129_vwCfdiRelacionado.view.sql"/>
+      <Binary Id="CreateObj130" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\130_fCfdiDocumentoDePagoXML.function.sql"/>
+      <Binary Id="CreateObj140" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\140_vwCfdiTrxPagos.view.sql"/>
+
+      <Binary Id="Grants190" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\190_DaPermisosFacturaElectronicaCia.grant.sql"/>
+
+      <!--Reportes y permisos STANDARD-->
+      <Binary Id="Createfunc210" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\10_tii_invoice_amount_letters.function.igarcia120622.sql"/>
+      <Binary Id="Createview220" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\20_tii_sopinvoice.view.sql"/>
+      <Binary Id="Createview225" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\25_vwRmImprimeCobros.view.sql"/>
+      <Binary Id="Grants230" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\30_tii_sopinvoice.grant.sql"/>
+
+    </Fragment>
 </Wix>

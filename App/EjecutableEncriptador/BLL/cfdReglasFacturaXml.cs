@@ -25,6 +25,9 @@ namespace cfd.FacturaElectronica
         CodigoDeBarras codigobb;
         Documento reporte;
         vwCfdTransaccionesDeVenta cfdiTransacciones;
+        vwCfdiDatosDelXml_wrapper cfdiDatosXml;
+        private string x_uuid;
+        private string x_sello;
 
         public vwCfdTransaccionesDeVenta CfdiTransacciones
         {
@@ -43,6 +46,7 @@ namespace cfd.FacturaElectronica
         {
             _Conexion = conex;
             _Param = param;
+            cfdiDatosXml = new vwCfdiDatosDelXml_wrapper(_Conexion.ConnStr);
             reporte = new Documento(_Conexion, _Param);
             codigobb = new CodigoDeBarras();
 
@@ -304,6 +308,34 @@ namespace cfd.FacturaElectronica
             }
         }
 
+        private void getDatosDelXml(short soptype, string sopnumbe)
+        {
+            try
+            {
+                x_uuid = string.Empty;
+                x_sello = string.Empty;
+                cfdiDatosXml.Where.Sopnumbe.Value = sopnumbe;
+                cfdiDatosXml.Where.Sopnumbe.Operator = WhereParameter.Operand.Equal;
+                cfdiDatosXml.Where.Soptype.Conjuction = WhereParameter.Conj.And;
+                cfdiDatosXml.Where.Soptype.Value = soptype;
+                cfdiDatosXml.Where.Soptype.Operator = WhereParameter.Operand.Equal;
+                cfdiDatosXml.Where.Estado.Conjuction = WhereParameter.Conj.And;
+                cfdiDatosXml.Where.Estado.Value = "emitido";
+                cfdiDatosXml.Where.Estado.Operator = WhereParameter.Operand.Equal;
+
+                if (cfdiDatosXml.Query.Load())
+                {
+                    x_uuid = cfdiDatosXml.UUID;
+                    x_sello = cfdiDatosXml.Sello;
+                }
+
+            }
+            catch (Exception eIddoc)
+            {
+                ultimoMensaje = "Contacte al administrador. No se puede acceder a la base de datos." + eIddoc.Message;
+            }
+        }
+
         /// <summary>
         /// Genera el código de barras bidimensional y guarda el archivo pdf. 
         /// Luego anota en la bitácora la factura impresa y el nuevo estado binario
@@ -325,10 +357,12 @@ namespace cfd.FacturaElectronica
                 string rutaYNomArchivo = trxVenta.RutaXml.Trim() + nomArchivo;
 
                 //Genera y guarda código de barras bidimensional
-                if(_Param.emite)
-                    codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + trxVenta.UUID + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + trxVenta.Total.ToString() + "&fe=" + Utiles.Derecha(trxVenta.Sello, 8)
+                if (_Param.emite)
+                {
+                    getDatosDelXml(trxVenta.Soptype, trxVenta.Sopnumbe);
+                    codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + x_uuid + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(x_sello, 8)
                                                 , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
-
+                }
                 //Genera pdf
                 if (codigobb.iErr == 0)
                     reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
