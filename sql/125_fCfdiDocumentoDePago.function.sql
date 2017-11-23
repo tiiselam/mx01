@@ -33,7 +33,7 @@ return
 				else null 
 			END											TipoCambioP,
 
-			cast(hdr.ORTRXAMT as numeric(19,2))			Monto,
+			cast(hdr.ororgtrx as numeric(19,2))			Monto,
 			CASE when hdr.cheknmbr = '' then null 
 				else rtrim(hdr.cheknmbr) 
 			end											NumOperacion,

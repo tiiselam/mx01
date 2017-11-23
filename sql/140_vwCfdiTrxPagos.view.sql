@@ -16,7 +16,7 @@ alter view dbo.vwCfdiTrxCobros as
 select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' end estadoContabilizado, 
 	cb.rmdtypal soptype, 'CBR' docid, cb.docnumbr sopnumbe, convert(datetime, cb.docdate, 126) fechahora,
  
-	cb.CUSTNMBR, custname nombreCliente, cb.txrgnnum idImpuestoCliente, cast(cb.TotalDoc as numeric(18,2)) total, cb.montoActualOriginal, cb.voidstts, 
+	cb.CUSTNMBR, custname nombreCliente, cb.txrgnnum idImpuestoCliente, cast(cb.ororgtrx as numeric(18,2)) total, cb.montoActualOriginal, cb.voidstts, 
 
 	isnull(lf.estado, isnull(fv.estado, 'inconsistente')) estado,
 	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'inconsistente' 
@@ -86,7 +86,7 @@ alter view dbo.vwCfdiCobrosAImprimir as
 --
 select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision, 
 	tv.regimen regimenFiscal, isnull(rgfs.descripcion, 'NA') rgfs_descripcion, tv.codigoPostal, 
-	tv.idImpuestoCliente rfcReceptor, tv.nombreCliente, tv.total, tv.isocurrc,
+	tv.idImpuestoCliente rfcReceptor, tv.custnmbr, tv.nombreCliente, tv.total, tv.isocurrc,
 	'P'	TipoDeComprobante,
 	'Pago' tdcmp_descripcion,
 	--tv.formaDePago, isnull(frpg.descripcion, 'NA') frpg_descripcion,

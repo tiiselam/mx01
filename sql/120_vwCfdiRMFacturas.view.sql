@@ -14,7 +14,7 @@ SELECT
 				THEN cast(d.XCHGRATE  as numeric(19,6))
 				ELSE null 
 			END AS TipoCambioP, 
-			d.ORTRXAMT AS Monto,
+			d.ororgtrx AS Monto,
             cuf.ISOCURRC AS MonedaDR, 
 
 			case when cup.isocurrc = cuf.isocurrc 

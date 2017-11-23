@@ -9,7 +9,7 @@ ALTER VIEW [dbo].[vwRmImprimeCobros] AS
 SELECT 
 		cob.[soptype],cob.[docid],cob.[sopnumbe],
 		cob.[regimenFiscal],cob.[rgfs_descripcion],cob.[codigoPostal],
-		cob.[rfcReceptor] TXRGNNUMCUST, cob.[nombreCliente] CUSTNAME, cob.[total], cob.[isocurrc],
+		cob.[rfcReceptor] TXRGNNUMCUST, cob.custnmbr, cob.[nombreCliente] CUSTNAME, abs(cob.[total]) total, cob.[isocurrc],
 		cob.[TipoDeComprobante],cob.[tdcmp_descripcion],
 		cob.[usoCfdi],cob.[uscf_descripcion],
 		cob.[folioFiscal],cob.[noCertificadoCSD],cob.[version],
@@ -23,10 +23,10 @@ SELECT
 		cob.UUIDrelacionado,
 
 		CASE
-			WHEN cob.isocurrc = 'MXN' THEN UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(cob.[total], 'PESOS ')) + ' M.N.'
-			WHEN cob.isocurrc = 'USD' THEN UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(cob.[total], 'DOLARES AMERICANOS '))
+			WHEN cob.isocurrc = 'MXN' THEN UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(abs(cob.[total]), 'PESOS ')) + ' M.N.'
+			WHEN cob.isocurrc = 'USD' THEN UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(abs(cob.[total]), 'DOLARES AMERICANOS '))
 		ELSE
-			UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(cob.[total], default)) 
+			UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(abs(cob.[total]), default)) 
 		END  AS AMOUNT_LETTERS,
 		cob.ClaveProdServ, cob.ClaveUnidad, cob.cantidad, cob.ITEMDESC, cob.ORUNTPRC, cob.XTNDPRCE,
 		RIGHT('0' + CAST(DAY(cob.fechaHoraEmision) AS VARCHAR(2)),2) + '/' + RIGHT('0' + CAST(MONTH(cob.fechaHoraEmision) AS VARCHAR(2)),2) + '/' + CAST(YEAR(cob.fechaHoraEmision) AS CHAR(4)) + ' ' + RIGHT('0' + CAST(DATEPART(HOUR,cob.fechaHoraEmision) AS VARCHAR(2)),2) + ':' + RIGHT('0' + CAST(DATEPART(MINUTE,cob.fechaHoraEmision) AS VARCHAR(2)),2) + ':' + RIGHT('0' + CAST(DATEPART(SECOND,cob.fechaHoraEmision) AS VARCHAR(2)),2) AS fechaHoraEmision,
@@ -46,6 +46,7 @@ SELECT
 		case when adi.CtaOrdenante like 'no existe tag%' then '' else adi.CtaOrdenante end CtaOrdenante,
 		adi.RfcEmisorCtaBen,
 		adi.CtaBeneficiario,
+		rel.APTODCNM,
 		rel.IdDocumento,
 		rel.MonedaDR,
 		rel.TipoCambioDR,
@@ -54,8 +55,8 @@ SELECT
 		rel.NumParcialidad,
 		rel.ImpSaldoAnt,
 		rel.ImpPagado,
-		rel.ImpSaldoInsoluto
-		--dbo.fCfdObtieneImagenC(cob.rutaYNomArchivo) codigoBarras
+		rel.ImpSaldoInsoluto,
+		dbo.fCfdObtieneImagenC(cob.rutaFileDrive) codigoBarras
 FROM dbo.vwCfdiCobrosAImprimir cob WITH (NOLOCK)
 	outer apply dbo.fCfdiDocumentoDePagoRelacionado (cob.soptype, cob.sopnumbe) rel
 	outer apply dbo.fCfdiDocumentoDePago (cob.soptype, cob.sopnumbe) adi

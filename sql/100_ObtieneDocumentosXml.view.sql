@@ -77,7 +77,8 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
 --20/11/17 JCF Creación cfdi 3.3
 --
-select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
+select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
+	ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
 	case when dt.soptype = 4 then
 			pa.param2
 		else um.UOFMLONGDESC
@@ -214,7 +215,7 @@ as
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, Concepto.SERLTNUM, 
-			Concepto.ITEMDESC, Concepto.CMPNTSEQ,
+			Concepto.ITEMDESC, Concepto.CMPNTSEQ, Concepto.ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
 			case when Concepto.ITMTRKOP = 2 then --tracking option: serie
 				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
@@ -236,7 +237,7 @@ return(
 		union all
 
 		select top (1) Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, Concepto.SERLTNUM,
-			Concepto.ITEMDESC, Concepto.CMPNTSEQ,
+			Concepto.ITEMDESC, Concepto.CMPNTSEQ, '' ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
 			null NoIdentificacion,
 			1 Cantidad,
