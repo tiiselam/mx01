@@ -28,7 +28,7 @@ begin
 	begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
-		   select ad.NumeroPedimento	--, ad.fecha
+		   select ad.NumeroPedimento '@NumeroPedimento'	--, ad.fecha
 		   from (
 				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
 				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(@SERLTNUM)),10) , 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
@@ -140,13 +140,13 @@ begin
 	declare @cncp xml;
 	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select @cncp = (
-		select dt.uscatvls_6 ClaveProdServ,
+		select dt.uscatvls_6 '@ClaveProdServ',
 				case when dt.ITMTRKOP = 2 then --tracking option: serie
 					dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.SERLTNUM))),10) 
 					else null
-				end NoIdentificacion, 
-				dt.cantidad, 
-				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.ITEMDESC))), 10) Descripcion,
+				end '@NoIdentificacion', 
+				dt.cantidad '@Cantidad', 
+				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.ITEMDESC))), 10) '@Descripcion',
 				dbo.fCfdiInfoAduaneraXML(dt.ITEMNMBR, dt.SERLTNUM)
 		from vwCfdiSopLineasTrxVentas dt
 		where dt.soptype = @soptype
@@ -171,7 +171,7 @@ begin
 end
 GO
 
-create function dbo.fCfdiImpuestosTrasladadosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int)
+create function dbo.fCfdiImpuestosTrasladadosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
 returns xml 
 as
 begin
@@ -179,7 +179,16 @@ begin
 	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select @impu = (
 		select
-			case when @p_LNITMSEQ=0 then null else cast(imp.ortxsls as numeric(19,2)) end Base,
+			case when @p_esdetalle = 1 then cast(imp.ortxsls as numeric(19,2)) 
+				else null
+			end Base,
+			--case when @p_LNITMSEQ=0 then 
+			--	CASE when @p_soptype = 4 
+			--		then cast(imp.ortxsls as numeric(19,2)) 
+			--		else null 
+			--		end
+			--	else cast(imp.ortxsls as numeric(19,2)) 
+			--end Base,
 			rtrim(tx.NAME) Impuesto,
 			case when tx.TXDTLPCT=0 then 'Exento' else 'Tasa' end TipoFactor, 
 			case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT/100 as numeric(19,6)) end TasaOCuota,
@@ -187,7 +196,8 @@ begin
 		from sop10105 imp	--sop_tax_work_hist
 		inner join tx00201 tx
 			on tx.taxdtlid = imp.taxdtlid
- 		where imp.SOPTYPE = @p_soptype
+ 		where 
+		imp.SOPTYPE = @p_soptype
 		  and imp.SOPNUMBE = @p_sopnumbe
 		  and imp.LNITMSEQ = @p_LNITMSEQ
 		  and tx.TXDTLPCT >= 0
@@ -280,13 +290,13 @@ begin
 	begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
-				select ClaveProdServ,
-					Cantidad,
-					ClaveUnidad,
-					Descripcion, 
-					cast(ValorUnitario as numeric(19,2)) ValorUnitario,
-					cast(Importe as numeric(19,2)) Importe,
-					dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0) 'cfdi:Impuestos'
+				select ClaveProdServ '@ClaveProdServ',
+					Cantidad '@Cantidad',
+					ClaveUnidad '@ClaveUnidad',
+					Descripcion '@Descripcion', 
+					cast(ValorUnitario as numeric(19,2)) '@ValorUnitario',
+					cast(Importe as numeric(19,2)) '@Importe',
+					dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos'
 				from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal) Concepto
 				where Concepto.importe != 0          
 				FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
@@ -297,16 +307,16 @@ begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
 			select 
-				ClaveProdServ,
-				NoIdentificacion,
-				Cantidad, 
-				ClaveUnidad, 
-				Descripcion, 
-				ValorUnitario,
-				Importe,
-				Descuento,
+				ClaveProdServ '@ClaveProdServ',
+				NoIdentificacion '@NoIdentificacion',
+				Cantidad '@Cantidad', 
+				ClaveUnidad '@ClaveUnidad', 
+				Descripcion '@Descripcion', 
+				ValorUnitario '@ValorUnitario',
+				Importe '@Importe',
+				Descuento '@Descuento',
 
-				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) 'cfdi:Impuestos',
+				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
 				dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SERLTNUM),
 			
@@ -473,7 +483,7 @@ begin
 		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal),
 		
 		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
-		isnull(dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0), ' ')	'cfdi:Impuestos',
+		dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0, 0)	'cfdi:Impuestos',
 
 		''													'cfdi:Complemento'
 	from dbo.vwCfdiSopTransaccionesVenta tv

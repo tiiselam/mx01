@@ -1371,6 +1371,7 @@ private static void showBytes(String info, byte[] data){
                 pemstr = pemstr.Replace(pemcerheader, "");
                 pemstr = pemstr.Replace(pemcerfooter, "");
                 pemstr = pemstr.Replace("\r\n", "");
+                pemstr = pemstr.Replace("\n", "");
             }
             else 
             {

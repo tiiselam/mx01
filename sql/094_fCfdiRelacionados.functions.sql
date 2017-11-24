@@ -102,10 +102,10 @@ begin
 	declare @cncp xml;
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
-			select 	rf.UUID
+			select 	rf.UUID '@UUID'
 			from dbo.fCfdiRelacionados(@soptype, @p_sopnumbe, @p_docid) rf
 			where rf.TipoRelacion = @p_TipoRelacion 
-			FOR XML path('CfdiRelacionado'), type
+			FOR XML path('cfdi:CfdiRelacionado'), type
 		)
 	
 	return @cncp

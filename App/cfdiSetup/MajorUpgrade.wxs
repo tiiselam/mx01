@@ -3,7 +3,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
 
-  <Product Id="F79551E3-DFE3-4C13-AD17-447BD890B12C" Name="GP Factura Digital"
+  <Product Id="4519B293-D128-4A83-886C-2064A946DA06" Name="GP Factura Digital"
            Language="1033" Version="7.0.0.1" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />

@@ -57,6 +57,7 @@ namespace cfd.FacturaElectronica
 
                 do
                 {
+                    msj = String.Empty;
                     try
                     {
                         if (CancellationPending) { e.Cancel = true; return; }

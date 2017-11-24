@@ -19,17 +19,17 @@ begin
 	)
 	select @cnp = 
 		(SELECT  
-			convert(datetime, hdr.docdate, 126)	FechaPago,
-			hdr.FormaDePagoP,
- 			hdr.MonedaP,
-			hdr.TipoCambioP,
-			hdr.Monto,
-			hdr.NumOperacion,
-			hdr.RfcEmisorCtaOrd,
-			hdr.NomBancoOrdExt,
-			hdr.CtaOrdenante,
-			hdr.RfcEmisorCtaBen, 
-			hdr.CtaBeneficiario,
+			convert(datetime, hdr.docdate, 126)	'@FechaPago',
+			hdr.FormaDePagoP '@FormaDePagoP',
+ 			hdr.MonedaP '@MonedaP',
+			hdr.TipoCambioP '@TipoCambioP',
+			hdr.Monto '@Monto',
+			hdr.NumOperacion '@NumOperacion',
+			case when hdr.RfcEmisorCtaOrd like 'no existe tag%' then null else hdr.RfcEmisorCtaOrd end '@RfcEmisorCtaOrd',
+			case when hdr.NomBancoOrdExt like 'no existe tag%' then null else hdr.NomBancoOrdExt  end '@NomBancoOrdExt',
+			case when hdr.CtaOrdenante like 'no existe tag%' then null else hdr.CtaOrdenante  end '@CtaOrdenante',
+			rtrim(hdr.RfcEmisorCtaBen) '@RfcEmisorCtaBen', 
+			rtrim(hdr.CtaBeneficiario) '@CtaBeneficiario',
 			[dbo].[fCfdiDocumentoDePagoXML_Nodo_Relacionado] (hdr.RMDTYPAL, hdr.DOCNUMBR)
 		FROM dbo.fCfdiDocumentoDePago(@RMDTYPAL, @DOCNUMBR) hdr
 		where hdr.docnumbr = @DOCNUMBR	

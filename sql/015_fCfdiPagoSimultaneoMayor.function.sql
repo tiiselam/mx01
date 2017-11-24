@@ -10,14 +10,16 @@ returns table
 as
 return(
 	select top (1) 
-		case when py.pymttype = 5 then '02'					--02 cheque
-			when py.pymttype = 4 then						--efectivo
-				case when cm.cmusrdf1 = '' then '03'		--03 transferencia
-					else rtrim(cm.cmusrdf1)					--?
-				end
-			when py.pymttype = 6 then left(py.cardname, 2)	--tarjeta
-			else '99'										--por definir
-		end FormaPago
+		case when left(UPPER(cm.CMUSRDF1), 2) = 'CB' then	--ch representa una cuenta bancaria
+ 			case py.pymttype 
+ 				when 4 then '03'					--transf. electrónica
+ 				when 5 then '02'					--cheque
+ 				when 6 then left(py.cardname,2)	--tarjeta
+				else null 
+			end
+			else									--representa un medio de pago
+ 				left(Rtrim(cm.CMUSRDF1), 2)
+		end	FormaPago
 	from sop10103 py
 		left join CM00100 cm
 			on cm.chekbkid = py.chekbkid

@@ -13,8 +13,8 @@ as
 return
 		(SELECT 
 			RMDTYPAL, DOCNUMBR, 
-			hdr.docdate,
-			CASE WHEN pa.PARAM2='SI' then Rtrim(mcp.grupid) 
+			hdr.docdate, hdr.bchsourc, ch.CMUSRDF1, hdr.mscschid, hdr.CSHRCTYP, hdr.FRTSCHID, 
+			CASE WHEN hdr.bchsourc like '%MCP%' then Rtrim(mcp.grupid) 
 				else 
 					case when left(UPPER(ch.CMUSRDF1), 2) = 'CB' then	--ch representa una cuenta bancaria
  						case hdr.CSHRCTYP 
@@ -40,14 +40,14 @@ return
 			cp.param1									RfcEmisorCtaOrd,
 			cp.param2									NomBancoOrdExt,
 			cp.param3									CtaOrdenante,
-			tef.EFTBANKACCT								RfcEmisorCtaBen, 
-			tef.TXRGNNUM								CtaBeneficiario
+			tef.TXRGNNUM								RfcEmisorCtaBen, 
+			tef.EFTBANKACCT								CtaBeneficiario
 		FROM vwRmTransaccionesTodas hdr
  			left join dynamics.dbo.MC40200 c on c.CURNCYID = HDR.CURNCYID
- 			left join CM00100 ch on ch.CHEKBKID=hdr.CBKIDCHK
-			left join CM00101 tef on tef.CHEKBKID = hdr.CBKIDCHK
+ 			left join CM00100 ch on ch.CHEKBKID=hdr.mscschid
+			left join CM00101 tef on tef.CHEKBKID = hdr.mscschid
 			outer apply dbo.fCfdiMcpFormaPago(hdr.DOCNUMBR) mcp
- 			outer apply dbo.fcfdiparametros('NA','MCP','NA','NA','NA','NA','PREDETERMINADO') pa
+ 			--outer apply dbo.fcfdiparametros('NA','MCP','NA','NA','NA','NA','PREDETERMINADO') pa
 			outer apply dbo.fCfdiParametrosCliente(hdr.custnmbr, 'RfcEmisorCtaOrd', 'NomBancoOrdExt', 'CtaOrdenante', 'NA', 'NA', 'NA', 'PREDETERMINADO') cp
 		where hdr.docnumbr = @DOCNUMBR	
 		and hdr.RMDTYPAL = @RMDTYPAL
