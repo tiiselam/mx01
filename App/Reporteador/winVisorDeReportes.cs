@@ -58,7 +58,7 @@ namespace Reporteador
 
         private void winVisorDeReportes_Load(object sender, EventArgs e)
         {
-            ReporteCrystal reporteCrystal = new ReporteCrystal(_Conexion);
+            ReporteCrystal reporteCrystal = new ReporteCrystal(_Conexion, _Configuracion);
             ReporteSSRS reporteSsrs = new ReporteSSRS(_Conexion, _Configuracion);
             crViewerCfd.Visible = false;
             ssrsRepView.Visible = false;
@@ -70,7 +70,7 @@ namespace Reporteador
                 if (_Configuracion.emite)
                     crViewerCfd.ReportSource = reporteCrystal.MuestraEnVisor(_Param1, _Param2, _Param3, _Param4);
                 else
-                    crViewerCfd.ReportSource = reporteCrystal.MuestraEnVisor(_Configuracion, _ValoresParametros);
+                    crViewerCfd.ReportSource = reporteCrystal.MuestraEnVisor(_ValoresParametros);
 
                 mensajeErr = reporteCrystal.ultimoMensaje;
                 numErr = reporteCrystal.numError;

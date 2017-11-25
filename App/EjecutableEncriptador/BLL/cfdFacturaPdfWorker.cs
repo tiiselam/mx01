@@ -13,7 +13,7 @@ namespace cfd.FacturaElectronica
     {
         private Parametros _Param;
         private ConexionAFuenteDatos _Conex;
-        private string msj;
+        //private string msj;
 
         public cfdFacturaPdfWorker(ConexionAFuenteDatos Conex, Parametros Param)
         {
@@ -29,6 +29,7 @@ namespace cfd.FacturaElectronica
         /// <param name="e">trxVentas</param>
         protected override void OnDoWork(DoWorkEventArgs e)
         {
+            string msj = "";
             try
             {
                 ReportProgress(0, "Iniciando proceso...\r\n");
@@ -37,7 +38,6 @@ namespace cfd.FacturaElectronica
                 int i = 1; int errores = 0;
                 string eBinario = "";
                 string eBase = "";
-                string msj = "";
                 cfdReglasFacturaXml DocumentoEmitido = new cfdReglasFacturaXml(_Conex, _Param);     //log de facturas xml emitidas y anuladas
                 ReglasME maquina = new ReglasME(_Param);
 
@@ -83,11 +83,11 @@ namespace cfd.FacturaElectronica
             catch (Exception xw)
             {
                 string imsj = xw.InnerException == null ? "" : xw.InnerException.ToString();
-                this.msj = xw.Message + " " + imsj + "\r\n" + xw.StackTrace;
+                msj = xw.Message + " " + imsj + "\r\n" + xw.StackTrace;
             }
             finally
             {
-                ReportProgress(100, this.msj);
+                ReportProgress(100, msj);
             }
             e.Result = "Proceso finalizado! \r\n ";
             ReportProgress(100, "");

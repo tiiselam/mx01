@@ -17,14 +17,16 @@ namespace Reporteador
         private string _IdUsuario = "";
         private string _Password = "";
         private bool _IntegratedSecurity = false;
+        private Parametros _param;
 
-        public ReporteCrystal(ConexionAFuenteDatos Conexion)
+        public ReporteCrystal(ConexionAFuenteDatos Conexion, Parametros Param)
         {
             _SrvrName = Conexion.ServerAddress;
             _DbName = Conexion.Intercompany;
             _IdUsuario = Conexion.Usuario;
             _Password = Conexion.Password;
             _IntegratedSecurity = Conexion.IntegratedSecurity;
+            _param = Param;
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Reporteador
         /// <param name="Comprobante"></param>
         /// <param name="RutaPDF">Ruta que incluye el nombre del archivo.</param>
         /// <returns></returns>
-        public bool GuardaDocumentoEnPDF(Parametros Param, string FolioDesde, string FolioHasta, string Tabla, int Comprobante, string RutaPDF)
+        public bool GuardaDocumentoEnPDF(string FolioDesde, string FolioHasta, string Tabla, int Comprobante, string RutaPDF)
         {
             ultimoMensaje = "";
             numError = 0;
@@ -54,7 +56,7 @@ namespace Reporteador
                 ParameterValues crParameterValues = new ParameterValues();
                 ParameterDiscreteValue crParameterDiscreteValue = new ParameterDiscreteValue();
 
-                cryRpt.Load(Param.rutaReporteCrystal);
+                cryRpt.Load(_param.rutaReporteCrystal);
 
                 //Conecta la base de datos
                 crConnectionInfo.IntegratedSecurity = _IntegratedSecurity;
@@ -154,7 +156,7 @@ namespace Reporteador
         /// <param name="ValoresParametros">Datos del comprobante que son los parámetros del reporte. El orden es importante.</param>
         /// <param name="RutaPDF">Ruta donde se guarda el pdf. Incluye el nombre del archivo.</param>
         /// <returns></returns>
-        public bool GuardaDocumentoEnPDF(Parametros Param, List<string> ValoresParametros, string RutaPDF)
+        public bool GuardaDocumentoEnPDF(List<string> ValoresParametros, string RutaPDF)
         {
             ultimoMensaje = "";
             numError = 0;
@@ -171,7 +173,7 @@ namespace Reporteador
                 ParameterDiscreteValue crParameterDiscreteValue = new ParameterDiscreteValue();
                 PageMargins margins;
 
-                cryRpt.Load(Param.rutaReporteCrystal);
+                cryRpt.Load(_param.rutaReporteCrystal);
 
                 //Conecta la base de datos
                 crConnectionInfo.IntegratedSecurity = _IntegratedSecurity;
@@ -190,7 +192,7 @@ namespace Reporteador
                     CrTable.ApplyLogOnInfo(crtableLogoninfo);
                 }
                 int i = 0;
-                foreach (PrmtrsReporte pr in Param.ListaParametrosReporte)
+                foreach (PrmtrsReporte pr in _param.ListaParametrosReporte)
                 {
                     //Envía parámetros al reporte
                     crParameterDiscreteValue.Value = ValoresParametros[i];                      //valor
@@ -204,13 +206,13 @@ namespace Reporteador
                 }
 
                 //Define márgenes si existen parámetros
-                if (Param.bottomMargin >= 0 && Param.topMargin >= 0 && Param.leftMargin >= 0 && Param.rightMargin >= 0)
+                if (_param.bottomMargin >= 0 && _param.topMargin >= 0 && _param.leftMargin >= 0 && _param.rightMargin >= 0)
                 {
                     margins = cryRpt.PrintOptions.PageMargins;
-                    margins.bottomMargin = Param.bottomMargin;
-                    margins.topMargin = Param.topMargin;
-                    margins.leftMargin = Param.leftMargin;
-                    margins.rightMargin = Param.rightMargin;
+                    margins.bottomMargin = _param.bottomMargin;
+                    margins.topMargin = _param.topMargin;
+                    margins.leftMargin = _param.leftMargin;
+                    margins.rightMargin = _param.rightMargin;
                     cryRpt.PrintOptions.ApplyPageMargins(margins);
                 }
 
@@ -257,12 +259,12 @@ namespace Reporteador
             ultimoMensaje = "";
             numError = 0;
             //Obtiene ruta del reporte crystal
-            Parametros Param = new Parametros(_DbName);
-            if (!Param.ultimoMensaje.Equals(string.Empty))
-            {
-                ultimoMensaje = Param.ultimoMensaje;
-                return null;
-            }
+            //Parametros Param = new Parametros(_DbName);
+            //if (!_param.ultimoMensaje.Equals(string.Empty))
+            //{
+            //    ultimoMensaje = _param.ultimoMensaje;
+            //    return null;
+            //}
 
             try
             {
@@ -276,7 +278,7 @@ namespace Reporteador
                 ParameterValues crParameterValues = new ParameterValues();
                 ParameterDiscreteValue crParameterDiscreteValue = new ParameterDiscreteValue();
 
-                cryRpt.Load(Param.rutaReporteCrystal);
+                cryRpt.Load(_param.rutaReporteCrystal);
 
                 //Conecta la base de datos
                 crConnectionInfo.IntegratedSecurity = _IntegratedSecurity;
@@ -341,7 +343,7 @@ namespace Reporteador
             }
         }
         
-        public ReportDocument MuestraEnVisorTestSP(Parametros Param, List<string> ValoresParametros)
+        public ReportDocument MuestraEnVisorTestSP(List<string> ValoresParametros)
         {
             ultimoMensaje = "";
             numError = 0;
@@ -357,7 +359,7 @@ namespace Reporteador
                 ParameterValues crParameterValues = new ParameterValues();
                 ParameterDiscreteValue crParameterDiscreteValue = new ParameterDiscreteValue();
 
-                cryRpt.Load(Param.rutaReporteCrystal);
+                cryRpt.Load(_param.rutaReporteCrystal);
 
                 //Conecta la base de datos
                 crConnectionInfo.IntegratedSecurity = _IntegratedSecurity;
@@ -378,7 +380,7 @@ namespace Reporteador
                 //}
 
                 int i = 0;
-                foreach (PrmtrsReporte pr in Param.ListaParametrosReporte)
+                foreach (PrmtrsReporte pr in _param.ListaParametrosReporte)
                 {
                     //Envía parámetros al reporte
                     crParameterDiscreteValue.Value = ValoresParametros[i];                      //valor
@@ -403,7 +405,7 @@ namespace Reporteador
             }
     }
         
-        public ReportDocument MuestraEnVisor(Parametros Param, List<string> ValoresParametros )
+        public ReportDocument MuestraEnVisor(List<string> ValoresParametros )
         {
             ultimoMensaje = "";
             numError = 0;
@@ -420,7 +422,7 @@ namespace Reporteador
                 ParameterDiscreteValue crParameterDiscreteValue = new ParameterDiscreteValue();
                 PageMargins margins;
 
-                cryRpt.Load(Param.rutaReporteCrystal);
+                cryRpt.Load(_param.rutaReporteCrystal);
                 //Conecta la base de datos
                 crConnectionInfo.IntegratedSecurity = _IntegratedSecurity;
                 crConnectionInfo.ServerName = _SrvrName;
@@ -441,7 +443,7 @@ namespace Reporteador
                 }
 
                 int i = 0;
-                foreach (PrmtrsReporte pr in Param.ListaParametrosReporte)
+                foreach (PrmtrsReporte pr in _param.ListaParametrosReporte)
                 {
                     //Envía parámetros al reporte
                     crParameterDiscreteValue.Value = ValoresParametros[i];                      //valor
@@ -455,19 +457,19 @@ namespace Reporteador
                 }
 
                 //Define márgenes si existen parámetros
-                if (Param.bottomMargin >= 0 && Param.topMargin >= 0 && Param.leftMargin >= 0 && Param.rightMargin >= 0)
+                if (_param.bottomMargin >= 0 && _param.topMargin >= 0 && _param.leftMargin >= 0 && _param.rightMargin >= 0)
                 {
                     margins = cryRpt.PrintOptions.PageMargins;
-                    margins.bottomMargin = Param.bottomMargin;
-                    margins.topMargin = Param.topMargin;
-                    margins.leftMargin = Param.leftMargin;
-                    margins.rightMargin = Param.rightMargin;
+                    margins.bottomMargin = _param.bottomMargin;
+                    margins.topMargin = _param.topMargin;
+                    margins.leftMargin = _param.leftMargin;
+                    margins.rightMargin = _param.rightMargin;
                     cryRpt.PrintOptions.ApplyPageMargins(margins);
                 }
 
-                if (Param.ImprimeEnImpresora)
+                if (_param.ImprimeEnImpresora)
                 {
-                    cryRpt.PrintOptions.PrinterName = Param.NombreImpresora;
+                    cryRpt.PrintOptions.PrinterName = _param.NombreImpresora;
                     cryRpt.PrintToPrinter(1, false, 0, 0);
                 }
                 return cryRpt;

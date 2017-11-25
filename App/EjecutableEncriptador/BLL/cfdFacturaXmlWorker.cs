@@ -116,12 +116,12 @@ namespace cfd.FacturaElectronica
                     catch (Exception lo)
                     {
                         string imsj = lo.InnerException == null ? "" : lo.InnerException.ToString();
-                        msj = lo.Message + " " + imsj + Environment.NewLine + lo.StackTrace;
+                        msj = lo.Message + " " + imsj + Environment.NewLine + comprobante.InnerXml; //lo.StackTrace;
                         errores++;
                     }
                     finally
                     {
-                        ReportProgress(i * 100 / trxVenta.RowCount, "Doc:" + trxVenta.Sopnumbe + " " + msj.Trim() + "\r\n");
+                        ReportProgress(i * 100 / trxVenta.RowCount, "Doc:" + trxVenta.Sopnumbe + " " + msj.Trim() + Environment.NewLine);
                         i++;
                     }
                 } while (trxVenta.MoveNext() && errores < 10);

@@ -52,7 +52,11 @@ select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' 
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 
 	emi.rfc, emi.regimen, emi.rutaXml, emi.codigoPostal,
 	isnull(lf.estadoActual, '000000') estadoActual, 
-	isnull(lf.mensajeEA, 'contabilizado') mensajeEA,
+	isnull(lf.mensajeEA, 
+			case when cb.montoActual != 0 then 'parcialmente aplicado'
+			else 'contabilizado'
+			end
+			) mensajeEA,
 	rtrim(mo.isocurrc) isocurrc,
 	null addenda
 from dbo.vwRmTransaccionesTodas cb

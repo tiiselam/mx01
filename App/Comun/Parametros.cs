@@ -305,6 +305,25 @@ namespace Comun
 
             set
             {
+                string _ext = String.Empty;
+                switch (value)
+                {
+                    case "tabFacturas":
+                        _ext = _extFactura == null ? String.Empty : _extFactura;
+                        break;
+                    case "tabCobros":
+                        _ext = _extCobro == null ? String.Empty : _extCobro;
+                        break;
+                    case "tabTraslados":
+                        _ext = _extTraslado == null ? String.Empty : _extTraslado;
+                        break;
+                    default:
+                        _ext = String.Empty;
+                        break;
+                }
+
+                _rutaReporteCrystal += _ext;
+
                 _extDefault = value;
             }
         }
@@ -351,24 +370,7 @@ namespace Comun
         public string rutaReporteCrystal
         {
             get {
-                string _ext = String.Empty;
-                switch (ExtDefault)
-                {
-                    case "tabFacturas":
-                        _ext = _extFactura == null ? String.Empty : _extFactura;
-                        break;
-                    case "tabCobros":
-                        _ext = _extCobro == null ? String.Empty : _extCobro;
-                        break;
-                    case "tabTraslados":
-                        _ext = _extTraslado == null ? String.Empty : _extTraslado;
-                        break;
-                    default:
-                        _ext = _extFactura == null ? String.Empty : _extFactura;
-                        break;
-                }
-
-                return _rutaReporteCrystal + _ext;
+                return _rutaReporteCrystal;
             }
             set { _rutaReporteCrystal = value; }
 
@@ -437,24 +439,7 @@ namespace Comun
         {
             get
             {
-                string _ext = String.Empty;
-                switch (ExtDefault)
-                {
-                    case "tabFacturas":
-                        _ext = _extFactura==null?String.Empty:_extFactura;
-                        break;
-                    case "tabCobros":
-                        _ext = _extCobro==null?String.Empty:_extCobro;
-                        break;
-                    case "tabTraslados":
-                        _ext = _extTraslado == null?String.Empty: _extTraslado;
-                        break;
-                    default:
-                        _ext = _extFactura == null ? String.Empty : _extFactura;
-                        break;
-                }
-
-                return _rutaReporteSSRS + _ext;
+                return _rutaReporteSSRS;
             }
             set { _rutaReporteSSRS = value; }
         }

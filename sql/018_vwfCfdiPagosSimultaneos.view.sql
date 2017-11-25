@@ -7,7 +7,7 @@ create view dbo.vwCfdiPagosSimultaneos
 --1/11/17 JCF Creación
 --
 as
-	select apfrdcty, apfrdcnm, ap.APTODCTY, ap.APTODCNM 
+	select apfrdcty, apfrdcnm, ap.APTODCTY+2 APTODCTY, ap.APTODCNM 
 	from dbo.tii_vwRmTrxAplicadasExtendidas ap
 	where ap.cashamnt_apto = ap.ortrxamt_apto
 go
@@ -15,3 +15,7 @@ go
 IF (@@Error = 0) PRINT 'Creación exitosa de: vwCfdiPagosSimultaneos'
 ELSE PRINT 'Error en la creación de: vwCfdiPagosSimultaneos'
 GO
+
+------------------------------------------
+--SELECT * FROM [vwCfdiPagosSimultaneos] WHERE [APTODCTY] = 1  AND [APTODCNM] = 00000128
+

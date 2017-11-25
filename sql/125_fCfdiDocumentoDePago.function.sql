@@ -29,11 +29,11 @@ return
 			end											FormaDePagoP,
  			LTRIM(RTRIM(C.ISOCURRC))					MonedaP,
 			case when c.ISOCURRC<>'MXN' THEN 
-				cast(hdr.XCHGRATE as numeric(19,6)) 
+				hdr.XCHGRATE
 				else null 
 			END											TipoCambioP,
 
-			cast(hdr.ororgtrx as numeric(19,2))			Monto,
+			hdr.ororgtrx								Monto,
 			CASE when hdr.cheknmbr = '' then null 
 				else rtrim(hdr.cheknmbr) 
 			end											NumOperacion,
@@ -42,7 +42,7 @@ return
 			cp.param3									CtaOrdenante,
 			tef.TXRGNNUM								RfcEmisorCtaBen, 
 			tef.EFTBANKACCT								CtaBeneficiario
-		FROM vwRmTransaccionesTodas hdr
+		FROM dbo.vwRmTransaccionesTodas hdr
  			left join dynamics.dbo.MC40200 c on c.CURNCYID = HDR.CURNCYID
  			left join CM00100 ch on ch.CHEKBKID=hdr.mscschid
 			left join CM00101 tef on tef.CHEKBKID = hdr.mscschid

@@ -14,12 +14,12 @@
     </PAC>
     <reporteador>CRYSTAL</reporteador>
 	<reporteExtensiones>
-       <Factura>.rpt</Factura>
-	   <Cobro>.COB.rpt</Cobro>
-	   <Traslado>.REM.rpt</Traslado>
+       <Factura>FC.rpt</Factura>
+	   <Cobro>CB.rpt</Cobro>
+	   <Traslado>RM.rpt</Traslado>
 	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\GMOPE_FACTURA_ELECT</Ruta>
+      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\MEX10_FACTURA_ELECT</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>

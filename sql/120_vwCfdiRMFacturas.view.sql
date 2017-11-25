@@ -9,46 +9,53 @@ alter VIEW [dbo].[vwCfdiRMFacturas]
 --
 AS
 SELECT  
-            d.DOCDATE AS FechaPago, cup.ISOCURRC AS MonedaP, 
+            pago.DOCDATE AS FechaPago, cup.ISOCURRC AS MonedaP, 
 			CASE WHEN cup.ISOCURRC <> 'MXN' 
-				THEN cast(d.XCHGRATE  as numeric(19,6))
+				THEN cast(pago.XCHGRATE  as numeric(19,6))
 				ELSE null 
 			END AS TipoCambioP, 
-			d.ororgtrx AS Monto,
+			pago.ororgtrx AS Monto,
             cuf.ISOCURRC AS MonedaDR, 
 
-			case when cup.isocurrc = cuf.isocurrc 
+			case when cup.isocurrc = cuf.isocurrc or a.actualapplytoamount = 0
 				then null
-				else
-					CASE WHEN cuf.ISOCURRC = 'MXN' 
-						THEN 1 
-						ELSE a.oraptoam / a.apptoamt
-					END  
+				else 
+					--moneda factura / moneda pago
+					round(a.ORAPTOAM / a.actualapplytoamount, 6)
+					--CASE WHEN cuf.ISOCURRC = 'MXN' 
+					--	THEN 1 
+					--	ELSE a.oraptoam / a.apptoamt
+					--END  
 			end TipoCambioDR,
 
-			CASE WHEN LEFT(UPPER(d.TRXDSCRN), 1) = 'C' and isnumeric(substring(d.TRXDSCRN, 2, 2)) = 1
-				THEN CAST(substring(d.TRXDSCRN, 2, 2) AS int) 
+			CASE WHEN LEFT(UPPER(pago.TRXDSCRN), 1) = '#' and isnumeric(substring(pago.TRXDSCRN, 2, 2)) = 1
+				THEN CAST(substring(pago.TRXDSCRN, 2, 2) AS int) 
 				ELSE pcm.numCuota
 			end NumParcialidad,
 
-			F.ORTRXAMT - pcm.sumaDePagosAplicados + a.oraptoam ImpSaldoAnt,
+			--moneda de la factura: 
+			--monto Original de factura -  acumulado de aplicaciones en moneda de factura + monto aplicado
+			F.ororgtrx - pcm.sumaORAPTOAM + a.ORAPTOAM ImpSaldoAntMonFac,
+			a.ORAPTOAM ImpPagadoMonFac,
+			F.ororgtrx - pcm.sumaORAPTOAM ImpSaldoInsolutoMonFac,
 
-			a.ORAPTOAM AS ImpPagado,
-            
-			F.ORTRXAMT - pcm.sumaDePagosAplicados ImpSaldoInsoluto,
+			--moneda funcional
+			(F.ORTRXAMT+isnull(reval.Total_Gain_or_Loss_on_Cu, 0)) - (pcm.sumaApfrmaplyamt+ pcm.sumaAPFRMWROFAMT) + a.Apfrmaplyamt ImpSaldoAnt,
+			a.Apfrmaplyamt ImpPagado,
+			(F.ORTRXAMT+isnull(reval.Total_Gain_or_Loss_on_Cu, 0)) - (pcm.sumaApfrmaplyamt+ pcm.sumaAPFRMWROFAMT) ImpSaldoInsoluto,
 
-			d.DOCNUMBR, a.APTODCNM, d.TRXDSCRN, d.RMDTYPAL, d.VOIDSTTS,
+			pago.DOCNUMBR, a.APTODCNM, pago.TRXDSCRN, pago.RMDTYPAL, pago.VOIDSTTS, pago.ororgtrx,
 
             uf.uuid AS IdDocumento
-FROM    dbo.vwRmTransaccionesTodas AS d 
-		inner JOIN dbo.vwCfdiRmTrxAplicadas AS a ON d.RMDTYPAL = a.APFRDCTY AND d.DOCNUMBR = a.APFRDCNM 
+FROM    dbo.vwRmTransaccionesTodas AS pago
+		inner JOIN dbo.vwCfdiRmTrxAplicadas AS a ON pago.RMDTYPAL = a.APFRDCTY AND pago.DOCNUMBR = a.APFRDCNM 
 		inner JOIN dbo.vwRmTransaccionesTodas AS F ON F.RMDTYPAL = a.APTODCTY AND F.DOCNUMBR = a.APTODCNM and F.voidstts = 0
-		LEFT OUTER JOIN DYNAMICS.dbo.MC40200 AS cup ON cup.CURNCYID = d.CURNCYID
+		LEFT OUTER JOIN DYNAMICS.dbo.MC40200 AS cup ON cup.CURNCYID = pago.CURNCYID
 		LEFT OUTER JOIN DYNAMICS.dbo.MC40200 AS cuf ON cuf.CURNCYID = F.CURNCYID
-		--outer apply dbo.fCfdiParametros('VERSION', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') pa
-		--outer apply dbo.fCfdiParametrosCliente(d .CUSTNMBR, 'ResidenciaFiscal', 'NumRegIdTrib', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') pac
 		outer apply dbo.fCfdiObtieneUUID(F.soptype, a.APTODCNM) uf
-		outer apply dbo.fCfdiPagosAcumulados(a.APFRDCTY, a.APFRDCNM, a.APFRDCDT, a.APTODCTY, a.APTODCNM, d.TRXDSCRN) pcm
+		outer apply dbo.fCfdiRmAjusteAcumuladoDeRevaluacion(a.APTODCNM, a.APTODCTY, pago.curncyid, a.APFRDCDT) reval
+		outer apply dbo.fCfdiPagosAcumulados(a.APFRDCTY, a.APFRDCNM, a.APFRDCDT, a.APTODCTY, a.APTODCNM, pago.TRXDSCRN) pcm
+where F.rmdtypal != 3	--nota de débito
 
 GO
 

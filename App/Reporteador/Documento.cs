@@ -19,7 +19,7 @@ namespace Reporteador
             _Conexion = conex;
             _Param = param;
             rSSRS = new ReporteSSRS(_Conexion, _Param);
-            rcrystal = new ReporteCrystal(_Conexion);
+            rcrystal = new ReporteCrystal(_Conexion, _Param);
 
             mensajeErr = rSSRS.ultimoMensaje;
             numErr = rSSRS.numError;
@@ -65,7 +65,7 @@ namespace Reporteador
                 //En el caso de una compañía que debe emitir xml, usar reporte con 4 parámetros
                 if (_Param.emite && _Param.reporteador.Equals("CRYSTAL"))
                 {
-                    if (!rcrystal.GuardaDocumentoEnPDF(_Param, strSopnumbe, strSopnumbe, prmTabla, shSoptype, strRutaYNomArchivo + ".pdf"))
+                    if (!rcrystal.GuardaDocumentoEnPDF(strSopnumbe, strSopnumbe, prmTabla, shSoptype, strRutaYNomArchivo + ".pdf"))
                         mensajeErr = rcrystal.ultimoMensaje;
                     numErr = rcrystal.numError;
                 }
@@ -77,7 +77,7 @@ namespace Reporteador
                     ValoresParametros.Add(strSopnumbe);
                     ValoresParametros.Add(strSopnumbe);
                     ValoresParametros.Add(prmTabla);
-                    if (!rcrystal.GuardaDocumentoEnPDF(_Param, ValoresParametros, strRutaYNomArchivo + ".pdf"))
+                    if (!rcrystal.GuardaDocumentoEnPDF(ValoresParametros, strRutaYNomArchivo + ".pdf"))
                         mensajeErr = rcrystal.ultimoMensaje;
                     numErr = rcrystal.numError;
                 }
