@@ -11,21 +11,26 @@ AS
 SELECT  
             pago.DOCDATE AS FechaPago, cup.ISOCURRC AS MonedaP, 
 			CASE WHEN cup.ISOCURRC <> 'MXN' 
-				THEN cast(pago.XCHGRATE  as numeric(19,6))
+				THEN 
+					case when cuf.ISOCURRC = 'MXN' 
+						then round(a.ORAPTOAM/a.actualapplytoamount, 6) + 0.000001	--usar un truco para que el pago sea siempre mayor
+						else pago.XCHGRATE
+					end
 				ELSE null 
 			END AS TipoCambioP, 
+
 			pago.ororgtrx AS Monto,
             cuf.ISOCURRC AS MonedaDR, 
 
 			case when cup.isocurrc = cuf.isocurrc or a.actualapplytoamount = 0
 				then null
 				else 
-					--moneda factura / moneda pago
-					round(a.ORAPTOAM / a.actualapplytoamount, 6)
-					--CASE WHEN cuf.ISOCURRC = 'MXN' 
-					--	THEN 1 
-					--	ELSE a.oraptoam / a.apptoamt
-					--END  
+					CASE WHEN cuf.ISOCURRC = 'MXN' 
+						THEN 1.00
+						ELSE --moneda factura / moneda pago
+							round(a.ORAPTOAM / a.actualapplytoamount, 6) - --restar un infinitésimo para que el pago sea mayor
+							case when cup.ISOCURRC = 'MXN' and cuf.ISOCURRC != 'MXN' then 0.000001 else 0 end
+					END  
 			end TipoCambioDR,
 
 			CASE WHEN LEFT(UPPER(pago.TRXDSCRN), 1) = '#' and isnumeric(substring(pago.TRXDSCRN, 2, 2)) = 1

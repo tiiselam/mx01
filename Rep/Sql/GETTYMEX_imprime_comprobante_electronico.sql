@@ -191,14 +191,12 @@ FROM SOP30200 A
 GO
 --------------------------------------------------------------------------------------------------------------
 --test
-select top 100  *
-from [IMPRIME_COMPROBANTE_ELECTRONICO]
-where stabla = 'SOP30200'
-AND year(docdate) = 2017
+--select top 100  *
+--from [IMPRIME_COMPROBANTE_ELECTRONICO]
+--where sopnumbe = '00000202'
 
-and month(docdate) = 11
 
-select top 100 *
-from vwCfdiDocumentosAImprimir
-where year(fechahoraemision) = 2017
-and month(fechahoraemision) = 11
+--select top 100 *
+--from vwCfdiDocumentosAImprimir
+--where year(fechahoraemision) = 2017
+--and month(fechahoraemision) = 11

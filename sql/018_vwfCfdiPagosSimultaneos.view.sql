@@ -17,5 +17,3 @@ ELSE PRINT 'Error en la creación de: vwCfdiPagosSimultaneos'
 GO
 
 ------------------------------------------
---SELECT * FROM [vwCfdiPagosSimultaneos] WHERE [APTODCTY] = 1  AND [APTODCNM] = 00000128
-

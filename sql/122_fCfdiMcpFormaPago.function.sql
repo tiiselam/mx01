@@ -1,3 +1,24 @@
+IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp20100') AND OBJECTPROPERTY(id,N'IsTable') = 1)
+begin
+	create table dbo.nfmcp20100
+	(
+	medioid		varchar(15) NOT NULL default 'NA',
+	numberie 	varchar(21) NOT NULL default '',
+	lineamnt int NOT NULL default 0,
+	) on [PRIMARY];
+end
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp00700') AND OBJECTPROPERTY(id,N'IsTable') = 1)
+begin
+	create table dbo.nfmcp00700
+	(
+	grupid		varchar(21) NOT NULL default 'NA',
+	medioid 	varchar(15) NOT NULL default ''
+	) on [PRIMARY];
+end
+
+-----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiMcpFormaPago') IS NOT NULL
    DROP FUNCTION dbo.fCfdiMcpFormaPago
 GO

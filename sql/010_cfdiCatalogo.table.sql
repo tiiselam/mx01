@@ -163,5 +163,6 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '5'
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '6') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '6', 'Factura generada por los traslados previos');
 
 GO
---select * from cfdiCatalogo
 
+-----------------------------------------------------------------------------------------
+--select * from cfdiCatalogo
