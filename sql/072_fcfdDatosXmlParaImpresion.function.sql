@@ -27,7 +27,7 @@ return(
 	@archivoXml.value('(//@MetodoPago)[1]', 'varchar(21)') MetodoPago,
 	@archivoXml.value('(//cfdi:Receptor/@UsoCFDI)[1]', 'varchar(4)') UsoCFDI,
 	@archivoXml.value('(//cfdi:CfdiRelacionados/@TipoRelacion)[1]', 'varchar(4)') TipoRelacion,
-	@archivoXml.value('(//cfdi:CfdiRelacionados/CfdiRelacionado/@UUID)[1]', 'varchar(60)') UUIDrelacionado
+	@archivoXml.value('(//cfdi:CfdiRelacionado/@UUID)[1]', 'varchar(60)') UUIDrelacionado
 	)
 	go
 
@@ -51,13 +51,13 @@ returns table
 return(
 	WITH XMLNAMESPACES('http://www.sat.gob.mx/Pagos' as "pago10")
 	select 
-	@archivoXml.value('(//pago10:Pagos/Pago/@TipoCambioP)[1]', 'varchar(12)') TipoCambioP,
-	@archivoXml.value('(//pago10:Pagos/Pago/@NumOperacion)[1]', 'varchar(30)') NumOperacion,
-	@archivoXml.value('(//pago10:Pagos/Pago/@RfcEmisorCtaOrd)[1]', 'varchar(15)') RfcEmisorCtaOrd,
-	@archivoXml.value('(//pago10:Pagos/Pago/@NomBancoOrdExt)[1]', 'varchar(50)') NomBancoOrdExt,
-	@archivoXml.value('(//pago10:Pagos/Pago/@CtaOrdenante)[1]', 'varchar(50)') CtaOrdenante,
-	@archivoXml.value('(//pago10:Pagos/Pago/@RfcEmisorCtaBen)[1]', 'varchar(15)') RfcEmisorCtaBen,
-	@archivoXml.value('(//pago10:Pagos/Pago/@CtaBeneficiario)[1]', 'varchar(50)') CtaBeneficiario
+	@archivoXml.value('(//pago10:Pago/@TipoCambioP)[1]', 'varchar(12)') TipoCambioP,
+	@archivoXml.value('(//pago10:Pago/@NumOperacion)[1]', 'varchar(30)') NumOperacion,
+	@archivoXml.value('(//pago10:Pago/@RfcEmisorCtaOrd)[1]', 'varchar(15)') RfcEmisorCtaOrd,
+	@archivoXml.value('(//pago10:Pago/@NomBancoOrdExt)[1]', 'varchar(50)') NomBancoOrdExt,
+	@archivoXml.value('(//pago10:Pago/@CtaOrdenante)[1]', 'varchar(50)') CtaOrdenante,
+	@archivoXml.value('(//pago10:Pago/@RfcEmisorCtaBen)[1]', 'varchar(15)') RfcEmisorCtaBen,
+	@archivoXml.value('(//pago10:Pago/@CtaBeneficiario)[1]', 'varchar(50)') CtaBeneficiario
 	)
 	go
 

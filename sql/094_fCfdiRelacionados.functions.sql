@@ -21,13 +21,14 @@ return(
 			select top(1) 1 orden,		
 				case when isnull(u.voidstts, -1) = 1 then '04'				--sustitución
 					when isnull(u.voidstts, -1) = 0 then
-						case when @p_docid = p.param2 and da.soptype = 3 
+						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura
 							else 'doc no anulado'
 						end
 					else 'no existe uuid'
 				end TipoRelacion,
-				da.soptype doctype, da.tracking_number docnumbr, isnull(u.UUID, 'no existe uuid') UUID, u.voidstts, u.FormaPago
+				da.soptype doctype, da.tracking_number docnumbr, isnull(u.UUID, 'no existe uuid') UUID, u.voidstts, 
+				u.FormaPago
 			from sop10107 da	--
 				outer apply dbo.fCfdiObtieneUUID(da.soptype, da.tracking_number) u
 				cross apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
@@ -37,20 +38,23 @@ return(
 			union all
 
 			--NC o devolución que relaciona a factura o nd
-			SELECT top(100) 2 orden,
-				case when @p_docid = p.param1 then '01'	--nc
-					when @p_docid = p.param3 then '03'	--devolución
-					else 'no hay param'
-				end,
-				ap.aptodcty, ap.aptodcnm, isnull(u.UUID, 'no existe uuid'), u.voidstts, u.FormaPago
-			from dbo.vwRmTrxAplicadas  ap
-				outer apply dbo.fCfdiObtieneUUID(ap.aptodcty+2, ap.aptodcnm) u	--tipo factura es 1 en AR
-				cross apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
-			where ap.APFRDCTY = @soptype+4										--tipo nc es 8 en AR
-			AND ap.apfrdcnm = @p_sopnumbe
-			and @soptype = 4
-			order by ap.oraptoam desc
-
+			SELECT orden, TipoRelacion, aptodcty, aptodcnm, UUID, voidstts, FormaPago
+			from (
+				SELECT top(100) 2 orden,
+					case when rtrim(@p_docid) = p.param1 then '01'	--nc
+						when rtrim(@p_docid) = p.param3 then '03'	--devolución
+						else 'no hay param'
+					end TipoRelacion,
+					ap.aptodcty, ap.aptodcnm, isnull(u.UUID, 'no existe uuid') UUID, u.voidstts, 
+					case when u.FormaPago = '' then '99' else u.FormaPago end FormaPago
+				from dbo.vwRmTrxAplicadas  ap
+					outer apply dbo.fCfdiObtieneUUID(ap.aptodcty+2, ap.aptodcnm) u	--tipo factura es 1 en AR
+					cross apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+				where ap.APFRDCTY = @soptype+4										--tipo nc es 8 en AR
+				AND ap.apfrdcnm = @p_sopnumbe
+				and @soptype = 4
+				order by ap.oraptoam desc
+			) nc
 )	
 go
 

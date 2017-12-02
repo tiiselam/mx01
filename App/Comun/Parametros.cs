@@ -323,7 +323,7 @@ namespace Comun
                 }
 
                 _rutaReporteCrystal += _ext;
-
+                _rutaReporteSSRS += _ext;
                 _extDefault = value;
             }
         }

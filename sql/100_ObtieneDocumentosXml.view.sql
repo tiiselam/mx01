@@ -8,17 +8,17 @@
 --		23/10/17 Versión CFDI 3.3 - cfdv33.pdf
 --Utilizado por:	Aplicación C# de generación de factura electrónica México
 -----------------------------------------------------------------------------------------------------------
-IF OBJECT_ID ('dbo.fCfdiInfoAduaneraXML') IS NOT NULL
-   DROP FUNCTION dbo.fCfdiInfoAduaneraXML
+IF OBJECT_ID ('dbo.fCfdiInfoAduaneraSLXML') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiInfoAduaneraSLXML
 GO
 
-create function dbo.fCfdiInfoAduaneraXML(@ITEMNMBR char(31), @SERLTNUM char(21))
+create function dbo.fCfdiInfoAduaneraSLXML(@ITEMNMBR char(31), @SERLTNUM char(21))
 returns xml 
 as
 --Propósito. Obtiene info aduanera para conceptos de importación
 --Requisito. Se asume que todos los artículos importados usan número de serie o lote. De otro modo se consideran nacionales.
 --			También se asume que no hay números de serie repetidos por artículo
---24/10/17 jcf Creación cfdi 3.3
+--30/11/17 jcf Creación cfdi 3.3
 --
 begin
 	declare @cncp xml;
@@ -28,10 +28,11 @@ begin
 	begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
-		   select ad.NumeroPedimento '@NumeroPedimento'	--, ad.fecha
+		   select ad.NumeroPedimento	--, ad.fecha
 		   from (
 				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(@SERLTNUM)),10) , 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR), 10)
+												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
 				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
 				  inner join IV00101 ma			--iv_itm_mstr
@@ -39,9 +40,11 @@ begin
 				 where ma.ITMTRKOP = 3			--lote
 					and la.ITEMNMBR = @ITEMNMBR
 					and la.LOTNUMBR = @SERLTNUM
+					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR),10)) = 15
 				union all
 				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(ud.user_defined_text01))),10) , 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)) ,10) 
+												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
 					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
 					on ud.POPRCTNM = rs.POPRCTNM
@@ -50,10 +53,68 @@ begin
 				where ma.ITMTRKOP = 2			--serie
 					and rs.ITEMNMBR = @ITEMNMBR
 					and rs.SERLTNUM = @SERLTNUM
+					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(ud.user_defined_text01),10)) = 15
+
 				) ad
 			FOR XML raw('cfdi:InformacionAduanera') , type
 		)
 	end
+	return @cncp
+end
+go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiInfoAduaneraSLXML()'
+ELSE PRINT 'Error en la creación de: fCfdiInfoAduaneraSLXML()'
+GO
+
+-----------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.fCfdiInfoAduaneraXML') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiInfoAduaneraXML
+GO
+
+create function dbo.fCfdiInfoAduaneraXML(@ITEMNMBR char(31))
+returns xml 
+as
+--Propósito. Obtiene info aduanera para conceptos de importación
+--Requisito. Se asume que todos los artículos importados usan número de serie o lote. De otro modo se consideran nacionales.
+--			También se asume que no hay números de serie repetidos por artículo
+--			Pueden haber varios lotes o series por artículo
+--24/10/17 jcf Creación cfdi 3.3
+--
+begin
+	declare @cncp xml;
+	select @cncp = null;
+
+		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
+		select @cncp = (
+		   select ad.NumeroPedimento	--, ad.fecha
+		   from (
+				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
+				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR), 10) 
+												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
+				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
+				  inner join IV00101 ma			--iv_itm_mstr
+					on ma.ITEMNMBR = la.ITEMNMBR
+				 where ma.ITMTRKOP = 3			--lote
+					and la.ITEMNMBR = @ITEMNMBR
+					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR),10)) = 15
+				union all
+				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
+				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)), 10) 
+												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
+					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
+					on ud.POPRCTNM = rs.POPRCTNM
+					inner join IV00101 ma		--iv_itm_mstr
+					on ma.ITEMNMBR = rs.ITEMNMBR
+				where ma.ITMTRKOP = 2			--serie
+					and rs.ITEMNMBR = @ITEMNMBR
+					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(ud.user_defined_text01),10)) = 15
+
+				) ad
+			FOR XML raw('cfdi:InformacionAduanera') , type
+		)
 	return @cncp
 end
 go
@@ -63,22 +124,19 @@ ELSE PRINT 'Error en la creación de: fCfdiInfoAduaneraXML()'
 GO
 
 -------------------------------------------------------------------------------------------------------
---IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdiSopLineasTrxVentas]') AND OBJECTPROPERTY(id,N'IsView') = 1)
---    DROP view dbo.[vwCfdiSopLineasTrxVentas];
---GO
 IF (OBJECT_ID ('dbo.vwCfdiSopLineasTrxVentas', 'V') IS NULL)
    exec('create view dbo.vwCfdiSopLineasTrxVentas as SELECT 1 as t');
 go
 
 alter view dbo.vwCfdiSopLineasTrxVentas as
---Propósito. Obtiene todas las líneas de facturas de venta SOP y la info aduanera de importación
---			También obtiene la serie/lote del artículo o kits
+--Propósito. Obtiene todas las líneas de facturas de venta SOP
 --			Incluye descuentos
 --Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
---20/11/17 JCF Creación cfdi 3.3
+--30/11/17 JCF Creación cfdi 3.3
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
-	ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
+	dt.QUANTITY, dt.UOFM,
+	--ISNULL(sr.serltqty, dt.QUANTITY) cantidad, sr.serltqty, 
 	case when dt.soptype = 4 then
 			pa.param2
 		else um.UOFMLONGDESC
@@ -88,36 +146,45 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 		else udmfa.descripcion
 	end UOFMsat_descripcion,
 	um.UOFMLONGDESC, 
-	sr.SERLTNUM, dt.ITEMDESC, dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
-	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
-			dt.QUANTITY * dt.ORUNTPRC
-		else 
-			sr.SERLTQTY * dt.ORUNTPRC
-	end importe,
+	case when dt.soptype = 4 then
+		prod.descripcion
+	else
+		dt.ITEMDESC
+	end ITEMDESC, 
+	dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
+	--sr.SERLTNUM, 
+	dt.QUANTITY * dt.ORUNTPRC importe, 
+	--case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
+	--		dt.QUANTITY * dt.ORUNTPRC
+	--	else 
+	--		sr.SERLTQTY * dt.ORUNTPRC
+	--end importe,
 	isnull(ma.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
 	case when dt.soptype = 4 then
 			pa.param1
 		else ma.uscatvls_6
 	end ClaveProdServ,
 	ma.uscatvls_6, 
-	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
-			dt.QUANTITY * dt.ormrkdam
-		else 
-			sr.SERLTQTY * dt.ormrkdam
-	end descuento
-from --SOP30200 cb
-	SOP30300 dt
+	dt.ormrkdam,
+	dt.QUANTITY * dt.ormrkdam descuento
+	--case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
+	--		dt.QUANTITY * dt.ormrkdam
+	--	else 
+	--		sr.SERLTQTY * dt.ormrkdam
+	--end descuento
+from SOP30300 dt
 left join iv00101 ma				--iv_itm_mstr
 	on ma.ITEMNMBR = dt.ITEMNMBR
-left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
-	on sr.SOPNUMBE = dt.SOPNUMBE
-	and sr.SOPTYPE = dt.SOPTYPE
-	and sr.CMPNTSEQ = dt.CMPNTSEQ
-	and sr.LNITMSEQ = dt.LNITMSEQ
+--left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
+--	on sr.SOPNUMBE = dt.SOPNUMBE
+--	and sr.SOPTYPE = dt.SOPTYPE
+--	and sr.CMPNTSEQ = dt.CMPNTSEQ
+--	and sr.LNITMSEQ = dt.LNITMSEQ
 outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
 outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','NA','NA','NA','NA','PREDETERMINADO') pa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
+outer apply dbo.fCfdiCatalogoGetDescripcion('PROD', pa.param1) prod
 
 go	
 
@@ -126,6 +193,71 @@ ELSE PRINT 'Error en la creación de: vwCfdiSopLineasTrxVentas'
 GO
 
 -------------------------------------------------------------------------------------------------------
+
+IF (OBJECT_ID ('dbo.vwCfdiSopLineasConSerialLot', 'V') IS NULL)
+   exec('create view dbo.vwCfdiSopLineasConSerialLot as SELECT 1 as t');
+go
+
+alter view dbo.vwCfdiSopLineasConSerialLot as
+--Propósito. Obtiene todas las líneas de facturas de venta SOP 
+--			También obtiene la serie/lote del artículo o kits
+--			Incluye descuentos
+--Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
+--29/11/17 JCF Creación cfdi 3.3
+--
+select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
+	ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
+	dt.UOFMsat, 
+	--case when dt.soptype = 4 then
+	--		pa.param2
+	--	else um.UOFMLONGDESC
+	--end UOFMsat,
+	dt.UOFMsat_descripcion,
+	--case when dt.soptype = 4 then
+	--		udmnc.descripcion
+	--	else udmfa.descripcion
+	--end UOFMsat_descripcion,
+	dt.UOFMLONGDESC, 
+	sr.SERLTNUM, dt.ITEMDESC, dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
+	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
+			dt.QUANTITY * dt.ORUNTPRC
+		else 
+			sr.SERLTQTY * dt.ORUNTPRC
+	end importe,
+	isnull(dt.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
+	dt.ClaveProdServ, 
+	--case when dt.soptype = 4 then
+	--		pa.param1
+	--	else ma.uscatvls_6
+	--end ClaveProdServ,
+	dt.uscatvls_6, 
+	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
+			dt.QUANTITY * dt.ormrkdam
+		else 
+			sr.SERLTQTY * dt.ormrkdam
+	end descuento
+from vwCfdiSopLineasTrxVentas dt
+--SOP30300 dt
+--left join iv00101 ma				--iv_itm_mstr
+--	on ma.ITEMNMBR = dt.ITEMNMBR
+left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
+	on sr.SOPNUMBE = dt.SOPNUMBE
+	and sr.SOPTYPE = dt.SOPTYPE
+	and sr.CMPNTSEQ = dt.CMPNTSEQ
+	and sr.LNITMSEQ = dt.LNITMSEQ
+--outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
+--outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','NA','NA','NA','NA','PREDETERMINADO') pa
+--outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
+--outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
+
+go	
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: vwCfdiSopLineasConSerialLot'
+ELSE PRINT 'Error en la creación de: vwCfdiSopLineasConSerialLot'
+GO
+
+-------------------------------------------------------------------------------------------------------
+
 IF OBJECT_ID ('dbo.fCfdiParteXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiParteXML
 GO
@@ -140,15 +272,15 @@ begin
 	declare @cncp xml;
 	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select @cncp = (
-		select dt.uscatvls_6 '@ClaveProdServ',
+		select dt.uscatvls_6 ClaveProdServ,
 				case when dt.ITMTRKOP = 2 then --tracking option: serie
 					dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.SERLTNUM))),10) 
 					else null
-				end '@NoIdentificacion', 
-				dt.cantidad '@Cantidad', 
-				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.ITEMDESC))), 10) '@Descripcion',
-				dbo.fCfdiInfoAduaneraXML(dt.ITEMNMBR, dt.SERLTNUM)
-		from vwCfdiSopLineasTrxVentas dt
+				end NoIdentificacion, 
+				dt.cantidad Cantidad, 
+				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.ITEMDESC))), 10) Descripcion,
+				dbo.fCfdiInfoAduaneraSLXML(dt.ITEMNMBR, dt.SERLTNUM)
+		from vwCfdiSopLineasConSerialLot dt
 		where dt.soptype = @soptype
 		and dt.sopnumbe = @sopnumbe
 		and dt.LNITMSEQ = @LNITMSEQ
@@ -224,14 +356,15 @@ as
 --20/11/17 jcf Creación cfdi 3.3
 --
 return(
-		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, Concepto.SERLTNUM, 
+		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
 			Concepto.ITEMDESC, Concepto.CMPNTSEQ, Concepto.ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
-			case when Concepto.ITMTRKOP = 2 then --tracking option: serie
-				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
-				else null
-			end NoIdentificacion,
-			Concepto.cantidad			Cantidad, 
+			null NoIdentificacion,
+			--case when Concepto.ITMTRKOP = 2 then --tracking option: serie
+			--	dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
+			--	else null
+			--end NoIdentificacion,
+			Concepto.quantity			Cantidad, 
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
@@ -246,7 +379,7 @@ return(
 
 		union all
 
-		select top (1) Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, Concepto.SERLTNUM,
+		select top (1) Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM,
 			Concepto.ITEMDESC, Concepto.CMPNTSEQ, '' ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
 			null NoIdentificacion,
@@ -313,12 +446,12 @@ begin
 				ClaveUnidad '@ClaveUnidad', 
 				Descripcion '@Descripcion', 
 				ValorUnitario '@ValorUnitario',
-				Importe '@Importe',
+				cast(Importe as numeric(19,2)) '@Importe',
 				Descuento '@Descuento',
 
 				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
-				dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SERLTNUM),
+				dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR),
 			
 				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) 
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0) Concepto
@@ -460,10 +593,16 @@ begin
 			else 'E' 
 		end													'@TipoDeComprobante',
 
-		case when tv.orpmtrvd = tv.total or tv.soptype = 4
-			then 'PUE'
-			Else 'PPD'
-		END													'@MetodoPago',
+		case when tv.soptype = 3
+			then case when tv.orpmtrvd = tv.total
+				then 'PUE'
+				Else 'PPD'
+				END
+			else case when tr.FormaPago = '99'
+				then 'PPD'
+				Else 'PUE'
+				END
+		end													'@MetodoPago',
 		emi.codigoPostal									'@LugarExpedicion',
 
         tr.TipoRelacion										'cfdi:CfdiRelacionados/@TipoRelacion',
@@ -525,7 +664,7 @@ alter view dbo.vwCfdiTransaccionesDeVenta as
 --24/02/14 jcf Agrega parámetro a fCfdAddendaXML para cliente Mabe
 --14/09/17 jcf Agrega parámetros incluyeAddendaDflt para addenda predeterminada para todos los clientes. Utilizado en MTP
 --				Agrega isocurrc
---25/10/17 jcf Ajuste para cfdi 3.3
+--30/11/17 jcf Reestructura para cfdi 3.3
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
 	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.montoActualOriginal, tv.voidstts, 
@@ -539,25 +678,6 @@ select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora,
 		then dbo.fCfdiGeneraDocumentoDeVentaXML (tv.soptype, tv.sopnumbe) 
 		else cast('' as xml) 
 	end comprobanteXml,
-	
-	----Datos del xml sellado por el PAC:
-	--isnull(dx.selloCFD, '') selloCFD, 
-	--isnull(dx.FechaTimbrado, '') FechaTimbrado, 
-	--isnull(dx.UUID, '') UUID, 
-	--isnull(dx.noCertificadoSAT, '') noCertificadoSAT, 
-	--isnull(dx.[version], '') [version], 
-	--isnull(dx.selloSAT, '') selloSAT, 
-	--isnull(dx.FormaPago, '') formaDePago,
-	--isnull(dx.sello, '') sello, 
-	--isnull(dx.noCertificado, '') noCertificado, 
-	--isnull(dx.MetodoPago, '') metodoDePago,
-	--isnull(dx.usoCfdi, '') usoCfdi,
-	--isnull(dx.RfcPAC, '') RfcPAC,
-	--isnull(dx.Leyenda, '') Leyenda,
-
-	--'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.RfcPAC + 
-	--case when isnull(dx.Leyenda, '') = '' then '' else '|'+dx.Leyenda end
-	--+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
 	
 	fv.ID_Certificado, fv.ruta_certificado, fv.ruta_clave, fv.contrasenia_clave, 
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 

@@ -4,6 +4,7 @@ begin
 	(
 	medioid		varchar(15) NOT NULL default 'NA',
 	numberie 	varchar(21) NOT NULL default '',
+	tii_chekbkid varchar(15) not null default '',
 	lineamnt int NOT NULL default 0,
 	) on [PRIMARY];
 end
@@ -30,7 +31,7 @@ returns table
 --
 as
 return(
-	select top (1) mcpd.grupid
+	select top (1) mcpd.grupid, mcpfp.tii_chekbkid
 	from  nfmcp20100 mcpfp 
  	left join nfmcp00700 mcpd 
 		on mcpd.medioid=mcpfp.medioid

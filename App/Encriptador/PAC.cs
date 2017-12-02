@@ -78,7 +78,7 @@ namespace Encriptador
                 {
                     String msjError = timbre.SelectSingleNode("/Resultado/@IdRespuesta").Value + " " + timbre.SelectSingleNode("Resultado/@Descripcion").Value;
                     msjError += ". Error reportado por el PAC al timbrar el comprobante."+Environment.NewLine;
-                    msjError += timbre.InnerText;
+                    msjError += timbre.OuterXml.ToString();
                     throw new ArgumentException(msjError);
                 }
             }

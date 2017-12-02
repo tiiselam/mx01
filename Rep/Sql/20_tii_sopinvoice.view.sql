@@ -16,7 +16,7 @@ ALTER VIEW [dbo].[TII_SOPINVOICE] AS
 --17/10/16 jcf Agrega ORTDISAM, y CodigoBarras en caso de usar Crystal
 --18/09/17 jcf Agrega isocurrc, addLeyenda. Comenta codigoBarras. Habilitar si usa Crystal
 --20/09/17 jcf Agrega noExterior
---20/11/17 jcf Modifica estructura detalle sop
+--20/11/17 jcf Modifica estructura detalle sop para cfdi 3.3
 --
 SELECT 
 		SOPHEADER.DOCSTATUS,

@@ -140,6 +140,7 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'USCF' and clave = 'P0
 
 -----------------------------------------------------------------------------------------
 --unidad de medida
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'ACT') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'ACT', 'Actividad');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'H87') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'H87', 'Pieza');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'FOT') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'FOT', 'Pie');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'LTR') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'LTR', 'Litro');
@@ -155,14 +156,18 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'XKI
 
 -----------------------------------------------------------------------------------------
 --TIPO RELACION
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '1') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '1', 'Nota de crédito de los documentos relacionados');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '2') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '2', 'Nota de débito de los documentos relacionados');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '3') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '3', 'Devolución de mercancía sobre facturas o traslados previos');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '4') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '4', 'Sustitución de los CFDI previos');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '5') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '5', 'Traslados de mercancias facturados previamente');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '6') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '6', 'Factura generada por los traslados previos');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '01') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '01', 'Nota de crédito de los documentos relacionados');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '02') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '02', 'Nota de débito de los documentos relacionados');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '03') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '03', 'Devolución de mercancía sobre facturas o traslados previos');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '04') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '04', 'Sustitución de los CFDI previos');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '05') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '05', 'Traslados de mercancias facturados previamente');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'TPRL' and clave = '06') insert into cfdiCatalogo(tipo, clave, descripcion) values('TPRL', '06', 'Factura generada por los traslados previos');
 
 GO
 
+-----------------------------------------------------------------------------------------
+--PRODUCTO ESPECIAL
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'PROD' and clave = '84111506') insert into cfdiCatalogo(tipo, clave, descripcion) values('PROD', '84111506', 'Servicios de facturación');
+go
 -----------------------------------------------------------------------------------------
 --select * from cfdiCatalogo
