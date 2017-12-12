@@ -96,6 +96,7 @@
     <Compile Include="BLL\cfdLogFacturaXML.cs" />
     <Compile Include="BLL\cfdReglasEmail.cs" />
     <Compile Include="BLL\cfdReglasFacturaXml.cs" />
+    <Compile Include="BLL\test.cs" />
     <Compile Include="BLL\vwCfdClienteDireccionesCorreo.cs" />
     <Compile Include="BLL\vwCfdCompannias.cs" />
     <Compile Include="BLL\vwCfdiDatosDelXml.cs" />

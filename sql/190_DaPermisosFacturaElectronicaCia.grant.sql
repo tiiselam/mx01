@@ -18,6 +18,7 @@ grant execute on proc_cfdLogFacturaXMLUpdate to rol_cfdigital, dyngrp;
 grant execute on proc_cfdLogFacturaXMLInsert to rol_cfdigital, dyngrp;
 grant execute on proc_cfdLogFacturaXMLDelete to rol_cfdigital, dyngrp;
 
+grant select on dbo.vwCfdiPagosSimultaneos to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdiTransaccionesDeVenta to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdiDocumentosAImprimir to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdIdDocumentos  to rol_cfdigital, dyngrp;
@@ -28,3 +29,14 @@ grant select on dbo.vwRmCfdiFacturasConFolioFiscal to rol_cfdigital, dyngrp;
 grant select on dbo.fCfdiParametros to rol_cfdigital;
 
 grant select on dbo.vwCfdiTrxCobros to rol_cfdigital;
+
+
+use dynamics;
+IF DATABASE_PRINCIPAL_ID('rol_cfdigital') IS NULL
+	create role rol_cfdigital;
+	
+--Objetos que usa factura electrónica
+grant select on dbo.sy01500 to rol_cfdigital, dyngrp;
+grant select on dbo.vwCfdCompannias to rol_cfdigital, dyngrp;
+grant select on dbo.MC40200 to rol_cfdigital, dyngrp;
+grant select on dbo.MC00100 to rol_cfdigital, dyngrp;

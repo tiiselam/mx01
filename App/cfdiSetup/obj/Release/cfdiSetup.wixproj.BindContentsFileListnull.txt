@@ -11,7 +11,7 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Mi
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.xml
 C:\jcTii\Desarrollo\_DevTools\MyGeneration.dOOdads\bin\Release\MyGeneration.dOOdads_2005.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\ParametrosCfd.xml
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\ParametrosCfdi.xml
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\QRCodeLib.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Reporteador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Reporteador.XmlSerializers.dll

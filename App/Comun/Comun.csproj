@@ -69,7 +69,7 @@
     <Compile Include="ValidadorXML.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ParametrosCfd.xml">
+    <Content Include="ParametrosCfdi.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ParametrosCfd_plantilla.xml" />

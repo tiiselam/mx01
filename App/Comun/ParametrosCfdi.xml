@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<listaParametros>
+  <servidor>TP-GP\GPTP</servidor>
+  <seguridadIntegrada>1</seguridadIntegrada>
+  <usuariosql>sa</usuariosql>
+  <passwordsql>-</passwordsql>
+  <compannia bd="MEX10">
+    <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoPagosXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
+    <URLArchivoXSLT>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
+    <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
+    <PAC>
+      <urlWebService>https://pruebas33.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
+    </PAC>
+    <reporteador>CRYSTAL</reporteador>
+    <reporteExtensiones>
+      <Factura>.rpt</Factura>
+      <Cobro>.COB.rpt</Cobro>
+      <Traslado>.REM.rpt</Traslado>
+    </reporteExtensiones>
+    <rutaReporteCrystal tipo="default">
+      <Ruta>\\10.1.1.22\Integraciones Getty\Factura Mexico\GMOPE_FACTURA_ELECT</Ruta>
+      <Margenes>
+        <bottomMargin>0</bottomMargin>
+        <topMargin>0</topMargin>
+        <leftMargin>0</leftMargin>
+        <rightMargin>0</rightMargin>
+      </Margenes>
+      <Parametro>
+        <Nombre>Desde Numero</Nombre>
+        <Tipo>string</Tipo>
+      </Parametro>
+      <Parametro>
+        <Nombre>Hasta Numero</Nombre>
+        <Tipo>string</Tipo>
+      </Parametro>
+      <Parametro>
+        <Nombre>sTabla</Nombre>
+        <Tipo>string</Tipo>
+      </Parametro>
+      <Parametro>
+        <Nombre>Comprobante</Nombre>
+        <Tipo>int</Tipo>
+      </Parametro>
+      <imprime>0</imprime>
+      <nombreImpresora>na</nombreImpresora>
+    </rutaReporteCrystal>
+    <ReporteSSRS tipo="default">
+      <Ruta>na</Ruta>
+      <SSRSServer>na</SSRSServer>
+      <Parametro>
+        <Nombre>na</Nombre>
+        <Tipo>na</Tipo>
+      </Parametro>
+    </ReporteSSRS>
+    <emite>1</emite>
+    <anula>1</anula>
+    <imprime>1</imprime>
+    <publica>0</publica>
+    <envia>1</envia>
+    <zip>1</zip>
+    <emailSetup>
+      <smtp>smtp.gmail.com</smtp>
+      <puerto>587</puerto>
+      <cuenta>billing@gettyimageslatam.com</cuenta>
+      <usuario>billing@gettyimageslatam.com</usuario>
+      <clave></clave>
+      <ssl>true</ssl>
+      <replyto>billing@gettyimageslatam.com</replyto>
+      <carta>FACTURA_ELECTRONICA</carta>
+      <adjuntoEmite>zip</adjuntoEmite>
+      <adjuntoImprime>pdf</adjuntoImprime>
+    </emailSetup>
+  </compannia>
+</listaParametros>
+

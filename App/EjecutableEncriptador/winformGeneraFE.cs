@@ -262,7 +262,7 @@ namespace EjecutableEncriptador
             toolStripConsulta.Enabled = emite || anula || imprime || publica || envia;
             btnBuscar.Enabled = emite || anula || imprime || publica || envia;
 
-            this.tabCfdi.Enabled = emite;
+            this.tabCfdi.Enabled = emite || imprime;
         }
 
         private void ReActualizaDatosDeVentana()
@@ -620,6 +620,19 @@ namespace EjecutableEncriptador
 
         private void tsBtnArchivoMensual_Click(object sender, EventArgs e)
         {
+            //En caso de no generar el código qr, este método puede hacerlo. Atención! Editar el método GeneraQRCode.
+
+            Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            Param.ExtDefault = this.tabCfdi.SelectedTab.Name;
+
+            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
+            {
+                txtbxMensajes.Text = ultimoMensaje;
+            }
+
+            test t = new test(DatosConexionDB.Elemento, Param);
+            t.TrxVenta = regla.CfdiTransacciones;
+            t.GeneraQRCode();
 
         }
 

@@ -101,7 +101,7 @@ namespace Comun
             try
             {
                 XmlDocument listaParametros = new XmlDocument();
-                listaParametros.Load(new XmlTextReader("ParametrosCfd.xml"));
+                listaParametros.Load(new XmlTextReader("ParametrosCfdi.xml"));
                 XmlNodeList listaElementos = listaParametros.DocumentElement.ChildNodes;
                 
                 foreach (XmlNode n in listaElementos)
@@ -127,7 +127,7 @@ namespace Comun
             try
             {
                 XmlDocument listaParametros = new XmlDocument();
-                listaParametros.Load(new XmlTextReader("ParametrosCfd.xml"));
+                listaParametros.Load(new XmlTextReader("ParametrosCfdi.xml"));
                 XmlNode elemento = listaParametros.DocumentElement;
 
                 _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;

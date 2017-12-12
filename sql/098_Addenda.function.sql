@@ -146,26 +146,27 @@ create function dbo.fCfdAddendaDetalle(@p_soptype smallint, @p_sopnumbe varchar(
 returns xml 
 as
 --Propósito. Detalle de una factura para addenda de Mabe
---21/2/14 jcf Creación
+--21/02/14 jcf Creación
+--06/12/17 JCF Modifica campo oxtndprc, quantity
 --
 begin
 	declare @cncp xml;
 	select @cncp = (
 		select 
-			ROW_NUMBER() OVER(PARTITION BY sopnumbe ORDER BY lnitmseq)	'@number',
+			ROW_NUMBER() OVER(PARTITION BY Concepto.sopnumbe ORDER BY Concepto.lnitmseq)	'@number',
 			'SimpleInvoiceLineItemType'									'@type',
 			'SUPPLIER_ASSIGNED'											'alternateTradeItemIdentification/@type',
 			rtrim(Concepto.ITEMNMBR)									'alternateTradeItemIdentification',
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10)	'tradeItemDescriptionInformation/longText',
 			'PZA'														'invoicedQuantity/@unitOfMeasure',
-			Concepto.cantidad											'invoicedQuantity',
+			Concepto.QUANTITY											'invoicedQuantity',
 			Concepto.ORUNTPRC											'grossPrice/Amount',
 			Concepto.ORUNTPRC											'netPrice/Amount',
 			dbo.fCfdAddendaDetalleImpuestos(Concepto.soptype, Concepto.sopnumbe, @p_impuestos),
-			Concepto.importe											'totalLineAmount/grossAmount/Amount',
-			Concepto.importe											'totalLineAmount/netAmount/Amount'
-		from vwSopLineasTrxVentas Concepto
-		where CMPNTSEQ = 0					--a nivel kit
+			Concepto.OXTNDPRC											'totalLineAmount/grossAmount/Amount',
+			Concepto.OXTNDPRC											'totalLineAmount/netAmount/Amount'
+		from SOP30300 Concepto
+		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
 		and Concepto.sopnumbe = @p_sopnumbe
 		FOR XML path('lineItem')

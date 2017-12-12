@@ -120,7 +120,7 @@
               <File Id="Comun" Name="$(var.Comun.TargetFileName)" Source="$(var.Comun.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Parametros" Guid="803CC646-A468-47e3-9FDF-36935BCA4D89">
-              <File Id="ParametrosCfd" Name="ParametrosCfd.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\ParametrosCfd.xml" DiskId="1" KeyPath="no"/>
+              <File Id="ParametrosCfdi" Name="ParametrosCfdi.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\ParametrosCfdi.xml" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="EMailManejador" Guid="2C73E2CE-2A0B-4358-8E28-10201B86B693">
               <File Id="EMailManejador" Name="$(var.EMailManejador.TargetFileName)" Source="$(var.EMailManejador.TargetPath)" DiskId="1" KeyPath="yes"/>

@@ -760,3 +760,9 @@ GO
 
 -- FIN DE SCRIPT ***********************************************
 
+--test
+--select 'cfdi.Add(new CfdiUUID() { Sopnumbe = "'+rtrim(sopnumbe)+'", Uuid="'+rtrim(folioFiscal)+'", Sello= "'+ rtrim(sello)+'"});',
+--sopnumbe, folioFiscal, sello, *
+--from vwCfdiDocumentosAImprimir
+--where month(fechaHoraEmision) = 12
+--order by 1
