@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <listaParametros>
-  <servidor>10.1.1.22</servidor>
+  <servidor>10.1.1.24</servidor>
   <seguridadIntegrada>0</seguridadIntegrada>
   <usuariosql>sa</usuariosql>
-  <passwordsql>sa22</passwordsql>
+  <passwordsql>imagenes24</passwordsql>
   <compannia bd="MEX10">
     <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
     <URLArchivoPagosXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>

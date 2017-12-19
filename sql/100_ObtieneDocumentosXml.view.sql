@@ -368,9 +368,9 @@ return(
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
-			cast(Concepto.ORUNTPRC as numeric(19, 2))				ValorUnitario,
-			cast(Concepto.importe  as numeric(19, 2))				Importe,
-			cast(Concepto.descuento as numeric(19, 2))				Descuento
+			Concepto.ORUNTPRC 		ValorUnitario,
+			Concepto.importe  		Importe,
+			Concepto.descuento 		Descuento
 		from vwCfdiSopLineasTrxVentas Concepto
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
@@ -445,9 +445,9 @@ begin
 				Cantidad '@Cantidad', 
 				ClaveUnidad '@ClaveUnidad', 
 				Descripcion '@Descripcion', 
-				ValorUnitario '@ValorUnitario',
-				cast(Importe as numeric(19,2)) '@Importe',
-				Descuento '@Descuento',
+				cast(ValorUnitario as numeric(19, 2)) '@ValorUnitario',
+				cast(Importe as numeric(19,2))			'@Importe',
+				cast(Descuento as numeric(19, 2))		'@Descuento',
 
 				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
@@ -542,13 +542,14 @@ IF OBJECT_ID ('dbo.fCfdiGeneraDocumentoDeVentaXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiGeneraDocumentoDeVentaXML
 GO
 
-CREATE function dbo.fCfdiGeneraDocumentoDeVentaXML (@soptype smallint, @sopnumbe varchar(21))
+create function dbo.fCfdiGeneraDocumentoDeVentaXML (@soptype smallint, @sopnumbe varchar(21))
 returns xml 
 as
 --Propósito. Elabora un comprobante xml para factura electrónica cfdi
 --Requisitos. El total de impuestos de la factura debe corresponder a la suma del detalle de impuestos. 
 --			Se asume que No incluye retenciones
 --23/10/17 jcf Creación cfdi 3.3
+--12/12/17 jcf No debe mostrar descuento si no hay descuento en el detalle
 --
 begin
 	declare @cfd xml;
@@ -579,7 +580,9 @@ begin
 		--tv.pymtrmid								'@CondicionesDePago',
 
 		cast(tv.subtotal as numeric(19,2))					'@SubTotal',
-		cast(tv.descuento as numeric(19,2))					'@Descuento',
+		case when tv.descuento = 0 then null 
+			else cast(tv.descuento as numeric(19,2)) 
+		end													'@Descuento',
 		tv.curncyid											'@Moneda',
 
 		case when tv.curncyid in ('MXN', 'XXX')
@@ -665,6 +668,7 @@ alter view dbo.vwCfdiTransaccionesDeVenta as
 --14/09/17 jcf Agrega parámetros incluyeAddendaDflt para addenda predeterminada para todos los clientes. Utilizado en MTP
 --				Agrega isocurrc
 --30/11/17 jcf Reestructura para cfdi 3.3
+--12/12/17 jcf Agrega mensaje en docs anulados
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
 	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.montoActualOriginal, tv.voidstts, 
@@ -683,7 +687,10 @@ select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora,
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 
 	emi.rfc, emi.regimen, emi.rutaXml, emi.codigoPostal,
 	isnull(lf.estadoActual, '000000') estadoActual, 
-	isnull(lf.mensajeEA, tv.estadoContabilizado) mensajeEA,
+	
+	isnull(lf.mensajeEA, tv.estadoContabilizado) +
+	case when tv.voidstts = 0 then '' else ' ANULADO.' end mensajeEA,
+
 	tv.curncyid isocurrc,
 	dbo.fCfdAddendaXML(tv.custnmbr,  tv.soptype, tv.sopnumbe, tv.docid, tv.cstponbr, tv.curncyid, tv.docdate, tv.xchgrate, tv.subtotal, tv.total, emi.incluyeAddendaDflt) addenda
 from dbo.vwCfdiSopTransaccionesVenta tv

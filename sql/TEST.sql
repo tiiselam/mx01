@@ -3,6 +3,8 @@ select [dbo].[fCfdiDocumentoDePagoXML] (9, 'PYMNT00000090')
 
 select [dbo].fCfdiDocumentoDePagoXMLPago (9, 'PYMNT00000122')
 
+select dbo.fCfdiConceptosXML(3, '00000840', 10)
+
 
 select *
 from [vwCfdiRMFacturas]

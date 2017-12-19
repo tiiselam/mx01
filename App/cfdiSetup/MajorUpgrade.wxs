@@ -9,7 +9,7 @@
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />
 
     <!--Actualiza una versión anterior-->
-    <Upgrade Id='44281eba-a31e-4e51-92b8-ff8327561a96'>
+    <Upgrade Id='BC4441BF-5570-42F6-BF37-249A39071F08'>
       <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' Minimum='6.0.0.0' IncludeMinimum='yes' Maximum='7.0.0.0' IncludeMaximum='no'/>
     </Upgrade>
 

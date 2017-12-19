@@ -69,9 +69,9 @@
     </emailSetup>
   </compannia>
   <compannia bd="MEX10">
-    <URLArchivoXSD>\\GILABASRDB07\GettyMX_FacturaElectronicaXml\fePlantillas\cfdv33.xsd</URLArchivoXSD>
-    <URLArchivoPagosXSD>\\GILABASRDB07\GettyMX_FacturaElectronicaXml\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
-    <URLArchivoXSLT>\\GILABASRDB07\GettyMX_FacturaElectronicaXml\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
+    <URLArchivoXSD>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoPagosXSD>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
+    <URLArchivoXSLT>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
     <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
     <PAC>
       <urlWebService>https://www.interfactura.com/ServicioTimbrado/TimbreServicios.asmx</urlWebService>
@@ -151,7 +151,7 @@
 	   <Traslado>.rpt</Traslado>
 	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>\\GILABASRDB07\Integraciones Getty\Factura Colombia\COL10_FACTURA_UNICA</Ruta>
+      <Ruta>\\10.1.1.24\Integraciones Getty\Factura Colombia\COL10_FACTURA_UNICA</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>
@@ -215,7 +215,7 @@
 	   <Traslado>.rpt</Traslado>
 	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
-      <Ruta>\\GILABASRDB07\Integraciones Getty\Factura Perú\PER10_FACTURA_UNICA</Ruta>
+      <Ruta>\\10.1.1.24\Integraciones Getty\Factura Perú\PER10_FACTURA_UNICA</Ruta>
       <Margenes>
         <bottomMargin>0</bottomMargin>
         <topMargin>0</topMargin>
