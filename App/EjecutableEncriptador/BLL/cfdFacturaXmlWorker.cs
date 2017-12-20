@@ -36,7 +36,7 @@ namespace cfd.FacturaElectronica
             try
             {
                 String msj=String.Empty;
-                ReportProgress(0, "Iniciando proceso...\r\n");
+                ReportProgress(0, "Revisando configuración...\r\n");
                 object[] args = e.Argument as object[];
                 vwCfdTransaccionesDeVenta trxVenta = (vwCfdTransaccionesDeVenta)args[0];
                 trxVenta.Rewind();                                                          //move to first record
@@ -55,6 +55,7 @@ namespace cfd.FacturaElectronica
                 PAC representanteSat = new PAC(trxVenta.Ruta_clavePac, trxVenta.Contrasenia_clavePac, _Param);
                 String Sello = string.Empty;
 
+                ReportProgress(0, "Iniciando proceso...\r\n");
                 do
                 {
                     msj = String.Empty;

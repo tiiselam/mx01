@@ -4,13 +4,13 @@
      xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
 
   <Product Id="18EF6029-54B0-42A3-A658-23736EDB6033" Name="GP Factura Digital Athos"
-           Language="1033" Version="7.0.0.2" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
+           Language="1033" Version="7.2.0.0" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />
 
     <!--Actualiza una versión anterior-->
     <Upgrade Id='BC4441BF-5570-42F6-BF37-249A39071F08'>
-      <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' Minimum='6.0.0.0' IncludeMinimum='yes' Maximum='7.0.0.0' IncludeMaximum='no'/>
+      <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' Minimum='6.0.0.0' IncludeMinimum='yes' Maximum='7.2.0.0' IncludeMaximum='no'/>
     </Upgrade>
 
     <InstallExecuteSequence>

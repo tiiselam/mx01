@@ -19,7 +19,6 @@ namespace EjecutableEncriptador
     public partial class winformGeneraFE : Form
     {
         static winVisorDeReportes FrmVisorDeReporte;
-        //vwCfdTransaccionesDeVenta trxVenta;     //todos los documentos de venta
         cfdReglasFacturaXml regla;
         DataGridView dGridActivo;
         String vistaActiva = String.Empty;
@@ -45,6 +44,19 @@ namespace EjecutableEncriptador
             InitializeComponent();
         }
 
+        private void winformGeneraFE_Load(object sender, EventArgs e)
+        {
+            if (!cargaCompannias(!DatosConexionDB.Elemento.IntegratedSecurity, DatosConexionDB.Elemento.Intercompany))
+            {
+                txtbxMensajes.Text = ultimoMensaje;
+                HabilitarVentana(false, false, false, false, false, true);
+            }
+            dtPickerDesde.Value = DateTime.Now;
+            dtPickerHasta.Value = DateTime.Now;
+            lblFecha.Text = DateTime.Now.ToString();
+        }
+
+        #region METODOS DE SOPORTE
         private void ObtieneGrid(string nombreTab)
         {
             switch (nombreTab)
@@ -56,6 +68,10 @@ namespace EjecutableEncriptador
                 case "tabCobros":
                     dGridActivo = dgridTrxCobros;
                     vistaActiva = "vwCfdiTrxCobros";
+                    break;
+                case "tabTraslados":
+                    dGridActivo = dGridTraslados;
+                    vistaActiva = "vwCfdiTrasladosUserInterface";
                     break;
                 default:
                     dGridActivo = dgridTrxFacturas;
@@ -118,7 +134,7 @@ namespace EjecutableEncriptador
         {
             for (int r = 0; r < dataGrid.RowCount; r++)
             {
-                dataGrid[idxChkBox, r].Value = marca; 
+                dataGrid[idxChkBox, r].Value = marca;
             }
             dataGrid.EndEdit();
         }
@@ -127,7 +143,7 @@ namespace EjecutableEncriptador
         {
             for (int r = 0; r < dataGrid.RowCount; r++)
             {
-                dataGrid[idxChkBox, r].Value = !LNoSeleccionados.Exists(delegate(CfdiDocumentoId match)
+                dataGrid[idxChkBox, r].Value = !LNoSeleccionados.Exists(delegate (CfdiDocumentoId match)
                                             {
                                                 return (match.idDoc == dataGrid[idxIdDoc, r].Value.ToString()
                                                     && match.sopnumbe == dataGrid[idxSopnumbe, r].Value.ToString());
@@ -204,11 +220,11 @@ namespace EjecutableEncriptador
                 //cargar lista de no seleccionados
                 foreach (DataGridViewRow dgvr in dGridActivo.Rows)
                 {
-                    if (!(dgvr.Cells[idxChkBox].Value != null && (dgvr.Cells[idxChkBox].Value.Equals(true) || dgvr.Cells[idxChkBox].Value.ToString().Equals("1"))))  
-                        LDocsNoSeleccionados.Add(new CfdiDocumentoId(dgvr.Cells[idxIdDoc].Value.ToString(), 
+                    if (!(dgvr.Cells[idxChkBox].Value != null && (dgvr.Cells[idxChkBox].Value.Equals(true) || dgvr.Cells[idxChkBox].Value.ToString().Equals("1"))))
+                        LDocsNoSeleccionados.Add(new CfdiDocumentoId(dgvr.Cells[idxIdDoc].Value.ToString(),
                                                                 Convert.ToInt16(dgvr.Cells[idxSoptype].Value.ToString()),
                                                                 dgvr.Cells[idxSopnumbe].Value.ToString()));
-                    progressBar1.Value = Convert.ToInt32( i * 100 / dGridActivo.RowCount);
+                    progressBar1.Value = Convert.ToInt32(i * 100 / dGridActivo.RowCount);
                     i++;
                 }
                 progressBar1.Value = 0;
@@ -233,18 +249,6 @@ namespace EjecutableEncriptador
                 ultimoMensaje = "[filtraListaSeleccionada] No se pudo filtrar los documentos seleccionados. " + eFiltro.Message;
                 return (false);
             }
-        }
-
-        private void winformGeneraFE_Load(object sender, EventArgs e)
-        {
-            if (!cargaCompannias(!DatosConexionDB.Elemento.IntegratedSecurity, DatosConexionDB.Elemento.Intercompany))
-            {
-                txtbxMensajes.Text = ultimoMensaje;
-                HabilitarVentana(false,false,false,false,false, true);
-            }
-            dtPickerDesde.Value = DateTime.Now;
-            dtPickerHasta.Value = DateTime.Now;
-            lblFecha.Text = DateTime.Now.ToString();
         }
 
         private void HabilitarVentana(bool emite, bool anula, bool imprime, bool publica, bool envia, bool cambiaCia)
@@ -280,7 +284,7 @@ namespace EjecutableEncriptador
             if (!cargaIdDocumento())
             {
                 txtbxMensajes.AppendText(ultimoMensaje);
-                HabilitarVentana(false,false,false,false,false, true);
+                HabilitarVentana(false, false, false, false, false, true);
             }
 
             Parametros configCfd = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
@@ -290,7 +294,7 @@ namespace EjecutableEncriptador
             if (!configCfd.ultimoMensaje.Equals(string.Empty))
             {
                 txtbxMensajes.AppendText(configCfd.ultimoMensaje);
-                HabilitarVentana(false,false,false,false,false, true);
+                HabilitarVentana(false, false, false, false, false, true);
                 return;
             }
 
@@ -302,91 +306,9 @@ namespace EjecutableEncriptador
             AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            txtbxMensajes.Text = "";
-            LDocsNoSeleccionados = new List<CfdiDocumentoId>();
-            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
-        }
+        #endregion
 
-        /// <summary>
-        /// Genera XMLs masivamente
-        /// </summary>
-        /// <param name="e"></param>
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            int errores = 0;
-            txtbxMensajes.Text = "";
-
-            Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
-            Param.ExtDefault = this.tabCfdi.SelectedTab.Name;
-            if (!Param.ultimoMensaje.Equals(string.Empty)) 
-            {
-                txtbxMensajes.Text = Param.ultimoMensaje;
-                errores++;
-            }
-            if (regla.CfdiTransacciones.RowCount == 0)
-            {
-                txtbxMensajes.Text = "No hay documentos para generar. Verifique los criterios de búsqueda.";
-                errores++;
-            }
-            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
-            {
-                txtbxMensajes.Text = ultimoMensaje;
-                errores++;
-            }
-            if (errores == 0)
-            {
-                cfdFacturaXmlWorker _bw = new cfdFacturaXmlWorker(DatosConexionDB.Elemento, Param); 
-                pBarProcesoActivo.Visible = true;
-                HabilitarVentana(false, false, false, false, false, false);
-                _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
-                _bw.ProgressChanged += new ProgressChangedEventHandler(bw_Progress);
-                object[] arguments = { regla.CfdiTransacciones }; 
-                _bw.RunWorkerAsync(arguments);
-            }
-        }
-
-        void bw_Progress(object sender, ProgressChangedEventArgs e)
-        {
-            try
-            {
-                progressBar1.Value = e.ProgressPercentage;
-                txtbxMensajes.AppendText(e.UserState.ToString());
-            }
-            catch (Exception ePr)
-            {
-                txtbxMensajes.AppendText("bw Progress: " + ePr.Message);
-            }
-        }
-
-        void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {
-            try
-            {
-            if (e.Cancelled)
-                progressBar1.Value = 0;
-            else if (e.Error != null)
-                txtbxMensajes.AppendText("[cfdFacturaXmlWorker]: " + e.Error.ToString());
-            else
-                txtbxMensajes.AppendText(e.Result.ToString());
-
-            //Actualiza la pantalla
-            Parametros Cia = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
-            Cia.ExtDefault = this.tabCfdi.SelectedTab.Name;
-            HabilitarVentana(Cia.emite, Cia.anula, Cia.imprime, Cia.publica, Cia.envia, true);
-            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
-            progressBar1.Value = 0;
-            pBarProcesoActivo.Visible = false;
-
-            }
-            catch (Exception eCm)
-            {
-                txtbxMensajes.AppendText("bw Completed: " + eCm.Message);
-            }
-
-        }
-
+        #region METODOS PARA FILTRADO Y BUSQUEDA
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -448,31 +370,6 @@ namespace EjecutableEncriptador
             AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
-        public bool ExistenFacturasNoEmitidas()
-        {
-            //int i = 0; 
-            //progressBar1.Value = 0;
-            //foreach (DataGridViewRow dgvr in dgridTrxFacturas.Rows)
-            //{
-            //    if (!dgvr.Cells[idxEstado].Value.Equals("emitido"))
-            //    {
-            //        dgvr.DefaultCellStyle.ForeColor = Color.Red;
-            //        dgridTrxFacturas.CurrentCell = dgvr.Cells[idxEstado];
-            //        progressBar1.Value = 0;
-            //        return true;
-            //    }
-            //    progressBar1.Value = i * 100 / dgridTrxFacturas.RowCount;
-            //    i++;
-            //}
-            //progressBar1.Value = 0;
-            return false;
-        }
-
-        public void GuardaArchivoMensual()
-        {
-
-        }
-
         private void tsConfirmaAnulaXml_MouseLeave(object sender, EventArgs e)
         {
             tsConfirmaAnulaXml.Visible = false;
@@ -483,88 +380,16 @@ namespace EjecutableEncriptador
         {
         }
 
-        /// <summary>
-        /// Imprimir en pantalla
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsButtonImprimir_Click(object sender, EventArgs e)
+        private void btnBuscar_Click(object sender, EventArgs e)
         {
-            string prmFolioDesde = "";
-            string prmFolioHasta = "";
-            string prmTabla = "SOP30200";
-            int prmSopType = 0;
-            Parametros configCfd = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
-            configCfd.ExtDefault = this.tabCfdi.SelectedTab.Name;
-            
             txtbxMensajes.Text = "";
-            txtbxMensajes.Refresh();
-            configCfd.ImprimeEnImpresora = false;
-            if (tsComboDestinoRep.Text.Equals("Impresora"))
-                configCfd.ImprimeEnImpresora = true;
-
-            if (dgridTrxFacturas.CurrentRow != null)
-            {
-                if (dgridTrxFacturas.CurrentCell.Selected)
-                {
-                    prmFolioDesde = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
-                    prmFolioHasta = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
-                    prmSopType = Convert.ToInt16(dgridTrxFacturas.CurrentRow.Cells[idxSoptype].Value.ToString());
-
-                    //En el caso de una compañía que debe emitir xml, controlar que la factura ha sido emitida antes de imprimir.
-                    if(configCfd.emite)
-                    {
-                        if (!dgridTrxFacturas.CurrentRow.Cells[idxEstado].Value.Equals("emitido"))      //estado FE
-                        {
-                            txtbxMensajes.Text = "La factura " + prmFolioDesde + " no fue emitida. Emita la factura y vuelva a intentar.\r\n";
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (dgridTrxFacturas.CurrentRow.Cells[idxAnulado].Value.ToString().Equals("1")) //factura anulada en GP
-                        {
-                            txtbxMensajes.Text = "La factura " + prmFolioDesde + " no se puede imprimir porque está anulada. \r\n";
-                            return;
-                        }
-                        if (dgridTrxFacturas.CurrentRow.Cells[idxEstadoContab].Value.Equals("en lote")) //estado contabilizado en GP
-                            prmTabla = "SOP10100";
-                    }
-
-                    if (FrmVisorDeReporte == null)
-                    {
-                        try
-                        {
-                            FrmVisorDeReporte = new winVisorDeReportes(DatosConexionDB.Elemento, configCfd, prmFolioDesde, prmFolioHasta, prmTabla, prmSopType);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                    }
-                    else
-                    {
-                        if (FrmVisorDeReporte.Created == false)
-                        {
-                            FrmVisorDeReporte = new winVisorDeReportes(DatosConexionDB.Elemento, configCfd, prmFolioDesde, prmFolioHasta, prmTabla, prmSopType);
-                        }
-                    }
-
-                    // Always show and activate the WinForm
-                    FrmVisorDeReporte.Show();
-                    FrmVisorDeReporte.Activate();
-                    txtbxMensajes.Text = FrmVisorDeReporte.mensajeErr;
-                }
-                else
-                    txtbxMensajes.Text = "No seleccionó ninguna factura. Debe marcar la factura que desea imprimir y luego presionar el botón de impresión.";
-            }
+            LDocsNoSeleccionados = new List<CfdiDocumentoId>();
+            AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
         }
 
-        private void cmbBxCompannia_TextChanged(object sender, EventArgs e)
-        {
-            ReActualizaDatosDeVentana();
-        }
+        #endregion
 
+        #region METODOS PRINCIPALES
         private void tsBtnAnulaElimina_Click(object sender, EventArgs e)
         {
             //int i = 0;
@@ -602,7 +427,7 @@ namespace EjecutableEncriptador
             try
             {
                 txtbxMensajes.Text = "";
-                
+
                 string ruta = dGridActivo.CurrentRow.Cells[idxMensaje].Value.ToString().Replace("Almacenado en ", "").Trim();
                 string archivo = ".XML";
 
@@ -633,6 +458,84 @@ namespace EjecutableEncriptador
             test t = new test(DatosConexionDB.Elemento, Param);
             t.TrxVenta = regla.CfdiTransacciones;
             t.GeneraQRCode();
+
+        }
+
+        /// <summary>
+        /// Genera XMLs masivamente
+        /// </summary>
+        /// <param name="e"></param>
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            int errores = 0;
+            txtbxMensajes.Text = "";
+
+            Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
+            Param.ExtDefault = this.tabCfdi.SelectedTab.Name;
+            if (!Param.ultimoMensaje.Equals(string.Empty))
+            {
+                txtbxMensajes.Text = Param.ultimoMensaje;
+                errores++;
+            }
+            if (regla.CfdiTransacciones.RowCount == 0)
+            {
+                txtbxMensajes.Text = "No hay documentos para generar. Verifique los criterios de búsqueda.";
+                errores++;
+            }
+            if (!filtraListaSeleccionada()) //Filtra cfdiTransacciones sólo con docs marcados
+            {
+                txtbxMensajes.Text = ultimoMensaje;
+                errores++;
+            }
+            if (errores == 0)
+            {
+                cfdFacturaXmlWorker _bw = new cfdFacturaXmlWorker(DatosConexionDB.Elemento, Param);
+                pBarProcesoActivo.Visible = true;
+                HabilitarVentana(false, false, false, false, false, false);
+                _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
+                _bw.ProgressChanged += new ProgressChangedEventHandler(bw_Progress);
+                object[] arguments = { regla.CfdiTransacciones };
+                _bw.RunWorkerAsync(arguments);
+            }
+        }
+
+        void bw_Progress(object sender, ProgressChangedEventArgs e)
+        {
+            try
+            {
+                progressBar1.Value = e.ProgressPercentage;
+                txtbxMensajes.AppendText(e.UserState.ToString());
+            }
+            catch (Exception ePr)
+            {
+                txtbxMensajes.AppendText("bw Progress: " + ePr.Message);
+            }
+        }
+
+        void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                if (e.Cancelled)
+                    progressBar1.Value = 0;
+                else if (e.Error != null)
+                    txtbxMensajes.AppendText("[cfdFacturaXmlWorker]: " + e.Error.ToString());
+                else
+                    txtbxMensajes.AppendText(e.Result.ToString());
+
+                //Actualiza la pantalla
+                Parametros Cia = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
+                Cia.ExtDefault = this.tabCfdi.SelectedTab.Name;
+                HabilitarVentana(Cia.emite, Cia.anula, Cia.imprime, Cia.publica, Cia.envia, true);
+                AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
+                progressBar1.Value = 0;
+                pBarProcesoActivo.Visible = false;
+
+            }
+            catch (Exception eCm)
+            {
+                txtbxMensajes.AppendText("bw Completed: " + eCm.Message);
+            }
 
         }
 
@@ -676,11 +579,11 @@ namespace EjecutableEncriptador
             }
         }
 
-        private void cmbBxCompannia_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ReActualizaDatosDeVentana();
-        }
-
+        /// <summary>
+        /// Envía emails
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsBtnEnviaEmail_Click(object sender, EventArgs e)
         {
             int errores = 0;
@@ -715,52 +618,17 @@ namespace EjecutableEncriptador
             }
         }
 
-        /// <summary>
-        /// Barre el grid para indicar los colores que corresponden a cada fila.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dgridTrxFacturas_RowPostPaint_1(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                //Está completo
-                int estadoDoc = Convert.ToInt32(dgridTrxFacturas.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
-                if (estadoDoc == estadoCompletadoCia)
-                {
-                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
-                }
-
-                //Está en proceso
-                if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
-                {
-                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
-                }
-            }
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {//pruebas
-            if (filtraListaSeleccionada())
-            {
-                txtbxMensajes.AppendText("Documentos seleccionados listos para procesar...proceso...\r\n");
-                AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
-            }
-            else
-                txtbxMensajes.Text = ultimoMensaje;
-        }
-
-        private void checkBoxMark_CheckedChanged(object sender, EventArgs e)
-        {
-            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, checkBoxMark.Checked);
-        }
-
         private void tsButtonConsultaTimbre_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void tsMenuImprimir_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Imprimir en pantalla
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsButtonImprimir_Click(object sender, EventArgs e)
         {
             string prmFolioDesde = "";
             string prmFolioHasta = "";
@@ -775,10 +643,12 @@ namespace EjecutableEncriptador
             if (tsComboDestinoRep.Text.Equals("Impresora"))
                 configCfd.ImprimeEnImpresora = true;
 
-            if (dgridTrxFacturas.CurrentRow != null && dgridTrxFacturas.CurrentCell.Selected)
+            if (dgridTrxFacturas.CurrentRow != null)
             {
-                    prmFolioDesde = tsTextDesde.Text;
-                    prmFolioHasta = tsTextHasta.Text;
+                if (dgridTrxFacturas.CurrentCell.Selected)
+                {
+                    prmFolioDesde = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
+                    prmFolioHasta = dgridTrxFacturas.CurrentRow.Cells[idxSopnumbe].Value.ToString();
                     prmSopType = Convert.ToInt16(dgridTrxFacturas.CurrentRow.Cells[idxSoptype].Value.ToString());
 
                     //En el caso de una compañía que debe emitir xml, controlar que la factura ha sido emitida antes de imprimir.
@@ -824,6 +694,76 @@ namespace EjecutableEncriptador
                     FrmVisorDeReporte.Show();
                     FrmVisorDeReporte.Activate();
                     txtbxMensajes.Text = FrmVisorDeReporte.mensajeErr;
+                }
+                else
+                    txtbxMensajes.Text = "No seleccionó ninguna factura. Debe marcar la factura que desea imprimir y luego presionar el botón de impresión.";
+            }
+        }
+
+        private void tsMenuImprimir_Click(object sender, EventArgs e)
+        {
+            string prmFolioDesde = "";
+            string prmFolioHasta = "";
+            string prmTabla = "SOP30200";
+            int prmSopType = 0;
+            Parametros configCfd = new Parametros(DatosConexionDB.Elemento.Intercompany);   //Carga configuración desde xml
+            configCfd.ExtDefault = this.tabCfdi.SelectedTab.Name;
+
+            txtbxMensajes.Text = "";
+            txtbxMensajes.Refresh();
+            configCfd.ImprimeEnImpresora = false;
+            if (tsComboDestinoRep.Text.Equals("Impresora"))
+                configCfd.ImprimeEnImpresora = true;
+
+            if (dgridTrxFacturas.CurrentRow != null && dgridTrxFacturas.CurrentCell.Selected)
+            {
+                prmFolioDesde = tsTextDesde.Text;
+                prmFolioHasta = tsTextHasta.Text;
+                prmSopType = Convert.ToInt16(dgridTrxFacturas.CurrentRow.Cells[idxSoptype].Value.ToString());
+
+                //En el caso de una compañía que debe emitir xml, controlar que la factura ha sido emitida antes de imprimir.
+                if (configCfd.emite)
+                {
+                    if (!dgridTrxFacturas.CurrentRow.Cells[idxEstado].Value.Equals("emitido"))      //estado FE
+                    {
+                        txtbxMensajes.Text = "La factura " + prmFolioDesde + " no fue emitida. Emita la factura y vuelva a intentar.\r\n";
+                        return;
+                    }
+                }
+                else
+                {
+                    if (dgridTrxFacturas.CurrentRow.Cells[idxAnulado].Value.ToString().Equals("1")) //factura anulada en GP
+                    {
+                        txtbxMensajes.Text = "La factura " + prmFolioDesde + " no se puede imprimir porque está anulada. \r\n";
+                        return;
+                    }
+                    if (dgridTrxFacturas.CurrentRow.Cells[idxEstadoContab].Value.Equals("en lote")) //estado contabilizado en GP
+                        prmTabla = "SOP10100";
+                }
+
+                if (FrmVisorDeReporte == null)
+                {
+                    try
+                    {
+                        FrmVisorDeReporte = new winVisorDeReportes(DatosConexionDB.Elemento, configCfd, prmFolioDesde, prmFolioHasta, prmTabla, prmSopType);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+                else
+                {
+                    if (FrmVisorDeReporte.Created == false)
+                    {
+                        FrmVisorDeReporte = new winVisorDeReportes(DatosConexionDB.Elemento, configCfd, prmFolioDesde, prmFolioHasta, prmTabla, prmSopType);
+                    }
+                }
+
+                // Always show and activate the WinForm
+                FrmVisorDeReporte.Show();
+                FrmVisorDeReporte.Activate();
+                txtbxMensajes.Text = FrmVisorDeReporte.mensajeErr;
             }
             else
                 txtbxMensajes.Text = "No seleccionó ninguna factura. Debe marcar la factura que desea imprimir y luego presionar el botón de impresión.";
@@ -844,7 +784,7 @@ namespace EjecutableEncriptador
             tsComboDestinoRep.Enabled = false;
             if (!configCfd.emite && configCfd.reporteador.Equals("CRYSTAL"))    //Se habilitó esta opción porque el visor de crystal no puede imprimir. 
                 tsComboDestinoRep.Enabled = true;
-            
+
             if (dGridActivo.CurrentRow != null)
             {
                 if (dGridActivo.CurrentCell.Selected)
@@ -857,6 +797,48 @@ namespace EjecutableEncriptador
                     txtbxMensajes.Text = "No seleccionó ninguna factura. Debe marcar la factura que desea imprimir y luego presionar el botón de impresión.";
             }
 
+        }
+
+        #endregion
+
+        #region EVENTOS
+        /// <summary>
+        /// Barre el grid para indicar los colores que corresponden a cada fila.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgridTrxFacturas_RowPostPaint_1(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                //Está completo
+                int estadoDoc = Convert.ToInt32(dgridTrxFacturas.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
+                if (estadoDoc == estadoCompletadoCia)
+                {
+                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
+                }
+
+                //Está en proceso
+                if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
+                {
+                    dgridTrxFacturas.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.Orange;
+                }
+            }
+        }
+
+        private void cmbBxCompannia_TextChanged(object sender, EventArgs e)
+        {
+            ReActualizaDatosDeVentana();
+        }
+
+        private void cmbBxCompannia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ReActualizaDatosDeVentana();
+        }
+
+        private void checkBoxMark_CheckedChanged(object sender, EventArgs e)
+        {
+            InicializaCheckBoxDelGrid(dGridActivo, idxChkBox, checkBoxMark.Checked);
         }
 
         private void tabCfdi_SelectedIndexChanged(object sender, EventArgs e)
@@ -889,5 +871,38 @@ namespace EjecutableEncriptador
             }
 
         }
+
+        private void dGridTraslados_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                //Está completo
+                int estadoDoc = Convert.ToInt32(dGridTraslados.Rows[e.RowIndex].Cells[idxEstadoDoc].Value.ToString(), 2);
+                if (estadoDoc == estadoCompletadoCia)
+                {
+                    dGridTraslados.Rows[e.RowIndex].Cells[idxIdDoc].Style.BackColor = Color.YellowGreen;
+                }
+
+                //Está en proceso
+                if (estadoDoc > 0 && estadoDoc != estadoCompletadoCia)
+                {
+                    dGridTraslados.Rows[e.RowIndex].Cells[idxSopnumbe].Style.BackColor = Color.Orange;
+                }
+            }
+
+        }
+        #endregion
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {//pruebas
+            if (filtraListaSeleccionada())
+            {
+                txtbxMensajes.AppendText("Documentos seleccionados listos para procesar...proceso...\r\n");
+                AplicaFiltroYActualizaPantalla(this.tabCfdi.SelectedTab.Name);
+            }
+            else
+                txtbxMensajes.Text = ultimoMensaje;
+        }
+
     }
 }

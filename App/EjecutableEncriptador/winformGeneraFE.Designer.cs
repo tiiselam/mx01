@@ -33,19 +33,10 @@
             this.dgridTrxFacturas = new System.Windows.Forms.DataGridView();
             this.Mark = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Docid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.soptypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sopnumbeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.fechahoraDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nombreClienteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.idImpuestoClienteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.estadoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mensajeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EstadoContabilizado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Voidstts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MensajeEA = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eBinAct = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.vwCfdTransaccionesDeVentaBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cmbBIdDoc = new System.Windows.Forms.ComboBox();
             this.cmbBEstado = new System.Windows.Forms.ComboBox();
             this.checkBoxEstado = new System.Windows.Forms.CheckBox();
@@ -128,19 +119,43 @@
             this.iddoc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Soptype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Sopnumbe = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Isocurrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabTraslados = new System.Windows.Forms.TabPage();
+            this.dGridTraslados = new System.Windows.Forms.DataGridView();
+            this.soptypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sopnumbeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fechahoraDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nombreClienteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.idImpuestoClienteDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.estadoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mensajeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.vwCfdTransaccionesDeVentaBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.fechahoraDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nombreClienteDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.idImpuestoClienteDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.estadoDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mensajeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mensajeEADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.estadoActualDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Isocurrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgridTrxFacturas)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vwCfdTransaccionesDeVentaBindingSource)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStripAccionesXML.SuspendLayout();
             this.toolStripImpresion.SuspendLayout();
@@ -160,6 +175,9 @@
             this.tabFacturas.SuspendLayout();
             this.tabCobros.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgridTrxCobros)).BeginInit();
+            this.tabTraslados.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dGridTraslados)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vwCfdTransaccionesDeVentaBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dgridTrxFacturas
@@ -218,78 +236,6 @@
             this.Docid.ReadOnly = true;
             this.Docid.Width = 50;
             // 
-            // soptypeDataGridViewTextBoxColumn
-            // 
-            this.soptypeDataGridViewTextBoxColumn.DataPropertyName = "Soptype";
-            this.soptypeDataGridViewTextBoxColumn.Frozen = true;
-            this.soptypeDataGridViewTextBoxColumn.HeaderText = "Tipo";
-            this.soptypeDataGridViewTextBoxColumn.Name = "soptypeDataGridViewTextBoxColumn";
-            this.soptypeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.soptypeDataGridViewTextBoxColumn.Visible = false;
-            this.soptypeDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // sopnumbeDataGridViewTextBoxColumn
-            // 
-            this.sopnumbeDataGridViewTextBoxColumn.DataPropertyName = "Sopnumbe";
-            this.sopnumbeDataGridViewTextBoxColumn.Frozen = true;
-            this.sopnumbeDataGridViewTextBoxColumn.HeaderText = "Número Doc.";
-            this.sopnumbeDataGridViewTextBoxColumn.Name = "sopnumbeDataGridViewTextBoxColumn";
-            this.sopnumbeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sopnumbeDataGridViewTextBoxColumn.Width = 115;
-            // 
-            // fechahoraDataGridViewTextBoxColumn
-            // 
-            this.fechahoraDataGridViewTextBoxColumn.DataPropertyName = "Fechahora";
-            this.fechahoraDataGridViewTextBoxColumn.Frozen = true;
-            this.fechahoraDataGridViewTextBoxColumn.HeaderText = "Fecha";
-            this.fechahoraDataGridViewTextBoxColumn.Name = "fechahoraDataGridViewTextBoxColumn";
-            this.fechahoraDataGridViewTextBoxColumn.ReadOnly = true;
-            this.fechahoraDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // nombreClienteDataGridViewTextBoxColumn
-            // 
-            this.nombreClienteDataGridViewTextBoxColumn.DataPropertyName = "NombreCliente";
-            this.nombreClienteDataGridViewTextBoxColumn.Frozen = true;
-            this.nombreClienteDataGridViewTextBoxColumn.HeaderText = "Nombre Cliente";
-            this.nombreClienteDataGridViewTextBoxColumn.Name = "nombreClienteDataGridViewTextBoxColumn";
-            this.nombreClienteDataGridViewTextBoxColumn.ReadOnly = true;
-            this.nombreClienteDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.nombreClienteDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // idImpuestoClienteDataGridViewTextBoxColumn
-            // 
-            this.idImpuestoClienteDataGridViewTextBoxColumn.DataPropertyName = "IdImpuestoCliente";
-            this.idImpuestoClienteDataGridViewTextBoxColumn.Frozen = true;
-            this.idImpuestoClienteDataGridViewTextBoxColumn.HeaderText = "Id. de Impuesto";
-            this.idImpuestoClienteDataGridViewTextBoxColumn.Name = "idImpuestoClienteDataGridViewTextBoxColumn";
-            this.idImpuestoClienteDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // totalDataGridViewTextBoxColumn
-            // 
-            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
-            this.totalDataGridViewTextBoxColumn.Frozen = true;
-            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
-            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
-            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // estadoDataGridViewTextBoxColumn
-            // 
-            this.estadoDataGridViewTextBoxColumn.DataPropertyName = "Estado";
-            this.estadoDataGridViewTextBoxColumn.Frozen = true;
-            this.estadoDataGridViewTextBoxColumn.HeaderText = "Estado";
-            this.estadoDataGridViewTextBoxColumn.Name = "estadoDataGridViewTextBoxColumn";
-            this.estadoDataGridViewTextBoxColumn.ReadOnly = true;
-            this.estadoDataGridViewTextBoxColumn.Visible = false;
-            this.estadoDataGridViewTextBoxColumn.Width = 55;
-            // 
-            // mensajeDataGridViewTextBoxColumn
-            // 
-            this.mensajeDataGridViewTextBoxColumn.DataPropertyName = "Mensaje";
-            this.mensajeDataGridViewTextBoxColumn.Frozen = true;
-            this.mensajeDataGridViewTextBoxColumn.HeaderText = "Mensaje";
-            this.mensajeDataGridViewTextBoxColumn.Name = "mensajeDataGridViewTextBoxColumn";
-            this.mensajeDataGridViewTextBoxColumn.Width = 150;
-            // 
             // EstadoContabilizado
             // 
             this.EstadoContabilizado.DataPropertyName = "EstadoContabilizado";
@@ -325,10 +271,6 @@
             this.eBinAct.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.eBinAct.Visible = false;
             this.eBinAct.Width = 20;
-            // 
-            // vwCfdTransaccionesDeVentaBindingSource
-            // 
-            this.vwCfdTransaccionesDeVentaBindingSource.DataSource = typeof(EjecutableEncriptador.vwCfdTransaccionesDeVenta);
             // 
             // cmbBIdDoc
             // 
@@ -533,7 +475,7 @@
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
             this.salirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.salirToolStripMenuItem.Text = "Cerrar";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -549,7 +491,7 @@
             // 
             this.genFacturaElectrónicaV10ToolStripMenuItem.Name = "genFacturaElectrónicaV10ToolStripMenuItem";
             this.genFacturaElectrónicaV10ToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.0.2";
+            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.2.0";
             // 
             // toolStripMenuItem2
             // 
@@ -1123,6 +1065,7 @@
             // 
             this.tabCfdi.Controls.Add(this.tabFacturas);
             this.tabCfdi.Controls.Add(this.tabCobros);
+            this.tabCfdi.Controls.Add(this.tabTraslados);
             this.tabCfdi.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabCfdi.Location = new System.Drawing.Point(0, 174);
             this.tabCfdi.Name = "tabCfdi";
@@ -1233,6 +1176,146 @@
             this.Sopnumbe.Name = "Sopnumbe";
             this.Sopnumbe.Width = 110;
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "EstadoContabilizado";
+            this.dataGridViewTextBoxColumn1.HeaderText = "EstadoContab.";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Voidstts";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Anulado";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Visible = false;
+            // 
+            // Isocurrc
+            // 
+            this.Isocurrc.DataPropertyName = "Isocurrc";
+            this.Isocurrc.HeaderText = "Mnda";
+            this.Isocurrc.Name = "Isocurrc";
+            this.Isocurrc.Width = 35;
+            // 
+            // tabTraslados
+            // 
+            this.tabTraslados.Controls.Add(this.dGridTraslados);
+            this.tabTraslados.Location = new System.Drawing.Point(4, 22);
+            this.tabTraslados.Name = "tabTraslados";
+            this.tabTraslados.Size = new System.Drawing.Size(996, 293);
+            this.tabTraslados.TabIndex = 2;
+            this.tabTraslados.Text = "TRASLADOS";
+            this.tabTraslados.UseVisualStyleBackColor = true;
+            // 
+            // dGridTraslados
+            // 
+            this.dGridTraslados.AllowUserToAddRows = false;
+            this.dGridTraslados.AllowUserToDeleteRows = false;
+            this.dGridTraslados.AllowUserToOrderColumns = true;
+            this.dGridTraslados.AutoGenerateColumns = false;
+            this.dGridTraslados.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dGridTraslados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dGridTraslados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewCheckBoxColumn1,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10,
+            this.dataGridViewTextBoxColumn11,
+            this.dataGridViewTextBoxColumn12,
+            this.dataGridViewTextBoxColumn13,
+            this.dataGridViewTextBoxColumn14,
+            this.dataGridViewTextBoxColumn15});
+            this.dGridTraslados.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dGridTraslados.DataSource = this.vwCfdTransaccionesDeVentaBindingSource;
+            this.dGridTraslados.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dGridTraslados.Location = new System.Drawing.Point(0, 0);
+            this.dGridTraslados.Name = "dGridTraslados";
+            this.dGridTraslados.RowHeadersWidth = 10;
+            this.dGridTraslados.Size = new System.Drawing.Size(996, 293);
+            this.dGridTraslados.TabIndex = 1;
+            this.dGridTraslados.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dGridTraslados_RowPostPaint);
+            // 
+            // soptypeDataGridViewTextBoxColumn
+            // 
+            this.soptypeDataGridViewTextBoxColumn.DataPropertyName = "Soptype";
+            this.soptypeDataGridViewTextBoxColumn.Frozen = true;
+            this.soptypeDataGridViewTextBoxColumn.HeaderText = "Tipo";
+            this.soptypeDataGridViewTextBoxColumn.Name = "soptypeDataGridViewTextBoxColumn";
+            this.soptypeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.soptypeDataGridViewTextBoxColumn.Visible = false;
+            this.soptypeDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // sopnumbeDataGridViewTextBoxColumn
+            // 
+            this.sopnumbeDataGridViewTextBoxColumn.DataPropertyName = "Sopnumbe";
+            this.sopnumbeDataGridViewTextBoxColumn.Frozen = true;
+            this.sopnumbeDataGridViewTextBoxColumn.HeaderText = "Número Doc.";
+            this.sopnumbeDataGridViewTextBoxColumn.Name = "sopnumbeDataGridViewTextBoxColumn";
+            this.sopnumbeDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sopnumbeDataGridViewTextBoxColumn.Width = 115;
+            // 
+            // fechahoraDataGridViewTextBoxColumn
+            // 
+            this.fechahoraDataGridViewTextBoxColumn.DataPropertyName = "Fechahora";
+            this.fechahoraDataGridViewTextBoxColumn.Frozen = true;
+            this.fechahoraDataGridViewTextBoxColumn.HeaderText = "Fecha";
+            this.fechahoraDataGridViewTextBoxColumn.Name = "fechahoraDataGridViewTextBoxColumn";
+            this.fechahoraDataGridViewTextBoxColumn.ReadOnly = true;
+            this.fechahoraDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // nombreClienteDataGridViewTextBoxColumn
+            // 
+            this.nombreClienteDataGridViewTextBoxColumn.DataPropertyName = "NombreCliente";
+            this.nombreClienteDataGridViewTextBoxColumn.Frozen = true;
+            this.nombreClienteDataGridViewTextBoxColumn.HeaderText = "Nombre Cliente";
+            this.nombreClienteDataGridViewTextBoxColumn.Name = "nombreClienteDataGridViewTextBoxColumn";
+            this.nombreClienteDataGridViewTextBoxColumn.ReadOnly = true;
+            this.nombreClienteDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.nombreClienteDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // idImpuestoClienteDataGridViewTextBoxColumn
+            // 
+            this.idImpuestoClienteDataGridViewTextBoxColumn.DataPropertyName = "IdImpuestoCliente";
+            this.idImpuestoClienteDataGridViewTextBoxColumn.Frozen = true;
+            this.idImpuestoClienteDataGridViewTextBoxColumn.HeaderText = "Id. de Impuesto";
+            this.idImpuestoClienteDataGridViewTextBoxColumn.Name = "idImpuestoClienteDataGridViewTextBoxColumn";
+            this.idImpuestoClienteDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // totalDataGridViewTextBoxColumn
+            // 
+            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
+            this.totalDataGridViewTextBoxColumn.Frozen = true;
+            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
+            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
+            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // estadoDataGridViewTextBoxColumn
+            // 
+            this.estadoDataGridViewTextBoxColumn.DataPropertyName = "Estado";
+            this.estadoDataGridViewTextBoxColumn.Frozen = true;
+            this.estadoDataGridViewTextBoxColumn.HeaderText = "Estado";
+            this.estadoDataGridViewTextBoxColumn.Name = "estadoDataGridViewTextBoxColumn";
+            this.estadoDataGridViewTextBoxColumn.ReadOnly = true;
+            this.estadoDataGridViewTextBoxColumn.Visible = false;
+            this.estadoDataGridViewTextBoxColumn.Width = 55;
+            // 
+            // mensajeDataGridViewTextBoxColumn
+            // 
+            this.mensajeDataGridViewTextBoxColumn.DataPropertyName = "Mensaje";
+            this.mensajeDataGridViewTextBoxColumn.Frozen = true;
+            this.mensajeDataGridViewTextBoxColumn.HeaderText = "Mensaje";
+            this.mensajeDataGridViewTextBoxColumn.Name = "mensajeDataGridViewTextBoxColumn";
+            this.mensajeDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // vwCfdTransaccionesDeVentaBindingSource
+            // 
+            this.vwCfdTransaccionesDeVentaBindingSource.DataSource = typeof(EjecutableEncriptador.vwCfdTransaccionesDeVenta);
+            // 
             // fechahoraDataGridViewTextBoxColumn1
             // 
             this.fechahoraDataGridViewTextBoxColumn1.DataPropertyName = "Fechahora";
@@ -1276,20 +1359,6 @@
             this.mensajeDataGridViewTextBoxColumn1.Name = "mensajeDataGridViewTextBoxColumn1";
             this.mensajeDataGridViewTextBoxColumn1.Width = 150;
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "EstadoContabilizado";
-            this.dataGridViewTextBoxColumn1.HeaderText = "EstadoContab.";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Voidstts";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Anulado";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.Visible = false;
-            // 
             // mensajeEADataGridViewTextBoxColumn
             // 
             this.mensajeEADataGridViewTextBoxColumn.DataPropertyName = "MensajeEA";
@@ -1304,12 +1373,109 @@
             this.estadoActualDataGridViewTextBoxColumn.Name = "estadoActualDataGridViewTextBoxColumn";
             this.estadoActualDataGridViewTextBoxColumn.Visible = false;
             // 
-            // Isocurrc
+            // dataGridViewCheckBoxColumn1
             // 
-            this.Isocurrc.DataPropertyName = "Isocurrc";
-            this.Isocurrc.HeaderText = "Mnda";
-            this.Isocurrc.Name = "Isocurrc";
-            this.Isocurrc.Width = 35;
+            this.dataGridViewCheckBoxColumn1.FalseValue = "0";
+            this.dataGridViewCheckBoxColumn1.Frozen = true;
+            this.dataGridViewCheckBoxColumn1.HeaderText = "M";
+            this.dataGridViewCheckBoxColumn1.IndeterminateValue = "-1";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.TrueValue = "1";
+            this.dataGridViewCheckBoxColumn1.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "docid";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Id Doc";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Soptype";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Soptype";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "Sopnumbe";
+            this.dataGridViewTextBoxColumn5.HeaderText = "Número Transferencia";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.Width = 140;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "Fechahora";
+            this.dataGridViewTextBoxColumn6.HeaderText = "Fecha";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.DataPropertyName = "NombreCliente";
+            this.dataGridViewTextBoxColumn7.HeaderText = "Nombre Cliente";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Visible = false;
+            this.dataGridViewTextBoxColumn7.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.DataPropertyName = "IdImpuestoCliente";
+            this.dataGridViewTextBoxColumn8.HeaderText = "Id. de Impuesto";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            this.dataGridViewTextBoxColumn8.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.DataPropertyName = "Total";
+            this.dataGridViewTextBoxColumn9.HeaderText = "Total";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.DataPropertyName = "Estado";
+            this.dataGridViewTextBoxColumn10.HeaderText = "Estado";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.DataPropertyName = "Mensaje";
+            this.dataGridViewTextBoxColumn11.HeaderText = "Mensaje";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.Width = 300;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.DataPropertyName = "EstadoContabilizado";
+            this.dataGridViewTextBoxColumn12.HeaderText = "EstadoContab.";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn13
+            // 
+            this.dataGridViewTextBoxColumn13.DataPropertyName = "Voidstts";
+            this.dataGridViewTextBoxColumn13.HeaderText = "Anulado";
+            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
+            this.dataGridViewTextBoxColumn13.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn14
+            // 
+            this.dataGridViewTextBoxColumn14.DataPropertyName = "MensajeEA";
+            this.dataGridViewTextBoxColumn14.HeaderText = "Observaciones";
+            this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
+            this.dataGridViewTextBoxColumn14.Width = 300;
+            // 
+            // dataGridViewTextBoxColumn15
+            // 
+            this.dataGridViewTextBoxColumn15.DataPropertyName = "EstadoActual";
+            this.dataGridViewTextBoxColumn15.HeaderText = "E";
+            this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
+            this.dataGridViewTextBoxColumn15.Visible = false;
             // 
             // winformGeneraFE
             // 
@@ -1330,7 +1496,6 @@
             this.Text = "GP Factura Electrónica";
             this.Load += new System.EventHandler(this.winformGeneraFE_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgridTrxFacturas)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vwCfdTransaccionesDeVentaBindingSource)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStripAccionesXML.ResumeLayout(false);
@@ -1364,6 +1529,9 @@
             this.tabCobros.ResumeLayout(false);
             this.tabCobros.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgridTrxCobros)).EndInit();
+            this.tabTraslados.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dGridTraslados)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vwCfdTransaccionesDeVentaBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1481,6 +1649,22 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn mensajeEADataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn estadoActualDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Isocurrc;
+        private System.Windows.Forms.TabPage tabTraslados;
+        private System.Windows.Forms.DataGridView dGridTraslados;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn13;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn14;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn15;
     }
 }
 

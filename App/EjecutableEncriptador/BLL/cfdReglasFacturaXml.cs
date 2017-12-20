@@ -303,7 +303,7 @@ namespace cfd.FacturaElectronica
                 if (eAFE.Message.Contains("denied"))
                     ultimoMensaje = "Elimine el archivo xml antes de volver a generar uno nuevo. Luego vuelva a intentar. " + eAFE.Message;
                 else
-                    ultimoMensaje = "Contacte al administrador. No se pudo guardar el archivo XML ni registrar la Bitácora. " + eAFE.Message;
+                    ultimoMensaje = "Contacte al administrador. No se pudo guardar el archivo XML y/o registrar la Bitácora. " + eAFE.Message;
                 throw new Exception(ultimoMensaje, eAFE);
             }
         }

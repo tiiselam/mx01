@@ -18,7 +18,8 @@ as
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
-			select top(1) 1 orden,		
+			select top(1) 1 orden,	
+				--case when left(da.tracking_number, 1) = 'T' then '06'		--factura generada por traslado previo
 				case when isnull(u.voidstts, -1) = 1 then '04'				--sustitución
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 

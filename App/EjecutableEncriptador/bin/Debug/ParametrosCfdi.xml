@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <listaParametros>
-  <servidor>10.1.1.24</servidor>
+  <servidor>10.1.1.22</servidor>
   <seguridadIntegrada>0</seguridadIntegrada>
   <usuariosql>sa</usuariosql>
-  <passwordsql>imagenes24</passwordsql>
+  <passwordsql>sa22</passwordsql>
   <compannia bd="ARG10">
     <URLArchivoXSD>na</URLArchivoXSD>
     <URLArchivoPagosXSD>na</URLArchivoPagosXSD>
@@ -69,18 +69,18 @@
     </emailSetup>
   </compannia>
   <compannia bd="MEX10">
-    <URLArchivoXSD>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\cfdv33.xsd</URLArchivoXSD>
-    <URLArchivoPagosXSD>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
-    <URLArchivoXSLT>\\10.1.1.24\GettyMX_FacturaElectronicaXml\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
+    <URLArchivoXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cfdv33.xsd</URLArchivoXSD>
+    <URLArchivoPagosXSD>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\Pagos10.xsd</URLArchivoPagosXSD>
+    <URLArchivoXSLT>C:\GPUsuario\GPCfdi\feGettyMex\fePlantillas\cadenaoriginal_3_3.xslt</URLArchivoXSLT>
     <URLConsulta>https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx</URLConsulta>
     <PAC>
-      <urlWebService>https://www.interfactura.com/ServicioTimbrado/TimbreServicios.asmx</urlWebService>
+      <urlWebService>https://pruebas33.interfactura.com/TimbreServicios/TimbreServicios.asmx</urlWebService>
     </PAC>
     <reporteador>CRYSTAL</reporteador>
 	<reporteExtensiones>
        <Factura>FC.rpt</Factura>
 	   <Cobro>CB.rpt</Cobro>
-	   <Traslado>RM.rpt</Traslado>
+	   <Traslado>TR.rpt</Traslado>
 	</reporteExtensiones>
     <rutaReporteCrystal tipo="default">
       <Ruta>W:\Factura Mexico\MEX10_FACTURA_ELECT</Ruta>
