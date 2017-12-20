@@ -16,7 +16,7 @@ SELECT ivc.estadoContabilizado, ivc.soptype, ivc.docid, ivc.doctype, ivc.docnumb
 		dpim.rgfs_descripcion,
 		dpim.usoCfdi,
 		dpim.uscf_descripcion,
-		row_number() over(partition by ivc.docnumbr order by det.lnseqnbr) ordern,
+		row_number() over(partition by ivc.doctype, ivc.docnumbr order by det.lnseqnbr) orden,
 		det.ITEMNMBR,
 		det.ClaveProdServ,
 		det.ITEMDESC,

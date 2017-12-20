@@ -18,11 +18,12 @@ select tv.estadoContabilizado, tv.soptype,
 			replace(convert(varchar(20), tv.DOCDATE, 102), '.', '-')+'T'+substring(convert(varchar(25), tv.dex_row_ts, 126), 12, 8)
 			,126) fechaHora,
 
-	'XAXX010101000' rfcReceptor, 'P01' usoCfdi
+	'XAXX010101000' rfcReceptor, 'P01' usoCfdi, 'MXN' moneda
 	--isnull(gr2.txrgnnum, '') CUSTNMBR, isnull(gr2.custname, '') nombreCliente, isnull(gr2.txrgnnum, '') idImpuestoCliente, 
 from (
 	select estadoContabilizado, TRXSORCE, cast(doctype+15 as smallint) soptype, doctype, docnumbr, dex_row_ts, docdate
 	from dbo.vwIvTransaccionesTHDet
+	where doctype = 3
 	group by estadoContabilizado, TRXSORCE, doctype, docnumbr, dex_row_ts, docdate
 	) tv
 	--left join tblGREM001 gr

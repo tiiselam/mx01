@@ -18,7 +18,11 @@ as
 return(
 		select Concepto.doctype, Concepto.docnumbr, Concepto.lnseqnbr, Concepto.ITEMNMBR, 
 			Concepto.ITEMDESC, 
-			rtrim(Concepto.uscatvls_6) ClaveProdServ,
+			case when pa.param3 = 'CATEGORIA' 
+				then Concepto.uscatvls_6
+				else pa.param3 
+			end ClaveProdServ,
+			--rtrim(Concepto.uscatvls_6) ClaveProdServ,
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10)  NoIdentificacion,
 			Concepto.trxqty				Cantidad, 
 			rtrim(um.UOFMLONGDESC)		UOFMsat, 
@@ -27,6 +31,7 @@ return(
 		from dbo.vwIvTransaccionesTHDet Concepto
 			outer apply dbo.fCfdUofMSAT(Concepto.UOMSCHDL, Concepto.uofm) um
 			outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
+			outer apply dbo.fcfdiparametros('NA','NA','CLPRODORIGEN','NA','NA','NA','PREDETERMINADO') pa
 		where Concepto.doctype = @p_doctype
 		and Concepto.docnumbr = @p_docnumbr
 )
@@ -172,7 +177,7 @@ select tv.estadoContabilizado, tv.soptype, rtrim(tv.docid) docid, rtrim(tv.docnu
 	
 	isnull(lf.mensajeEA, tv.estadoContabilizado) mensajeEA,
 
-	'' isocurrc,
+	tv.moneda isocurrc,
 	cast('' as xml) addenda
 from dbo.vwCfdiTrasladosInventario tv
 	cross join dbo.fCfdEmisor() emi

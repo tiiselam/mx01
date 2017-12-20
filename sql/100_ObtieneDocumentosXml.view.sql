@@ -136,7 +136,6 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	dt.QUANTITY, dt.UOFM,
-	--ISNULL(sr.serltqty, dt.QUANTITY) cantidad, sr.serltqty, 
 	case when dt.soptype = 4 then
 			pa.param2
 		else um.UOFMLONGDESC
@@ -152,36 +151,24 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 		dt.ITEMDESC
 	end ITEMDESC, 
 	dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
-	--sr.SERLTNUM, 
 	dt.QUANTITY * dt.ORUNTPRC importe, 
-	--case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
-	--		dt.QUANTITY * dt.ORUNTPRC
-	--	else 
-	--		sr.SERLTQTY * dt.ORUNTPRC
-	--end importe,
 	isnull(ma.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
 	case when dt.soptype = 4 then
 			pa.param1
-		else ma.uscatvls_6
+		else 
+			case when pa.param3 = 'CATEGORIA' 
+				then ma.uscatvls_6
+				else pa.param3 
+			end
 	end ClaveProdServ,
 	ma.uscatvls_6, 
 	dt.ormrkdam,
 	dt.QUANTITY * dt.ormrkdam descuento
-	--case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
-	--		dt.QUANTITY * dt.ormrkdam
-	--	else 
-	--		sr.SERLTQTY * dt.ormrkdam
-	--end descuento
 from SOP30300 dt
 left join iv00101 ma				--iv_itm_mstr
 	on ma.ITEMNMBR = dt.ITEMNMBR
---left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
---	on sr.SOPNUMBE = dt.SOPNUMBE
---	and sr.SOPTYPE = dt.SOPTYPE
---	and sr.CMPNTSEQ = dt.CMPNTSEQ
---	and sr.LNITMSEQ = dt.LNITMSEQ
 outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
-outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','NA','NA','NA','NA','PREDETERMINADO') pa
+outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','CLPRODORIGEN','NA','NA','NA','PREDETERMINADO') pa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
 outer apply dbo.fCfdiCatalogoGetDescripcion('PROD', pa.param1) prod
@@ -208,15 +195,7 @@ alter view dbo.vwCfdiSopLineasConSerialLot as
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
 	dt.UOFMsat, 
-	--case when dt.soptype = 4 then
-	--		pa.param2
-	--	else um.UOFMLONGDESC
-	--end UOFMsat,
 	dt.UOFMsat_descripcion,
-	--case when dt.soptype = 4 then
-	--		udmnc.descripcion
-	--	else udmfa.descripcion
-	--end UOFMsat_descripcion,
 	dt.UOFMLONGDESC, 
 	sr.SERLTNUM, dt.ITEMDESC, dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
 	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
@@ -226,10 +205,6 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	end importe,
 	isnull(dt.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
 	dt.ClaveProdServ, 
-	--case when dt.soptype = 4 then
-	--		pa.param1
-	--	else ma.uscatvls_6
-	--end ClaveProdServ,
 	dt.uscatvls_6, 
 	case when isnull(sr.SOPNUMBE, '_nulo')='_nulo' then 
 			dt.QUANTITY * dt.ormrkdam
@@ -237,18 +212,11 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 			sr.SERLTQTY * dt.ormrkdam
 	end descuento
 from vwCfdiSopLineasTrxVentas dt
---SOP30300 dt
---left join iv00101 ma				--iv_itm_mstr
---	on ma.ITEMNMBR = dt.ITEMNMBR
 left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
 	on sr.SOPNUMBE = dt.SOPNUMBE
 	and sr.SOPTYPE = dt.SOPTYPE
 	and sr.CMPNTSEQ = dt.CMPNTSEQ
 	and sr.LNITMSEQ = dt.LNITMSEQ
---outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
---outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','NA','NA','NA','NA','PREDETERMINADO') pa
---outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
---outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
 
 go	
 
@@ -272,7 +240,7 @@ begin
 	declare @cncp xml;
 	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 	select @cncp = (
-		select dt.uscatvls_6 ClaveProdServ,
+		select dt.ClaveProdServ,
 				case when dt.ITMTRKOP = 2 then --tracking option: serie
 					dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.SERLTNUM))),10) 
 					else null
@@ -359,7 +327,7 @@ return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
 			Concepto.ITEMDESC, Concepto.CMPNTSEQ, Concepto.ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
-			null NoIdentificacion,
+			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10)  NoIdentificacion,
 			--case when Concepto.ITMTRKOP = 2 then --tracking option: serie
 			--	dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
 			--	else null

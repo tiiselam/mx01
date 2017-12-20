@@ -160,8 +160,8 @@ SELECT
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(substring(cm.cmmttext, 1, 350))), 10) addLeyenda,
 
 		RTRIM(SOPELECTINV.rutaYNomArchivo) AS rutaYNomArchivo,
-		RTRIM(SOPELECTINV.rutaYNomArchivoNet) AS rutaYNomArchivoNet
-		--dbo.fCfdObtieneImagenC(SOPELECTINV.rutaYNomArchivo) codigoBarras
+		RTRIM(SOPELECTINV.rutaYNomArchivoNet) AS rutaYNomArchivoNet,
+		dbo.fCfdObtieneImagenC(SOPELECTINV.rutaYNomArchivo) codigoBarras
 FROM
 (
 		-- ENCABEZADO DE FACTURAS SOP EN LOTE

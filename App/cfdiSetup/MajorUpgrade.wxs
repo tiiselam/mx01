@@ -3,7 +3,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
 
-  <Product Id="18EF6029-54B0-42A3-A658-23736EDB6033" Name="GP Factura Digital Athos"
+  <Product Id="6E38CD38-3415-4FC5-9620-3879DBC6B670" Name="GP Factura Digital Athos"
            Language="1033" Version="7.2.0.0" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />

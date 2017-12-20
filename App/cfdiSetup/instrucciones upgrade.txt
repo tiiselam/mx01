@@ -44,9 +44,11 @@
   Versión 7.0.1 4519B293-D128-4A83-886C-2064A946DA06
   ACHILLES
   24/10/16 Sí utiliza instalador
+  20/12/17 jcf instala cfdi 33 v7.2.0
 
   GETTY MEX
-  5/6/17 jcf Instala v6.3.0
+  05/06/17 jcf Instala v6.3.0
+  11/12/17 jcf Instala cfdi 33 v7.0.1
 
   GILA
   13/2/12 No utiliza instalador

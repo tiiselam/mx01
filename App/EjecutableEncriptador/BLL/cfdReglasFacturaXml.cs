@@ -257,7 +257,7 @@ namespace cfd.FacturaElectronica
                 comprobante.Save(new XmlTextWriter(rutaYNomArchivo + ".xml", Encoding.UTF8));
 
                 //Registra log de la emisión del xml antes de imprimir el pdf, sino habrá error al imprimir
-                RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, comprobante.InnerXml,
+                RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, rutaYNomArchivo, "0", _Conexion.Usuario, comprobante.InnerXml,
                                         "emitido", mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo));
 
                 RegistraLogDePagosSimultaneos(trxVenta.Soptype, trxVenta.Sopnumbe, mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo), mEstados.eBinActualConError, mEstados.EnLetras(mEstados.eBinActualConError));
