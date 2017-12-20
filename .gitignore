@@ -5,3 +5,5 @@
 *.force
 *.txt
 *.msi
+*.wixpdb
+*.wixobj
