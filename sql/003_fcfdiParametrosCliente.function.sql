@@ -5,31 +5,30 @@ GO
 create function dbo.fCfdiParametrosCliente(@CUSTNMBR char(15), @tag1 varchar(17), @tag2 varchar(17), @tag3 varchar(17), @tag4 varchar(17), @tag5 varchar(17), @tag6 varchar(17), @ADRSCODE char(15) = 'MAIN')
 returns table
 as
---Propósito. Devuelve los parámetros de la compañía
---Requisitos. Los @tagx deben configurarse en la ventana Información de internet del id de dirección @ADRSCODE de la compañía.
---21/11/16 jcf Creación 
---14/09/17 jcf Agrega inet7 y 8
---13/10/17 jcf Agrega filtro por COMPANIA
+--Propósito. Devuelve los parámetros de un cliente
+--Requisitos. Los @tagx deben configurarse en la ventana Información de internet del id de dirección @ADRSCODE del cliente.
+--01/12/17 jcf Creación
+--02/01/18 jcf Corrige error cuando el último parámetro no termina en el caracter retorno.
 --
 return
 (
 	select 
-		case when charindex(@tag1+'=', ia.inetinfo) > 0 and charindex(char(13), ia.inetinfo) > 0 then
+		case when charindex(@tag1+'=', ia.inetinfo) > 0 and charindex(char(13), ia.inetinfo, charindex(@tag1+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag1+'=', ia.inetinfo) +len(@tag1)+1, charindex(char(13), ia.inetinfo, charindex(@tag1+'=', ia.inetinfo)) - charindex(@tag1+'=', ia.inetinfo) - len(@tag1)-1) 
 		else 'no existe tag: '+@tag1 end param1,
-		CASE when charindex(@tag2+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
+		CASE when charindex(@tag2+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo, charindex(@tag2+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag2+'=', ia.inetinfo)+ len(@tag2)+1, charindex(char(13), ia.inetinfo, charindex(@tag2+'=', ia.inetinfo)) - charindex(@tag2+'=', ia.inetinfo) - len(@tag2)-1) 
 		else 'no existe tag: '+@tag2 end param2,
-		CASE when charindex(@tag3+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
+		CASE when charindex(@tag3+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo, charindex(@tag3+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag3+'=', ia.inetinfo)+ len(@tag3)+1, charindex(char(13), ia.inetinfo, charindex(@tag3+'=', ia.inetinfo)) - charindex(@tag3+'=', ia.inetinfo) - len(@tag3)-1)
 		else 'no existe tag: '+@tag3 end param3,
-		CASE when charindex(@tag4+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
+		CASE when charindex(@tag4+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo, charindex(@tag4+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag4+'=', ia.inetinfo)+ len(@tag4)+1, charindex(char(13), ia.inetinfo, charindex(@tag4+'=', ia.inetinfo)) - charindex(@tag4+'=', ia.inetinfo) - len(@tag4)-1)
 		else 'no existe tag: '+@tag4 end param4,
-		CASE when charindex(@tag5+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
+		CASE when charindex(@tag5+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo, charindex(@tag5+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag5+'=', ia.inetinfo)+ len(@tag5)+1, charindex(char(13), ia.inetinfo, charindex(@tag5+'=', ia.inetinfo)) - charindex(@tag5+'=', ia.inetinfo) - len(@tag5)-1)
 		else 'no existe tag: '+@tag5 end param5,
-		CASE when charindex(@tag6+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
+		CASE when charindex(@tag6+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo, charindex(@tag6+'=', ia.inetinfo)) > 0 then
 			substring(ia.inetinfo, charindex(@tag6+'=', ia.inetinfo)+ len(@tag6)+1, charindex(char(13), ia.inetinfo, charindex(@tag6+'=', ia.inetinfo)) - charindex(@tag6+'=', ia.inetinfo) - len(@tag6)-1)
 		else 'no existe tag: '+@tag6 end param6,
 		ia.INET7, ia.INET8

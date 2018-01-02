@@ -49,13 +49,14 @@ AS
 --			Esto implica que si un usuario ingresa una factura entre hrs 24 y hrs 3 del día siguiente de Argentina, la hora será siempre menor a 3.
 --21/11/16 jcf Parametriza la diferencia horaria en CFDIDIFHORA
 --31/07/17 JCF El parámetro está en la dirección PRINCIPAL
+--21/12/17 JCF Los parámetros están en la dirección PREDETERMINADO
 --
 begin try
 
 	DECLARE @horaMex int;
     set @horaMex = 0;
 	select @horaMex = case when isnumeric(PARAM1) = 1 then convert(int, param1) else 0 end
-	from dbo.fCfdiParametros('CFDIDIFHORA', '-', '-', '-', '-', '-', 'PRINCIPAL');
+	from dbo.fCfdiParametros('CFDIDIFHORA', '-', '-', '-', '-', '-', 'PREDETERMINADO');
 
 	UPDATE dbo.SOP10100 set DOCNCORR = 
 				case when datepart(hh, getdate()) <= @horaMex then

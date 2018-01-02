@@ -545,7 +545,7 @@ begin
 		end													'@FormaPago',
 		''													'@NoCertificado', 
 		''													'@Certificado', 
-		--tv.pymtrmid								'@CondicionesDePago',
+		rtrim(tv.pymtrmid)									'@CondicionesDePago',
 
 		cast(tv.subtotal as numeric(19,2))					'@SubTotal',
 		case when tv.descuento = 0 then null 

@@ -29,25 +29,6 @@ select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' 
 		else cast('' as xml) 
 	end comprobanteXml,
 	
-	----Datos del xml sellado por el PAC:
-	--isnull(dx.selloCFD, '') selloCFD, 
-	--isnull(dx.FechaTimbrado, '') FechaTimbrado, 
-	--isnull(dx.UUID, '') UUID, 
-	--isnull(dx.noCertificadoSAT, '') noCertificadoSAT, 
-	--isnull(dx.[version], '') [version], 
-	--isnull(dx.selloSAT, '') selloSAT, 
-	--isnull(dx.FormaPago, '') formaDePago,
-	--isnull(dx.sello, '') sello, 
-	--isnull(dx.noCertificado, '') noCertificado, 
-	--isnull(dx.MetodoPago, '') metodoDePago,
-	--isnull(dx.usoCfdi, '') usoCfdi,
-	--isnull(dx.RfcPAC, '') RfcPAC,
-	--isnull(dx.Leyenda, '') Leyenda,
-
-	--'||'+dx.[version]+'|'+dx.UUID+'|'+dx.FechaTimbrado+'|'+dx.RfcPAC + 
-	--case when isnull(dx.Leyenda, '') = '' then '' else '|'+dx.Leyenda end
-	--+'|'+dx.selloCFD+'|'+dx.noCertificadoSAT+'||' cadenaOriginalSAT,
-	
 	fv.ID_Certificado, fv.ruta_certificado, fv.ruta_clave, fv.contrasenia_clave, 
 	isnull(pa.ruta_certificado, '_noexiste') ruta_certificadoPac, isnull(pa.ruta_clave, '_noexiste') ruta_clavePac, isnull(pa.contrasenia_clave, '') contrasenia_clavePac, 
 	emi.rfc, emi.regimen, emi.rutaXml, emi.codigoPostal,
