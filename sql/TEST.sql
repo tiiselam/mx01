@@ -44,6 +44,10 @@ select *
 from SOP10106
 where sopnumbe like '00000878'
 
+
+----------------------------------------------------------------------
+--VENTAS
+
 select *
 --update s set tracking_number = '00000838'
 from sop10107 s
@@ -51,11 +55,14 @@ where s.sopnumbe like '00000878'
 
 select *
 from vwCfdiTransaccionesDeVenta s
-where s.sopnumbe like '00000878'
+where s.sopnumbe like '00000883'
+
+
 
 select *
 --update s set ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
 from sop30200 s
 where s.sopnumbe = '00000882'
 
-Contratación del servicio de banco de imágenes correspondiente al mes de Diciembre 2017              
+select stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim('111015544'), 10)
+												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ')

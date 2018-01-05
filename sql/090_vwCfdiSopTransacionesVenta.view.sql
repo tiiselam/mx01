@@ -1,12 +1,13 @@
-IF OBJECT_ID ('dbo.vwCfdiSopTransaccionesVenta') IS NOT NULL
-   DROP view vwCfdiSopTransaccionesVenta
-GO
+IF (OBJECT_ID ('dbo.vwCfdiSopTransaccionesVenta', 'V') IS NULL)
+   exec('create view dbo.vwCfdiSopTransaccionesVenta as SELECT 1 as t');
+go
 
-create view dbo.vwCfdiSopTransaccionesVenta
+alter view dbo.vwCfdiSopTransaccionesVenta
 --Propósito. Obtiene las transacciones de venta SOP. 
 --Utiliza:	vwRmTransaccionesTodas
 --Requisitos. No muestra facturas registradas en cuentas por cobrar. 
 --24/10/17 jcf Creación cfdi 3.3 
+--05/01/18 jcf Agrega ccode, taxexmt1
 --
 AS
 
@@ -38,6 +39,7 @@ SELECT	'contabilizado' estadoContabilizado,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.city), 10)) city, 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.[STATE]), 10)) [state], 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.country), 10)) country, 
+		cn.ccode, cn.taxexmt1,
 		right('00000'+dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10), 5) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
@@ -64,7 +66,9 @@ SELECT	'contabilizado' estadoContabilizado,
 		cab.orpmtrvd, rtrim(cab.curncyid) curncyid, 
 		cab.xchgrate, 
 		cab.voidStts, cab.ORDOCAMT, 
-		cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, cab.zipcode, 
+		cab.address1, cab.address2, cab.address3, cab.city, cab.[STATE], cab.country, 
+		cab.ccode, cab.taxexmt1,
+		cab.zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		cab.cstponbr,
 		ctrl.USRDEF05, ctrl.usrtab01

@@ -12,74 +12,81 @@ IF OBJECT_ID ('dbo.fCfdiInfoAduaneraSLXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiInfoAduaneraSLXML
 GO
 
-create function dbo.fCfdiInfoAduaneraSLXML(@ITEMNMBR char(31), @SERLTNUM char(21))
-returns xml 
-as
---Propósito. Obtiene info aduanera para conceptos de importación
---Requisito. Se asume que todos los artículos importados usan número de serie o lote. De otro modo se consideran nacionales.
---			También se asume que no hay números de serie repetidos por artículo
---30/11/17 jcf Creación cfdi 3.3
---
-begin
-	declare @cncp xml;
-	select @cncp = null;
+--create function dbo.fCfdiInfoAduaneraSLXML(@ITEMNMBR char(31), @SERLTNUM char(21))
+--returns xml 
+--as
+----Propósito. Obtiene info aduanera para conceptos de importación
+----Requisito. Se asume que todos los artículos importados usan número de serie o lote y tienen un número de 14 a 15 dígitos.
+----			 De otro modo se consideran nacionales.
+----			También se asume que no hay números de serie repetidos por artículo
+----30/11/17 jcf Creación cfdi 3.3
+----03/01/18 jcf deprecated. En su lugar se usa fCfdiInfoAduaneraXML
+----
+--begin
+--	declare @cncp xml;
+--	select @cncp = null;
 
-	IF isnull(@SERLTNUM, '_NULO') <> '_NULO'	
-	begin
-		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
-		select @cncp = (
-		   select ad.NumeroPedimento	--, ad.fecha
-		   from (
-				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR), 10)
-												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
-						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
-				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
-				  inner join IV00101 ma			--iv_itm_mstr
-					on ma.ITEMNMBR = la.ITEMNMBR
-				 where ma.ITMTRKOP = 3			--lote
-					and la.ITEMNMBR = @ITEMNMBR
-					and la.LOTNUMBR = @SERLTNUM
-					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR),10)) = 15
-				union all
-				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)) ,10) 
-												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
-				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
-					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
-					on ud.POPRCTNM = rs.POPRCTNM
-					inner join IV00101 ma		--iv_itm_mstr
-					on ma.ITEMNMBR = rs.ITEMNMBR
-				where ma.ITMTRKOP = 2			--serie
-					and rs.ITEMNMBR = @ITEMNMBR
-					and rs.SERLTNUM = @SERLTNUM
-					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(ud.user_defined_text01),10)) = 15
+--	IF isnull(@SERLTNUM, '_NULO') <> '_NULO'	
+--	begin
+--		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
+--		select @cncp = (
+--		   select ad.NumeroPedimento	--, ad.fecha
+--		   from (
+--				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
+--				select top 1 stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '')
+--												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+--						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
+--				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
+--				  inner join IV00101 ma			--iv_itm_mstr
+--					on ma.ITEMNMBR = la.ITEMNMBR
+--				 where ma.ITMTRKOP = 3			--lote
+--					and la.ITEMNMBR = @ITEMNMBR
+--					and la.LOTNUMBR = @SERLTNUM
+--					and len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
+--					and isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
+--					and left(la.LOTNUMBR, 2) between '11' and '99' --últimos dos dígitos del año de validación
+--				union all
+--				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
+--				select top 1 stuff(stuff(stuff(replace(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)), ' ', '') 
+--												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+--				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
+--					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
+--					on ud.POPRCTNM = rs.POPRCTNM
+--					inner join IV00101 ma		--iv_itm_mstr
+--					on ma.ITEMNMBR = rs.ITEMNMBR
+--				where ma.ITMTRKOP = 2			--serie
+--					and rs.ITEMNMBR = @ITEMNMBR
+--					and rs.SERLTNUM = @SERLTNUM
+--					and len(REPLACE(ud.user_defined_text01, ' ', '')) BETWEEN 14 AND 15
+--					and isnumeric(REPLACE(ud.user_defined_text01, ' ', '')) = 1
+--					and left(ud.user_defined_text01, 2) between '11' and '99' --últimos dos dígitos del año de validación
 
-				) ad
-			FOR XML raw('cfdi:InformacionAduanera') , type
-		)
-	end
-	return @cncp
-end
-go
+--				) ad
+--			FOR XML raw('cfdi:InformacionAduanera') , type
+--		)
+--	end
+--	return @cncp
+--end
+--go
 
-IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiInfoAduaneraSLXML()'
-ELSE PRINT 'Error en la creación de: fCfdiInfoAduaneraSLXML()'
-GO
+--IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiInfoAduaneraSLXML()'
+--ELSE PRINT 'Error en la creación de: fCfdiInfoAduaneraSLXML()'
+--GO
 
 -----------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiInfoAduaneraXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiInfoAduaneraXML
 GO
 
-create function dbo.fCfdiInfoAduaneraXML(@ITEMNMBR char(31))
+create function dbo.fCfdiInfoAduaneraXML(@ITEMNMBR char(31), @SOPTYPE smallint, @SOPNUMBE char(21), @LNITMSEQ int, @CMPNTSEQ int)
 returns xml 
 as
 --Propósito. Obtiene info aduanera para conceptos de importación
---Requisito. Se asume que todos los artículos importados usan número de serie o lote. De otro modo se consideran nacionales.
---			También se asume que no hay números de serie repetidos por artículo
+--Requisito. Se asume que todos los artículos importados usan número de serie o lote y tienen un número de 14 a 15 dígitos.
+--			 De otro modo se consideran nacionales.
 --			Pueden haber varios lotes o series por artículo
 --24/10/17 jcf Creación cfdi 3.3
+--03/01/18 jcf Corrige numPedimento
 --
 begin
 	declare @cncp xml;
@@ -90,28 +97,47 @@ begin
 		   select ad.NumeroPedimento	--, ad.fecha
 		   from (
 				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR), 10) 
+				select top 1 stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '') 
 												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
-				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
+				  from SOP10201 sl WITH (NOLOCK) 
+					INNER JOIN IV00301 la WITH (NOLOCK) --iv_lot_attributes [ITEMNMBR LOTNUMBR]
+					ON sl.ITEMNMBR = la.ITEMNMBR 
+					AND sl.SERLTNUM = la.LOTNUMBR
 				  inner join IV00101 ma			--iv_itm_mstr
 					on ma.ITEMNMBR = la.ITEMNMBR
 				 where ma.ITMTRKOP = 3			--lote
 					and la.ITEMNMBR = @ITEMNMBR
-					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(la.LOTNUMBR),10)) = 15
+					and sl.SOPTYPE = @SOPTYPE
+					AND sl.SOPNUMBE = @SOPNUMBE
+					AND sl.LNITMSEQ = @LNITMSEQ 
+					AND sl.CMPNTSEQ = @CMPNTSEQ
+					and len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
+					and isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
+					and left(la.LOTNUMBR, 2) between '11' and '99' --últimos dos dígitos del año de validación
+
 				union all
+
 				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
-				select top 1 stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)), 10) 
+				select top 1 stuff(stuff(stuff(replace(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)), ' ', '') 
 												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
 					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
-					on ud.POPRCTNM = rs.POPRCTNM
+						on ud.POPRCTNM = rs.POPRCTNM
 					inner join IV00101 ma		--iv_itm_mstr
-					on ma.ITEMNMBR = rs.ITEMNMBR
+						on ma.ITEMNMBR = rs.ITEMNMBR
+					INNER JOIN SOP10201 sl WITH (NOLOCK) 
+						ON sl.ITEMNMBR = rs.ITEMNMBR 
+						AND sl.SERLTNUM = rs.SERLTNUM
 				where ma.ITMTRKOP = 2			--serie
 					and rs.ITEMNMBR = @ITEMNMBR
-					and len(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim(ud.user_defined_text01),10)) = 15
-
+					and sl.SOPTYPE = @SOPTYPE
+					AND sl.SOPNUMBE = @SOPNUMBE
+					AND sl.LNITMSEQ = @LNITMSEQ 
+					AND sl.CMPNTSEQ = @CMPNTSEQ
+					and len(REPLACE(ud.user_defined_text01, ' ', '')) BETWEEN 14 AND 15
+					and isnumeric(REPLACE(ud.user_defined_text01, ' ', '')) = 1
+					and left(ud.user_defined_text01, 2) between '11' and '99' --últimos dos dígitos del año de validación
 				) ad
 			FOR XML raw('cfdi:InformacionAduanera') , type
 		)
@@ -133,6 +159,7 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --			Incluye descuentos
 --Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
 --30/11/17 JCF Creación cfdi 3.3
+--05/01/18 jcf Agrega parámetro id de exportación
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	dt.QUANTITY, dt.UOFM,
@@ -163,12 +190,13 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	end ClaveProdServ,
 	ma.uscatvls_6, 
 	dt.ormrkdam,
-	dt.QUANTITY * dt.ormrkdam descuento
+	dt.QUANTITY * dt.ormrkdam descuento,
+	pa.param4 idExporta
 from SOP30300 dt
 left join iv00101 ma				--iv_itm_mstr
 	on ma.ITEMNMBR = dt.ITEMNMBR
 outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
-outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','CLPRODORIGEN','NA','NA','NA','PREDETERMINADO') pa
+outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','CLPRODORIGEN','CFDIEXPORTA','NA','NA','PREDETERMINADO') pa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
 outer apply dbo.fCfdiCatalogoGetDescripcion('PROD', pa.param1) prod
@@ -191,6 +219,7 @@ alter view dbo.vwCfdiSopLineasConSerialLot as
 --			Incluye descuentos
 --Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
 --29/11/17 JCF Creación cfdi 3.3
+--05/01/18 jcf Agrega parámetro id de exportación
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	ISNULL(sr.serltqty, dt.QUANTITY) cantidad, dt.QUANTITY, sr.serltqty, dt.UOFM, 
@@ -210,7 +239,8 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 			dt.QUANTITY * dt.ormrkdam
 		else 
 			sr.SERLTQTY * dt.ormrkdam
-	end descuento
+	end descuento,
+	dt.idExporta
 from vwCfdiSopLineasTrxVentas dt
 left join sop10201 sr				--SOP_Serial_Lot_WORK_HIST
 	on sr.SOPNUMBE = dt.SOPNUMBE
@@ -230,11 +260,13 @@ IF OBJECT_ID ('dbo.fCfdiParteXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiParteXML
 GO
 
-create function dbo.fCfdiParteXML(@soptype smallint, @sopnumbe char(21), @LNITMSEQ int)
+create function dbo.fCfdiParteXML(@soptype smallint, @sopnumbe char(21), @LNITMSEQ int, @DOCID char(15))
 returns xml 
 as
 --Propósito. Obtiene info de componentes de kit e info aduanera
---2/5/12 jcf Creación
+--02/05/12 jcf Creación
+--03/01/18 jcf Corrige info aduanera
+--05/01/18 jcf En caso de complemento de comercio exterior, no debe generar info aduanera
 --
 begin
 	declare @cncp xml;
@@ -247,7 +279,11 @@ begin
 				end NoIdentificacion, 
 				dt.cantidad Cantidad, 
 				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(dt.ITEMDESC))), 10) Descripcion,
-				dbo.fCfdiInfoAduaneraSLXML(dt.ITEMNMBR, dt.SERLTNUM)
+				case when dt.idExporta = @DOCID 
+					then null
+					else dbo.fCfdiInfoAduaneraXML(dt.ITEMNMBR, dt.SOPTYPE , dt.SOPNUMBE , dt.LNITMSEQ , dt.CMPNTSEQ )
+				end
+				--dbo.fCfdiInfoAduaneraSLXML(dt.ITEMNMBR, dt.SERLTNUM)
 		from vwCfdiSopLineasConSerialLot dt
 		where dt.soptype = @soptype
 		and dt.sopnumbe = @sopnumbe
@@ -273,36 +309,50 @@ GO
 
 create function dbo.fCfdiImpuestosTrasladadosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
 returns xml 
+--Propósito. Obtiene los impuestos trasladados, nodo Traslados/traslado
+--05/01/17 jcf Si sólo existen conceptos exentos, el nodo Traslados a nivel de comprobante no debe existir. GuíaAnexo20.pdf Pag. 32 
+--
 as
 begin
-	declare @impu xml;
-	WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
-	select @impu = (
-		select
-			case when @p_esdetalle = 1 then cast(imp.ortxsls as numeric(19,2)) 
-				else null
-			end Base,
-			--case when @p_LNITMSEQ=0 then 
-			--	CASE when @p_soptype = 4 
-			--		then cast(imp.ortxsls as numeric(19,2)) 
-			--		else null 
-			--		end
-			--	else cast(imp.ortxsls as numeric(19,2)) 
-			--end Base,
-			rtrim(tx.NAME) Impuesto,
-			case when tx.TXDTLPCT=0 then 'Exento' else 'Tasa' end TipoFactor, 
-			case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT/100 as numeric(19,6)) end TasaOCuota,
-			case when tx.TXDTLPCT=0 then null else cast(imp.orslstax as numeric(19,2)) end Importe
-		from sop10105 imp	--sop_tax_work_hist
-		inner join tx00201 tx
-			on tx.taxdtlid = imp.taxdtlid
- 		where 
-		imp.SOPTYPE = @p_soptype
-		  and imp.SOPNUMBE = @p_sopnumbe
-		  and imp.LNITMSEQ = @p_LNITMSEQ
-		  and tx.TXDTLPCT >= 0
-		FOR XML raw('cfdi:Traslado'), type, root('cfdi:Traslados')
-		)
+	declare @impu xml, @existeImpuestos numeric(19,6);
+	select @impu = null;
+	select @existeImpuestos = 1;
+
+	if (@p_esdetalle = 0)
+		select @existeImpuestos = sum(tx.TXDTLPCT)
+							from sop10105 imp	--sop_tax_work_hist
+							inner join tx00201 tx
+								on tx.taxdtlid = imp.taxdtlid
+ 							where imp.SOPTYPE = @p_soptype
+							  and imp.SOPNUMBE = @p_sopnumbe
+							  and imp.LNITMSEQ = @p_LNITMSEQ
+							  and tx.TXDTLPCT >= 0
+							  ;
+
+    if (isnull(@existeImpuestos, 0) > 0)
+	begin
+		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
+		select @impu = (
+			select
+				case when @p_esdetalle = 1 then cast(imp.ortxsls as numeric(19,2)) 
+					else null
+				end Base,
+				rtrim(tx.NAME) Impuesto,
+				case when tx.TXDTLPCT=0 then 'Exento' else 'Tasa' end TipoFactor, 
+				case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT/100 as numeric(19,6)) end TasaOCuota,
+				case when tx.TXDTLPCT=0 then null else cast(imp.orslstax as numeric(19,2)) end Importe
+			from sop10105 imp	--sop_tax_work_hist
+			inner join tx00201 tx
+				on tx.taxdtlid = imp.taxdtlid
+ 			where 
+			imp.SOPTYPE = @p_soptype
+			  and imp.SOPNUMBE = @p_sopnumbe
+			  and imp.LNITMSEQ = @p_LNITMSEQ
+			  and tx.TXDTLPCT >= 0
+			FOR XML raw('cfdi:Traslado'), type, root('cfdi:Traslados')
+			)
+	end
+
 	return @impu
 end
 go
@@ -322,6 +372,7 @@ as
 --Propósito. Obtiene las líneas de una factura 
 --			Elimina carriage returns, line feeds, tabs, secuencias de espacios y caracteres especiales.
 --20/11/17 jcf Creación cfdi 3.3
+--05/01/18 jcf Agrega idExporta
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
@@ -338,7 +389,8 @@ return(
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
 			Concepto.ORUNTPRC 		ValorUnitario,
 			Concepto.importe  		Importe,
-			Concepto.descuento 		Descuento
+			Concepto.descuento 		Descuento,
+			Concepto.idExporta
 		from vwCfdiSopLineasTrxVentas Concepto
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
@@ -357,7 +409,8 @@ return(
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
 			@p_subtotal		ValorUnitario,
 			@p_subtotal		Importe,
-			null			Descuento
+			null			Descuento,
+			Concepto.idExporta
 		from vwCfdiSopLineasTrxVentas Concepto
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
@@ -378,12 +431,14 @@ IF OBJECT_ID ('dbo.fCfdiConceptosXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptosXML
 GO
 
-create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6))
+create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @DOCID char(15))
 returns xml 
 as
 --Propósito. Obtiene las líneas de una factura en formato xml para CFDI
 --			Elimina carriage returns, line feeds, tabs, secuencias de espacios y caracteres especiales.
 --23/10/17 jcf Creación cfdi 3.3
+--03/01/18 jcf Corrige infor aduanera
+--05/01/18 jcf No debe generar info aduanera cuando es exportación
 --
 begin
 	declare @cncp xml;
@@ -419,9 +474,12 @@ begin
 
 				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
-				dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR),
-			
-				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) 
+				case when Concepto.idExporta = @DOCID 
+					then null
+					else dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SOPTYPE , Concepto.SOPNUMBE , Concepto.LNITMSEQ , Concepto.CMPNTSEQ )
+			    end,
+
+				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, @DOCID) 
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0) Concepto
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
@@ -518,6 +576,7 @@ as
 --			Se asume que No incluye retenciones
 --23/10/17 jcf Creación cfdi 3.3
 --12/12/17 jcf No debe mostrar descuento si no hay descuento en el detalle
+--05/01/18 jcf Agrega datos para complemento de exportación
 --
 begin
 	declare @cfd xml;
@@ -585,12 +644,22 @@ begin
 
 		tv.idImpuestoCliente								'cfdi:Receptor/@Rfc',
 		tv.nombreCliente									'cfdi:Receptor/@Nombre', 
+
+		case when tv.idImpuestoCliente = 'XEXX010101000'
+			then rtrim(tv.ccode)
+			else null
+		end													'cfdi:Receptor/@ResidenciaFiscal', 
+		case when tv.idImpuestoCliente = 'XEXX010101000'
+			then rtrim(tv.taxexmt1)
+			else null
+		end													'cfdi:Receptor/@NumRegIdTrib', 
+
 		case when tv.idImpuestoCliente != 'XEXX010101000'
 			then case when tv.usrtab01 = '' then isnull(pc.param1, 'P01') else left(upper(tv.usrtab01), 3) end
 			else 'P01'
 		END													'cfdi:Receptor/@UsoCFDI',
 
-		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal),
+		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.docid),
 		
 		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
 		dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0, 0)	'cfdi:Impuestos',
