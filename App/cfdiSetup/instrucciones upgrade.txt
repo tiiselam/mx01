@@ -62,10 +62,11 @@
   20/5/12 Sí utiliza instalador
   
   MTP, CAPSA
-  19/8/15 sí utiliza instalador
+  19/08/15 sí utiliza instalador
+  08/01/18 JCF Instala cfdi 33 v7.2.0
 
   WINTERS
-  13/2/12 Sí utiliza instalador
+  13/2/12 Sí utiliza instalador. Sólo habilitado para generar pdf
   
   TEAM PEDIATRICO
   17/11/16 Sí utiliza instalador. Sólo habilitado para generar pdf
