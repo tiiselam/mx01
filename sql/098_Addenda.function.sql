@@ -198,6 +198,7 @@ as
 --03/09/13 jcf Agrega cfdi namespace
 --24/02/14 jcf Agrega addenda de cliente Mabe
 --14/09/17 jcf Agrega parámetros incluyeAddendaDflt para addenda predeterminada para todos los clientes. Utilizado en MTP
+--19/01/18 jcf Agrega addenda de cliente pemex de Achilles
 --
 begin
 	declare @cncp xml, @numDigitos int, @posicion int --, @satNameSpace varchar(100);
@@ -307,6 +308,25 @@ begin
 				for xml path(''), root('cfdi:Addenda')
 				)
 	end
+	--Achilles. Cliente PEMEX
+	else if exists(select custnmbr from rm00101 where custnmbr = rtrim(@p_custnmbr) and  TXRGNNUM = 'PME380607P35')
+	begin	
+		select @cncp = convert(xml, 
+					'<pm:Addenda_Pemex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pm="http://pemex.com/facturaelectronica/addenda/v2" xsi:schemaLocation="http://pemex.com/facturaelectronica/addenda/v2 https://pemex.reachcore.com/schemas/addenda-pemex-v2.xsd">' +
+					dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cmmttext), 10) +
+					'</pm:Addenda_Pemex>')
+		from sop10106
+		where sopnumbe = @p_sopnumbe
+		and soptype = @p_soptype
+		and comment_1 != '';
+
+		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as cfdi)
+		select @cncp = ( 
+				select @cncp
+				for xml path(''), root('cfdi:Addenda')
+				)
+		--select @cncpXml;
+	end
 
 	return @cncp
 end
@@ -337,3 +357,4 @@ GO
 
 --sp_statistics mc40200
 --sp_columns sop30200
+

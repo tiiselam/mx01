@@ -10,17 +10,13 @@ as
 --Propósito. Devuelve datos del emisor
 --Requisitos. Los impuestos están configurados en el campo texto de la compañía. 
 --			Debe indicar el parámetros IMPUESTOS=[idImpuesto1],[idImpuesto2],etc.
---			Debe indicar el parámetros OTROS=[01] ó [02]
---			[01] El método de pago es fijo. Si la factura viene de la interface pagada indica tarjeta de crédito, sino depósito
---				El número de cuenta bancaria viene del campo 1 def por el usuario de la dirección de facturación del cliente
---			[02] El método de pago viene del campo 1 tipo lista def por el usuario de la factura
---				El número de cuenta bancaria viene del campo 2 tipo texto def por el usuario de la factura
 --Utilizado por. fCfdDatosAdicionales()
 --24/04/12 jcf Creación cfdi
 --02/07/12 jcf Agrega parámetro OTROS. 
 --08/02/17 jcf Elimina estado de lugarExpedicion
 --14/09/17 jcf Usa fCfdiParametros y agrega estado a lugarExpedicion
 --19/12/17 jcf Agrega utc
+--11/01/18 jcf Agrega comercioExterior
 --
 return
 ( 
@@ -39,11 +35,12 @@ select rtrim(replace(ci.TAXREGTN, 'RFC ', '')) rfc,
 	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ISNULL(nt.INET7, '')), 10) rutaXml,
 	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ISNULL(nt.INET8, '')), 10) regimen,
 	nt.param2 impuestos,
-	nt.param3 otrosDatos,	--cfdi 2.3
+	nt.param3 otrosDatos,	--cfdi 3.2 deprecated
 	nt.param4 incluyeAddendaDflt,
-	nt.param5 utc
+	nt.param5 utc,
+	nt.param6 comercioExterior
 from DYNAMICS..SY01500 ci			--sy_company_mstr
-cross apply dbo.fCfdiParametros('VERSION', 'IMPUESTOS', 'OTROS', 'ADDENDADFLT', 'UTC', 'NA', ci.LOCATNID) nt
+cross apply dbo.fCfdiParametros('VERSION', 'IMPUESTOS', 'OTROS', 'ADDENDADFLT', 'UTC', 'CFDIEXPORTA', ci.LOCATNID) nt
 where ci.INTERID = DB_NAME()
 )
 go

@@ -56,6 +56,7 @@ namespace Comun
         public string ultimoMensaje = "";
         private string _URLArchivoXSD = "";
         private string _URLArchivoPagosXSD = String.Empty;
+        private string _URLArchivoComExtXSD;
         private string _URLArchivoXSLT = "";
         private string _URLConsulta = "";
         private string _URLwebServPAC = "";
@@ -130,9 +131,31 @@ namespace Comun
                 listaParametros.Load(new XmlTextReader("ParametrosCfdi.xml"));
                 XmlNode elemento = listaParametros.DocumentElement;
 
-                _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
-                _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
-                _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
+                try
+                {
+                    _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
+                    _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
+                    _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
+                    //_URLArchivoPagosXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSLT/text()").Value;
+
+                }
+                catch (Exception)
+                {
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener los parámetros URLArchivoXSD, URLArchivoXSLT, URLArchivoPagosXSD o URLArchivoPagosXSLT en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw;
+                }
+
+                try
+                {
+                    _URLArchivoComExtXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoComExtXSD/text()").Value;
+                    //_URLArchivoComExtXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoComExtXSLT/text()").Value;
+                }
+                catch (Exception)
+                {
+                    _URLArchivoComExtXSD = "na";
+                    //_URLArchivoComExtXSLT= "na";
+                }
+
                 _URLConsulta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLConsulta/text()").Value;
                 _URLwebServPAC = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/PAC/urlWebService/text()").Value;
                 _emite = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emite/text()").Value;
@@ -166,7 +189,7 @@ namespace Comun
                     _emailUser = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/usuario/text()").Value;
 
                 }
-                catch (Exception usr)
+                catch (Exception)
                 {
                     _emailUser = string.Empty;
                 }
@@ -176,7 +199,7 @@ namespace Comun
                     _emailPwd = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/clave/text()").Value;
 
                 }
-                catch (Exception pwd)
+                catch (Exception)
                 {
                     _emailPwd = string.Empty;
                 }
@@ -265,11 +288,50 @@ namespace Comun
             }
         }
 
+        public string URLArchivoComExtXSD
+        {
+            get
+            {
+                return _URLArchivoComExtXSD;
+            }
+
+            set
+            {
+                _URLArchivoComExtXSD = value;
+            }
+        }
+
         public string URLArchivoXSLT
         {
             get { return _URLArchivoXSLT; }
             set { _URLArchivoXSLT = value; }
         }
+
+        //public string URLArchivoPagosXSLT
+        //{
+        //    get
+        //    {
+        //        return _URLArchivoPagosXSLT;
+        //    }
+
+        //    set
+        //    {
+        //        _URLArchivoPagosXSLT = value;
+        //    }
+        //}
+
+        //public string URLArchivoComExtXSLT
+        //{
+        //    get
+        //    {
+        //        return _URLArchivoComExtXSLT;
+        //    }
+
+        //    set
+        //    {
+        //        _URLArchivoComExtXSLT = value;
+        //    }
+        //}
 
         public string URLConsulta
         {

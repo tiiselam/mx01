@@ -8,6 +8,7 @@ alter view dbo.vwCfdiSopTransaccionesVenta
 --Requisitos. No muestra facturas registradas en cuentas por cobrar. 
 --24/10/17 jcf Creación cfdi 3.3 
 --05/01/18 jcf Agrega ccode, taxexmt1
+--19/01/18 JCF Corrige zipcode
 --
 AS
 
@@ -40,7 +41,7 @@ SELECT	'contabilizado' estadoContabilizado,
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.[STATE]), 10)) [state], 
 		dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.country), 10)) country, 
 		cn.ccode, cn.taxexmt1,
-		right('00000'+dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10), 5) zipcode, 
+		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
 		da.USRDEF05, isnull(da.usrtab01, '') usrtab01

@@ -15,12 +15,14 @@ as
 --		Se asume que una nc o devolución aplica una o más facturas. Hasta 100 facturas.
 --		Un documento debe tener un solo tipo de relación.
 --24/10/17 jcf Creación
+--16/01/18 jcf Agrega sustitución de factura anulada con NC
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
 			select top(1) 1 orden,	
 				--case when left(da.tracking_number, 1) = 'T' then '06'		--factura generada por traslado previo
-				case when isnull(u.voidstts, -1) = 1 then '04'				--sustitución
+				case when isnull(u.voidstts, -1) = 1 or											--sustitución de factura anulada
+						(isnull(apli.APFRDCTY, -1) = 8 and u.montoActualOriginal = 0) then '04'	--sustitución de factura anulada con NC
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura
@@ -32,7 +34,15 @@ return(
 				u.FormaPago
 			from sop10107 da	--
 				outer apply dbo.fCfdiObtieneUUID(da.soptype, da.tracking_number) u
-				cross apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+				outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+				outer apply (
+							select ap.APFRDCTY
+							from dbo.vwRmTrxAplicadas  ap
+							where ap.aptodcnm = da.tracking_number
+							and ap.aptodcty = case da.soptype when 3 then 1 else 8 end
+							GROUP BY ap.APFRDCTY
+							having COUNT(*) = 1
+							) apli
 			where da.sopnumbe = @p_sopnumbe
 			and da.soptype = @soptype
 			
@@ -50,7 +60,7 @@ return(
 					case when u.FormaPago = '' then '99' else u.FormaPago end FormaPago
 				from dbo.vwRmTrxAplicadas  ap
 					outer apply dbo.fCfdiObtieneUUID(ap.aptodcty+2, ap.aptodcnm) u	--tipo factura es 1 en AR
-					cross apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+					outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 				where ap.APFRDCTY = @soptype+4										--tipo nc es 8 en AR
 				AND ap.apfrdcnm = @p_sopnumbe
 				and @soptype = 4

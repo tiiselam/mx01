@@ -10,26 +10,47 @@ namespace Comun
     public class TransformerXML
     {
         private Dictionary<string, XslCompiledTransform> transforms = new Dictionary<string, XslCompiledTransform>();
-        public string cadenaOriginal = "";
+        public string cadenaOriginal = string.Empty;
+        public string cadenaOriginalComex = string.Empty;
+        private XslCompiledTransform _xslCfdiCompilado = null;
+        private Parametros _param;
 
-        public XslCompiledTransform Load(string rutaArchivoXSLT)
+        public TransformerXML(Parametros pa)
         {
-            XslCompiledTransform transform = null;
+            _param = pa;
+            Load(_param.URLArchivoXSLT);
+            //_xslCfdiCompilado = Load(_param.URLArchivoXSLT);
+        }
+
+
+        //public void Load(string rutaArchivoXSLT)
+        //{
+        //    // Set the credentials on the XmlUrlResolver object.
+        //    XmlUrlResolver resolver = new XmlUrlResolver();
+        //    //resolver.Credentials = myCache;
+
+        //    // Compile the style sheet.
+        //    _xslCfdiCompilado = new XslCompiledTransform();
+        //    _xslCfdiCompilado.Load(rutaArchivoXSLT, XsltSettings.Default, resolver);
+        //}
+
+        public void Load(string rutaArchivoXSLT)
+        {
+            //XslCompiledTransform transform = null;
             try
             {
-                if (!transforms.TryGetValue(rutaArchivoXSLT, out transform))
+                if (!transforms.TryGetValue(rutaArchivoXSLT, out _xslCfdiCompilado))
                 {
-                    transform = new XslCompiledTransform();
-                    transform.Load(rutaArchivoXSLT);
-                    transforms[rutaArchivoXSLT] = transform;
+                    _xslCfdiCompilado = new XslCompiledTransform();
+                    _xslCfdiCompilado.Load(rutaArchivoXSLT);
+                    transforms[rutaArchivoXSLT] = _xslCfdiCompilado;
                 }
-                return transform;
+                //return transform;
             }
             catch (Exception lo)
             {
                 throw new IOException("Excepción al inicializar la plantilla de transformación de XML. Verifique la existencia del archivo: " + rutaArchivoXSLT, lo);
             }
-
         }
 
         /// <summary>
@@ -38,18 +59,24 @@ namespace Comun
         /// <param name="archivoXml">Archivo xml a transformar.</param>
         /// <param name="transformer">Objeto que aplica un xslt al archivo xml.</param>
         /// <returns>False cuando hay al menos un error</returns>
-        public void getCadenaOriginal(XmlDocument archivoXml, XslCompiledTransform transformer)
+        public string getCadenaOriginal(XmlDocument archivoXml, XslCompiledTransform transformer)
         {
             StringWriter writer = new StringWriter();
             try
             {
                 transformer.Transform(archivoXml, null, writer);
-                cadenaOriginal = writer.ToString();
+                return(writer.ToString());
             }
             catch 
             {
                 throw;
             }
+        }
+
+        public void getCadenaOriginal(XmlDocument comprobanteCfdiXml)
+        {
+            cadenaOriginal = getCadenaOriginal(comprobanteCfdiXml, _xslCfdiCompilado);
+
         }
     }
 }

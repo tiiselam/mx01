@@ -25,7 +25,10 @@ public class ValidadorXML
             // Add the schema to the collection.
             sc.Add(null, prm.URLArchivoXSD);
             sc.Add(null, prm.URLArchivoPagosXSD);
-        }
+
+            if (!prm.URLArchivoComExtXSD.ToLower().Equals("na"))
+                    sc.Add(null, prm.URLArchivoComExtXSD);
+            }
         catch(Exception vx)
         {
             throw new IOException ("No existe alguno de los archivos xsd: \r\n" + prm.URLArchivoXSD + " o \r\n" + prm.URLArchivoPagosXSD + "\r\n", vx);

@@ -17,6 +17,7 @@ ALTER VIEW [dbo].[TII_SOPINVOICE] AS
 --18/09/17 jcf Agrega isocurrc, addLeyenda. Comenta codigoBarras. Habilitar si usa Crystal
 --20/09/17 jcf Agrega noExterior
 --20/11/17 jcf Modifica estructura detalle sop para cfdi 3.3
+--17/01/18 jcf Corrige OXTNDPRC cuando la venta es por lote
 --
 SELECT 
 		SOPHEADER.DOCSTATUS,
@@ -97,7 +98,12 @@ SELECT
 		SOPDETAIL.ClaveUnidad UOFM,
 		SOPDETAIL.UOFMsat_descripcion,
 		SOPDETAIL.ValorUnitario ORUNTPRC,
-		SOPDETAIL.Importe OXTNDPRC,
+		
+		case when ISNULL(SOPDETAILSERIALLOT.SERLTQTY, 0) = 0 then SOPDETAIL.Importe 
+			else SOPDETAIL.ValorUnitario * SOPDETAILSERIALLOT.SERLTQTY
+		end OXTNDPRC,
+
+		--SOPDETAIL.Importe OXTNDPRC,
 		SOPDETAIL.descuento ormrkdamDetail,
 		SOPDETAIL.Cantidad QUANTITY,
 		SOPDETAILSERIALLOT.SERLTNUM,
@@ -158,7 +164,7 @@ SELECT
 		SOPELECTINV.RfcPAC,
 		SOPELECTINV.Leyenda,
 		RIGHT('0' + CAST(DAY(SOPELECTINV.FechaTimbrado) AS VARCHAR(2)),2) + '/' + RIGHT('0' + CAST(MONTH(SOPELECTINV.FechaTimbrado) AS VARCHAR(2)),2) + '/' + CAST(YEAR(SOPELECTINV.FechaTimbrado) AS CHAR(4)) + ' ' + RIGHT('0' + CAST(DATEPART(HOUR,SOPELECTINV.FechaTimbrado) AS VARCHAR(2)),2) + ':' + RIGHT('0' + CAST(DATEPART(MINUTE,SOPELECTINV.FechaTimbrado) AS VARCHAR(2)),2) + ':' + RIGHT('0' + CAST(DATEPART(SECOND,SOPELECTINV.FechaTimbrado) AS VARCHAR(2)),2) AS FechaTimbrado,
-		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(substring(cm.cmmttext, 1, 350))), 10) addLeyenda,
+		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cm.cmmttext), 10) addLeyenda,
 
 		RTRIM(SOPELECTINV.rutaYNomArchivo) AS rutaYNomArchivo,
 		RTRIM(SOPELECTINV.rutaYNomArchivoNet) AS rutaYNomArchivoNet,

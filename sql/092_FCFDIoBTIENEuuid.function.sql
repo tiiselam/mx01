@@ -8,10 +8,11 @@ as
 --Propósito. Devuelve el UUID de un cfdi
 --Requisitos. 
 --13/10/17 jcf Creación 
+--16/01/18 jcf Agrega montoActualOriginal
 --
 return
 (
-	select tv.docid, dx.uuid, tv.voidstts, dx.FormaPago
+	select tv.docid, dx.uuid, tv.voidstts, dx.FormaPago, tv.montoActualOriginal
 	from dbo.vwCfdiSopTransaccionesVenta tv
 		left join dbo.vwCfdiDatosDelXml dx
 		on dx.soptype = tv.SOPTYPE

@@ -26,7 +26,7 @@ SELECT
 				then null
 				else 
 					CASE WHEN cuf.ISOCURRC = 'MXN' 
-						THEN 1.00
+						THEN 1
 						ELSE --moneda factura / moneda pago
 							round(a.ORAPTOAM / a.actualapplytoamount, 6) - --restar un infinitésimo para que el pago sea mayor
 							case when cup.ISOCURRC = 'MXN' and cuf.ISOCURRC != 'MXN' then 0.000001 else 0 end

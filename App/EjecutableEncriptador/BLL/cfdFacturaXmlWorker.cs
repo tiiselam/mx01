@@ -50,8 +50,8 @@ namespace cfd.FacturaElectronica
                 cfdReglasFacturaXml DocVenta = new cfdReglasFacturaXml(_Conex, _Param);     //log de facturas xml emitidas y anuladas
                 ReglasME maquina = new ReglasME(_Param);
                 ValidadorXML validadorxml = new ValidadorXML(_Param);
-                TransformerXML loader = new TransformerXML();
-                XslCompiledTransform xslCompilado = loader.Load(_Param.URLArchivoXSLT);
+                TransformerXML loader = new TransformerXML(_Param);
+
                 PAC representanteSat = new PAC(trxVenta.Ruta_clavePac, trxVenta.Contrasenia_clavePac, _Param);
                 String Sello = string.Empty;
 
@@ -77,7 +77,8 @@ namespace cfd.FacturaElectronica
                                 comprobante.LoadXml(trxVenta.ComprobanteXml);
                                 comprobante.DocumentElement.SetAttribute("NoCertificado", criptografo.noCertificado);
 
-                                loader.getCadenaOriginal(comprobante, xslCompilado);    //Obtener cadena original del CFD
+                                loader.getCadenaOriginal(comprobante);                  //Obtener cadena original del CFD
+
                                 Sello = criptografo.obtieneSello(loader.cadenaOriginal);//Crear el archivo xml y sellarlo
                                 comprobante.DocumentElement.SetAttribute("Sello", Sello);
                                 comprobante.DocumentElement.SetAttribute("Certificado", criptografo.certificadoFormatoPem);
@@ -86,6 +87,7 @@ namespace cfd.FacturaElectronica
                                     comprobante.Save(new XmlTextWriter(trxVenta.Sopnumbe.Trim() + "tst.xml", Encoding.UTF8));
 
                                 validadorxml.ValidarXSD(comprobante);                   //Validar el esquema del archivo xml
+
                                 representanteSat.comprobanteFiscal = comprobante;
                                 representanteSat.timbraCFD();                           //agregar sello al comprobante
 

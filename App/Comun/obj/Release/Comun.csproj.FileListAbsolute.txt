@@ -17,4 +17,3 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Comun.dl
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Comun.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Release\Comun.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Release\Comun.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Release\Comun.csprojResolveAssemblyReference.cache

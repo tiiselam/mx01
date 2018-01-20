@@ -124,6 +124,12 @@
             this.Isocurrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabTraslados = new System.Windows.Forms.TabPage();
             this.dGridTraslados = new System.Windows.Forms.DataGridView();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.soptypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sopnumbeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fechahoraDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -141,18 +147,12 @@
             this.mensajeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mensajeEADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.estadoActualDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgridTrxFacturas)).BeginInit();
@@ -459,7 +459,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(152, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(244, 24);
             this.menuStrip1.TabIndex = 14;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -491,7 +491,7 @@
             // 
             this.genFacturaElectrónicaV10ToolStripMenuItem.Name = "genFacturaElectrónicaV10ToolStripMenuItem";
             this.genFacturaElectrónicaV10ToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.2.0";
+            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.3.0";
             // 
             // toolStripMenuItem2
             // 
@@ -1240,6 +1240,51 @@
             this.dGridTraslados.TabIndex = 1;
             this.dGridTraslados.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dGridTraslados_RowPostPaint);
             // 
+            // dataGridViewCheckBoxColumn1
+            // 
+            this.dataGridViewCheckBoxColumn1.FalseValue = "0";
+            this.dataGridViewCheckBoxColumn1.Frozen = true;
+            this.dataGridViewCheckBoxColumn1.HeaderText = "M";
+            this.dataGridViewCheckBoxColumn1.IndeterminateValue = "-1";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.TrueValue = "1";
+            this.dataGridViewCheckBoxColumn1.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "docid";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Id Doc";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Soptype";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Soptype";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "Sopnumbe";
+            this.dataGridViewTextBoxColumn5.HeaderText = "Número Transferencia";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.Width = 140;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.DataPropertyName = "EstadoContabilizado";
+            this.dataGridViewTextBoxColumn12.HeaderText = "EstadoContab.";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn13
+            // 
+            this.dataGridViewTextBoxColumn13.DataPropertyName = "Voidstts";
+            this.dataGridViewTextBoxColumn13.HeaderText = "Anulado";
+            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
+            this.dataGridViewTextBoxColumn13.Visible = false;
+            // 
             // soptypeDataGridViewTextBoxColumn
             // 
             this.soptypeDataGridViewTextBoxColumn.DataPropertyName = "Soptype";
@@ -1373,37 +1418,6 @@
             this.estadoActualDataGridViewTextBoxColumn.Name = "estadoActualDataGridViewTextBoxColumn";
             this.estadoActualDataGridViewTextBoxColumn.Visible = false;
             // 
-            // dataGridViewCheckBoxColumn1
-            // 
-            this.dataGridViewCheckBoxColumn1.FalseValue = "0";
-            this.dataGridViewCheckBoxColumn1.Frozen = true;
-            this.dataGridViewCheckBoxColumn1.HeaderText = "M";
-            this.dataGridViewCheckBoxColumn1.IndeterminateValue = "-1";
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
-            this.dataGridViewCheckBoxColumn1.TrueValue = "1";
-            this.dataGridViewCheckBoxColumn1.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "docid";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Id Doc";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "Soptype";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Soptype";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "Sopnumbe";
-            this.dataGridViewTextBoxColumn5.HeaderText = "Número Transferencia";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.Width = 140;
-            // 
             // dataGridViewTextBoxColumn6
             // 
             this.dataGridViewTextBoxColumn6.DataPropertyName = "Fechahora";
@@ -1448,20 +1462,6 @@
             this.dataGridViewTextBoxColumn11.HeaderText = "Mensaje";
             this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
             this.dataGridViewTextBoxColumn11.Width = 300;
-            // 
-            // dataGridViewTextBoxColumn12
-            // 
-            this.dataGridViewTextBoxColumn12.DataPropertyName = "EstadoContabilizado";
-            this.dataGridViewTextBoxColumn12.HeaderText = "EstadoContab.";
-            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
-            this.dataGridViewTextBoxColumn12.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn13
-            // 
-            this.dataGridViewTextBoxColumn13.DataPropertyName = "Voidstts";
-            this.dataGridViewTextBoxColumn13.HeaderText = "Anulado";
-            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
-            this.dataGridViewTextBoxColumn13.Visible = false;
             // 
             // dataGridViewTextBoxColumn14
             // 

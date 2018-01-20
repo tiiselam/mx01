@@ -55,7 +55,7 @@ where s.sopnumbe like '00000878'
 
 select *
 from vwCfdiTransaccionesDeVenta s
-where s.sopnumbe like '00000883'
+where s.sopnumbe like '4001910'
 
 
 
