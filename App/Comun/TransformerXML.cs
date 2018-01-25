@@ -19,20 +19,12 @@ namespace Comun
         {
             _param = pa;
             Load(_param.URLArchivoXSLT);
-            //_xslCfdiCompilado = Load(_param.URLArchivoXSLT);
         }
 
-
-        //public void Load(string rutaArchivoXSLT)
-        //{
-        //    // Set the credentials on the XmlUrlResolver object.
-        //    XmlUrlResolver resolver = new XmlUrlResolver();
-        //    //resolver.Credentials = myCache;
-
-        //    // Compile the style sheet.
-        //    _xslCfdiCompilado = new XslCompiledTransform();
-        //    _xslCfdiCompilado.Load(rutaArchivoXSLT, XsltSettings.Default, resolver);
-        //}
+        public TransformerXML(string rutaArchivoXSLT)
+        {
+            Load(rutaArchivoXSLT);
+        }
 
         public void Load(string rutaArchivoXSLT)
         {

@@ -12,6 +12,7 @@ alter view dbo.vwCfdiTrxCobros as
 --			El estado "inconsistente" indica que existe un problema en el folio o certificado, por tanto no puede ser generado.
 --			El estado "emitido" indica que el archivo xml ha sido generado y sellado por el PAC y está listo para ser impreso.
 --30/10/17 jcf Creación cfdi 3.3
+--24/01/18 jcf usa montoActualOriginal para validar que esté totalmente aplicado
 --
 select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' end estadoContabilizado, 
 	cb.rmdtypal soptype, 'CBR' docid, cb.docnumbr sopnumbe, convert(datetime, cb.docdate, 126) fechahora,
@@ -34,7 +35,7 @@ select case when cb.rmTipoTrx in ('A', 'H') then 'contabilizado' else 'en lote' 
 	emi.rfc, emi.regimen, emi.rutaXml, emi.codigoPostal,
 	isnull(lf.estadoActual, '000000') estadoActual, 
 	isnull(lf.mensajeEA, 
-			case when cb.montoActual != 0 then 'parcialmente aplicado'
+			case when cb.montoActualOriginal != 0 then 'parcialmente aplicado'
 			else 'contabilizado'
 			end
 			) mensajeEA,

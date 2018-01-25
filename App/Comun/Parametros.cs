@@ -136,19 +136,17 @@ namespace Comun
                     _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
                     _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
                     _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
-                    //_URLArchivoPagosXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSLT/text()").Value;
 
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener los parámetros URLArchivoXSD, URLArchivoXSLT, URLArchivoPagosXSD o URLArchivoPagosXSLT en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener los parámetros URLArchivoXSD, URLArchivoXSLT o URLArchivoPagosXSD en " + IdCompannia + ". [Parametros(Compañía)] ";
                     throw;
                 }
 
                 try
                 {
                     _URLArchivoComExtXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoComExtXSD/text()").Value;
-                    //_URLArchivoComExtXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoComExtXSLT/text()").Value;
                 }
                 catch (Exception)
                 {
