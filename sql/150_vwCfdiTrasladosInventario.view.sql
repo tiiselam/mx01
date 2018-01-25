@@ -4,7 +4,8 @@ IF (OBJECT_ID ('dbo.vwCfdiTrasladosInventario', 'V') IS NULL)
 go
 
 alter view dbo.vwCfdiTrasladosInventario as
---Propósito. Transacciones de inventario a nivel de cabecera
+--Propósito. Transacciones de inventario a nivel de cabecera. 
+--			Suma 15 al tipo de documento de IV para no colisionar con transacciones de SOP, RM
 --Requisitos. Es probable que no requiera del chunk Guía de remisión GREM.cnk
 --19/12/17 jcf Creación cfdi 3.3 traslado
 --

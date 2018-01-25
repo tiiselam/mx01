@@ -7,6 +7,7 @@ create function dbo.fCfdiDatosXmlParaImpresion(@archivoXml xml)
 --Usado por. vwCfdTransaccionesDeVenta
 --Requisitos. CFDI
 --25/10/17 jcf Creación cfdi 3.3
+--25/01/18 jcf Agrega receptorRfc
 --
 returns table
 return(
@@ -25,6 +26,7 @@ return(
 	@archivoXml.value('(//@NoCertificado)[1]', 'varchar(20)') NoCertificado,
 	@archivoXml.value('(//@FormaPago)[1]', 'varchar(50)') FormaPago,
 	@archivoXml.value('(//@MetodoPago)[1]', 'varchar(21)') MetodoPago,
+	@archivoXml.value('(//cfdi:Receptor/@Rfc)[1]', 'varchar(15)') receptorRfc,
 	@archivoXml.value('(//cfdi:Receptor/@UsoCFDI)[1]', 'varchar(4)') UsoCFDI,
 	@archivoXml.value('(//cfdi:CfdiRelacionados/@TipoRelacion)[1]', 'varchar(4)') TipoRelacion,
 	@archivoXml.value('(//cfdi:CfdiRelacionado/@UUID)[1]', 'varchar(60)') UUIDrelacionado

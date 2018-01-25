@@ -5,6 +5,7 @@ go
 alter view dbo.vwCfdiDatosDelXml as
 --Propósito. Lista los datos del xml emitido 
 --21/11/17 jcf Creación cfdi 3.3
+--25/01/18 jcf Agrega receptorRfc para conta electrónica
 --
 select lf.soptype, lf.sopnumbe, lf.secuencia, lf.estado, lf.mensaje, lf.estadoActual, lf.mensajeEA, 
 	--Datos del xml sellado por el PAC:
@@ -18,6 +19,7 @@ select lf.soptype, lf.sopnumbe, lf.secuencia, lf.estado, lf.mensaje, lf.estadoAc
 	isnull(dx.Sello, '') sello, 
 	isnull(dx.NoCertificado, '') noCertificadoCSD, 
 	isnull(dx.MetodoPago, '') MetodoPago,	
+	isnull(dx.receptorRfc, '') receptorRfc,			
 	isnull(dx.UsoCfdi, '') usoCfdi,			
 	isnull(dx.RfcPAC, '') RfcPAC,
 	isnull(dx.Leyenda, '') Leyenda,
