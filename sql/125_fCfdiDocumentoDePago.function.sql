@@ -43,7 +43,8 @@ return
 		FROM dbo.vwRmTransaccionesTodas hdr
  			left join dynamics.dbo.MC40200 c on c.CURNCYID = HDR.CURNCYID
 			outer apply dbo.fCfdiMcpFormaPago(hdr.DOCNUMBR) mcp
-			left join CM00101 tef on tef.CHEKBKID = CASE WHEN hdr.bchsourc like '%MCP%' then mcp.tii_chekbkid else hdr.mscschid end
+			left join CM00101 tef 
+				on tef.CHEKBKID = CASE WHEN hdr.bchsourc like '%MCP%' then mcp.tii_chekbkid else hdr.mscschid end
 			outer apply dbo.fCfdiFormaPagoManual(hdr.mscschid, hdr.CSHRCTYP, hdr.FRTSCHID) ch
 			outer apply dbo.fCfdiParametrosCliente(hdr.custnmbr, 'RfcEmisorCtaOrd', 'NomBancoOrdExt', 'CtaOrdenante', 'NA', 'NA', 'NA', 'PREDETERMINADO') cp
 			outer apply (select max(TipoCambioP) TipoCambioP from dbo.fCfdiDocumentoDePagoRelacionado(hdr.RMDTYPAL, hdr.docnumbr)) pago

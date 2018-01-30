@@ -2,10 +2,28 @@ IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp2010
 begin
 	create table dbo.nfmcp20100
 	(
-	medioid		varchar(15) NOT NULL default 'NA',
-	numberie 	varchar(21) NOT NULL default '',
-	tii_chekbkid varchar(15) not null default '',
-	lineamnt int NOT NULL default 0,
+	[MCPTYPID] [char](21) NOT NULL,
+	[NUMBERIE] [char](21) NOT NULL,
+	[LNSEQNBR] [numeric](19, 5) NOT NULL,
+	[MEDIOID] [char](21) NOT NULL,
+	[BANKID] [char](15) NOT NULL,
+	[DOCNUMBR] [char](21) NOT NULL,
+	[LOCATNNM] [char](31) NOT NULL,
+	[TITACCT] [char](65) NOT NULL,
+	[EMIDATE] [datetime] NOT NULL,
+	[DUEDATE] [datetime] NOT NULL,
+	[LINEAMNT] [numeric](19, 5) NOT NULL,
+	[AMOUNTO] [numeric](19, 5) NOT NULL,
+	[CURNCYID] [char](15) NOT NULL,
+	[STSDESCR] [char](31) NOT NULL,
+	[CURRNIDX] [smallint] NOT NULL,
+	[BANACTID] [char](21) NOT NULL,
+	[TII_MCP_Clearing] [smallint] NOT NULL,
+	[TII_MCP_Checkbook_Integ] [tinyint] NOT NULL,
+	[TII_MCP_Integrated_Date] [datetime] NOT NULL,
+	[TII_CHEKBKID] [char](15) NOT NULL,
+	[TXRGNNUM] [char](25) NOT NULL,
+	[DEX_ROW_ID] [int] IDENTITY(1,1) NOT NULL
 	) on [PRIMARY];
 end
 
@@ -14,8 +32,9 @@ IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp0070
 begin
 	create table dbo.nfmcp00700
 	(
-	grupid		varchar(21) NOT NULL default 'NA',
-	medioid 	varchar(15) NOT NULL default ''
+	[GRUPID] [char](21) NOT NULL,
+	[MEDIOID] [char](21) NOT NULL,
+	[CHEKBKID] [char](15) NOT NULL
 	) on [PRIMARY];
 end
 

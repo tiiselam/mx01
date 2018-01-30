@@ -35,46 +35,47 @@ IF OBJECT_ID ('trgins_sop10100_registraHora','TR') IS NOT NULL
    DROP TRIGGER dbo.trgins_sop10100_registraHora
 GO
 
-create TRIGGER dbo.trgins_sop10100_registraHora ON dbo.sop10100
+create TRIGGER [dbo].[trgins_sop10100_registraHora] ON [dbo].[SOP10100]
 AFTER INSERT
 AS
 --MEXICO, COLOMBIA, ESPAÑA, PERU, USA
 --Propósito. Registra la hora de la transacción. Usar la hora adecuada en cada país.
 --24/11/10 JCF Creación. 
 --27/08/13 JCF Getty ejecuta una integración en la madrugada desde Argentina. 
---		Si ingresan facturas a hrs > 22 de México, debe generar factura electrónica al día siguiente.
+--  Si ingresan facturas a hrs > 22 de México, debe generar factura electrónica al día siguiente.
 --20/12/13 jcf Todas las facturas ingresan con diferencia -3
 --25/08/16 jcf Si la factura se genera a hrs. 03:01 o superior se disminuye 3 horas. Esto para evitar tener la fecha de hoy con hora adelantada.
---			Considerar que en México hay una diferencia de 2 o 3 horas dependiendo de la estación.
---			Esto implica que si un usuario ingresa una factura entre hrs 24 y hrs 3 del día siguiente de Argentina, la hora será siempre menor a 3.
---21/11/16 jcf Parametriza la diferencia horaria en CFDIDIFHORA
---31/07/17 JCF El parámetro está en la dirección PRINCIPAL
+--   Considerar que en México hay una diferencia de 2 o 3 horas dependiendo de la estación.
+--   Esto implica que si un usuario ingresa una factura entre hrs 24 y hrs 3 del día siguiente de Argentina, la hora será siempre menor a 3.
 --21/12/17 JCF Los parámetros están en la dirección PREDETERMINADO
+--30/01/18 jcf Cuando la fecha de la factura es mayor a la fecha de hoy en México, poner la hora 00:01
 --
 begin try
 
-	DECLARE @horaMex int;
+ DECLARE @horaMex int;
     set @horaMex = 0;
-	select @horaMex = case when isnumeric(PARAM1) = 1 then convert(int, param1) else 0 end
-	from dbo.fCfdiParametros('CFDIDIFHORA', '-', '-', '-', '-', '-', 'PREDETERMINADO');
+ select @horaMex = case when isnumeric(PARAM1) = 1 then convert(int, param1) else 0 end
+ from dbo.fCfdiParametros('CFDIDIFHORA', '-', '-', '-', '-', '-', 'PREDETERMINADO');
 
-	UPDATE dbo.SOP10100 set DOCNCORR = 
-				case when datepart(hh, getdate()) <= @horaMex then
-					convert(varchar(12), getdate(), 114)	--hora local del servidor
-				else
-					convert(varchar(12), dateadd(hh,-@horaMex, getdate()), 114)
-				end
-	 FROM dbo.SOP10100, inserted 
-	 WHERE SOP10100.SOPTYPE = inserted.SOPTYPE 
-	 AND SOP10100.SOPNUMBE = inserted.SOPNUMBE;
+ UPDATE dbo.SOP10100 set DOCNCORR = 
+	CASE when datediff(day, dateadd(hh,-@horaMex, getdate()), SOP10100.DOCDATE) > 0 then '00:01:01:001'
+		else
+			case when datepart(hh, getdate()) <= @horaMex then
+			 convert(varchar(12), getdate(), 114) --hora local del servidor
+			else
+			 convert(varchar(12), dateadd(hh,-@horaMex, getdate()), 114)
+			end
+		end
+  FROM dbo.SOP10100, inserted 
+  WHERE SOP10100.SOPTYPE = inserted.SOPTYPE 
+  AND SOP10100.SOPNUMBE = inserted.SOPNUMBE;
 
 end try
 BEGIN catch
-	declare @l_error nvarchar(2048)
-	select @l_error = 'Error al registrar la hora de la factura. [trg_sop10100_registraHora] ' + error_message()
-	RAISERROR (@l_error , 16, 1)
+ declare @l_error nvarchar(2048)
+ select @l_error = 'Error al registrar la hora de la factura. [trg_sop10100_registraHora] ' + error_message()
+ RAISERROR (@l_error , 16, 1)
 end catch
-go
 
 -------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('trgupd_sop10100_registraHora','TR') IS NOT NULL
