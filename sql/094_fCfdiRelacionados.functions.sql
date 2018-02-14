@@ -17,6 +17,7 @@ as
 --24/10/17 jcf Creación
 --16/01/18 jcf Agrega sustitución de factura anulada con NC
 --02/02/18 jcf Cuando se anula una factura con nc es posible que quede un saldo en centésimas. Se acepta un rango de 0.05.
+--14/02/18 jcf Relacionar el mismo tipo de documento sólo cuando es factura. No incluye el caso excepcíonal de nc que aplica a nc. Para esto se necesita un caso de uso.
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
@@ -46,6 +47,7 @@ return(
 							) apli
 			where da.sopnumbe = @p_sopnumbe
 			and da.soptype = @soptype
+			and da.soptype = 3	--facturas
 			
 			union all
 

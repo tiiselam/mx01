@@ -47,6 +47,7 @@ where sopnumbe like '%233'
 
 ----------------------------------------------------------------------
 --VENTAS
+use mex10;
 
 select *
 --update s set tracking_number = '00000838'
@@ -55,7 +56,7 @@ where s.sopnumbe like '00001057'
 
 select *
 from vwCfdiTransaccionesDeVenta s
-where s.sopnumbe like '00001057'
+where s.sopnumbe like '0000013%'
 
 
 
