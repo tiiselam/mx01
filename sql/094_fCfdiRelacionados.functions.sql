@@ -16,13 +16,14 @@ as
 --		Un documento debe tener un solo tipo de relación.
 --24/10/17 jcf Creación
 --16/01/18 jcf Agrega sustitución de factura anulada con NC
+--02/02/18 jcf Cuando se anula una factura con nc es posible que quede un saldo en centésimas. Se acepta un rango de 0.05.
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
 			select top(1) 1 orden,	
 				--case when left(da.tracking_number, 1) = 'T' then '06'		--factura generada por traslado previo
-				case when isnull(u.voidstts, -1) = 1 or											--sustitución de factura anulada
-						(isnull(apli.APFRDCTY, -1) = 8 and u.montoActualOriginal = 0) then '04'	--sustitución de factura anulada con NC
+				case when isnull(u.voidstts, -1) = 1 or														--sustitución de factura anulada
+						(isnull(apli.APFRDCTY, -1) = 8 and (abs(u.montoActualOriginal) < 0.05)) then '04'	--sustitución de factura anulada con NC
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura

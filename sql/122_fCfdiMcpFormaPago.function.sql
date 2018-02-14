@@ -28,6 +28,19 @@ begin
 end
 
 -----------------------------------------------------------------------------------------------------------------------------
+IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp30100') AND OBJECTPROPERTY(id,N'IsTable') = 1)
+begin
+	create table dbo.nfmcp30100
+	(
+	[NUMBERIE] [char](21) NOT NULL,
+	[MEDIOID] [char](21) NOT NULL,
+	[LINEAMNT] [numeric](19, 5) NOT NULL,
+	[TII_CHEKBKID] [char](15) NOT NULL,
+	[DEX_ROW_ID] [int] IDENTITY(1,1) NOT NULL
+	) on [PRIMARY];
+end
+
+-----------------------------------------------------------------------------------------------------------------------------
 IF not EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'dbo.nfmcp00700') AND OBJECTPROPERTY(id,N'IsTable') = 1)
 begin
 	create table dbo.nfmcp00700
@@ -47,11 +60,18 @@ create function dbo.fCfdiMcpFormaPago(@DOCNUMBR varchar(21))
 returns table
 --Propósito. Obtiene la forma de pago de MCP
 --10/11/17 jcf Creación
+--14/02/18 jcf Agrega nfmcp30100
 --
 as
 return(
 	select top (1) mcpd.grupid, mcpfp.tii_chekbkid
-	from  nfmcp20100 mcpfp 
+	from
+		( select tii_chekbkid, medioid, numberie, lineamnt  
+		from nfmcp20100  
+		union all
+		select tii_chekbkid, medioid, numberie, lineamnt  
+		from nfmcp30100  
+		) mcpfp
  	left join nfmcp00700 mcpd 
 		on mcpd.medioid=mcpfp.medioid
 	where mcpfp.numberie = @DOCNUMBR

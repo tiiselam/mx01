@@ -607,6 +607,7 @@ returns xml
 as
 --Propósito. Obtiene las líneas de una factura en formato xml para complemento de comercio exterior
 --11/01/18 jcf Creación cfdi 3.3
+--02/02/18 jcf No incluir fracción arancelaria si está en blanco
 --
 begin
 	declare @cncp xml;
@@ -614,7 +615,9 @@ begin
 							'http://www.sat.gob.mx/ComercioExterior11' as "cce11")
 		select @cncp = (
 			select itemnmbr		'@NoIdentificacion',
-				rtrim(uscatvls_5)		'@FraccionArancelaria', 
+				CASE WHEN isnull(uscatvls_5, '') = '' then null
+					else rtrim(uscatvls_5)		
+				end										'@FraccionArancelaria', 
 				cast(sumQuantity as numeric(19,3))		'@CantidadAduana',
 				param1			'@UnidadAduana',
 				cast(sumValorUnitario as numeric(19,2)) '@ValorUnitarioAduana',
