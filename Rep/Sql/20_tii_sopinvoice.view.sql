@@ -3,8 +3,6 @@ IF (OBJECT_ID ('dbo.TII_SOPINVOICE', 'V') IS NULL)
    exec('create view dbo.TII_SOPINVOICE as SELECT 1 as t');
 go
 
-ALTER VIEW [dbo].[TII_SOPINVOICE] AS 
---Propósito. Representación impresa de factura electrónica México. Habilitar codigoBarras si usa Crystal!
 --...2011 I García Creación.
 --27/08/12 jcf Agrega unidad de medida No aplica para items tipo servicio
 --09/11/12 jcf Agrega fCfdDatosAdicionales y comenta SOP10106
@@ -16,8 +14,12 @@ ALTER VIEW [dbo].[TII_SOPINVOICE] AS
 --17/10/16 jcf Agrega ORTDISAM, y CodigoBarras en caso de usar Crystal
 --18/09/17 jcf Agrega isocurrc, addLeyenda. Comenta codigoBarras. Habilitar si usa Crystal
 --20/09/17 jcf Agrega noExterior
+
+ALTER VIEW [dbo].[TII_SOPINVOICE] AS 
+--Propósito. Representación impresa de factura electrónica México. Habilitar codigoBarras si usa Crystal!
 --20/11/17 jcf Modifica estructura detalle sop para cfdi 3.3
 --17/01/18 jcf Corrige OXTNDPRC cuando la venta es por lote
+--16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
 --
 SELECT 
 		SOPHEADER.DOCSTATUS,
@@ -106,7 +108,13 @@ SELECT
 		--SOPDETAIL.Importe OXTNDPRC,
 		SOPDETAIL.descuento ormrkdamDetail,
 		SOPDETAIL.Cantidad QUANTITY,
-		SOPDETAILSERIALLOT.SERLTNUM,
+
+		case when dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB1)) + ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB2))),10) = '' then
+				SOPDETAILSERIALLOT.SERLTNUM
+			else 
+				dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB1)) + ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB2))),10)
+		end SERLTNUM,
+		--SOPDETAILSERIALLOT.SERLTNUM,
 		SOPELECTINV.TipoRelacion,
 		SOPELECTINV.tprl_descripcion,
 		SOPELECTINV.UUIDrelacionado,

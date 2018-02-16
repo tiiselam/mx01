@@ -8,72 +8,6 @@
 --		23/10/17 Versión CFDI 3.3 - cfdv33.pdf
 --Utilizado por:	Aplicación C# de generación de factura electrónica México
 -----------------------------------------------------------------------------------------------------------
-IF OBJECT_ID ('dbo.fCfdiInfoAduaneraSLXML') IS NOT NULL
-   DROP FUNCTION dbo.fCfdiInfoAduaneraSLXML
-GO
-
---create function dbo.fCfdiInfoAduaneraSLXML(@ITEMNMBR char(31), @SERLTNUM char(21))
---returns xml 
---as
-----Propósito. Obtiene info aduanera para conceptos de importación
-----Requisito. Se asume que todos los artículos importados usan número de serie o lote y tienen un número de 14 a 15 dígitos.
-----			 De otro modo se consideran nacionales.
-----			También se asume que no hay números de serie repetidos por artículo
-----30/11/17 jcf Creación cfdi 3.3
-----03/01/18 jcf deprecated. En su lugar se usa fCfdiInfoAduaneraXML
-----
---begin
---	declare @cncp xml;
---	select @cncp = null;
-
---	IF isnull(@SERLTNUM, '_NULO') <> '_NULO'	
---	begin
---		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
---		select @cncp = (
---		   select ad.NumeroPedimento	--, ad.fecha
---		   from (
---				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
---				select top 1 stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '')
---												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
---						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
---				  from iv00301 la				--iv_lot_attributes [ITEMNMBR LOTNUMBR]
---				  inner join IV00101 ma			--iv_itm_mstr
---					on ma.ITEMNMBR = la.ITEMNMBR
---				 where ma.ITMTRKOP = 3			--lote
---					and la.ITEMNMBR = @ITEMNMBR
---					and la.LOTNUMBR = @SERLTNUM
---					and len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
---					and isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
---					and left(la.LOTNUMBR, 2) between '11' and '99' --últimos dos dígitos del año de validación
---				union all
---				--En caso de usar número de serie, la info aduanera viene de los campos def por el usuario de la recepción de compra
---				select top 1 stuff(stuff(stuff(replace(dbo.fCfdReemplazaCaracteresNI(rtrim(ud.user_defined_text01)), ' ', '') 
---												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
---				  from POP30330	rs				--POP_SerialLotHist [POPRCTNM RCPTLNNM QTYTYPE SLTSQNUM]
---					inner JOIN POP10306 ud		--POP_ReceiptUserDefined 			
---					on ud.POPRCTNM = rs.POPRCTNM
---					inner join IV00101 ma		--iv_itm_mstr
---					on ma.ITEMNMBR = rs.ITEMNMBR
---				where ma.ITMTRKOP = 2			--serie
---					and rs.ITEMNMBR = @ITEMNMBR
---					and rs.SERLTNUM = @SERLTNUM
---					and len(REPLACE(ud.user_defined_text01, ' ', '')) BETWEEN 14 AND 15
---					and isnumeric(REPLACE(ud.user_defined_text01, ' ', '')) = 1
---					and left(ud.user_defined_text01, 2) between '11' and '99' --últimos dos dígitos del año de validación
-
---				) ad
---			FOR XML raw('cfdi:InformacionAduanera') , type
---		)
---	end
---	return @cncp
---end
---go
-
---IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiInfoAduaneraSLXML()'
---ELSE PRINT 'Error en la creación de: fCfdiInfoAduaneraSLXML()'
---GO
-
------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiInfoAduaneraXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiInfoAduaneraXML
 GO
@@ -87,6 +21,7 @@ as
 --			Pueden haber varios lotes o series por artículo
 --24/10/17 jcf Creación cfdi 3.3
 --03/01/18 jcf Corrige numPedimento
+--16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
 --
 begin
 	declare @cncp xml;
@@ -97,9 +32,19 @@ begin
 		   select ad.NumeroPedimento	--, ad.fecha
 		   from (
 				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
-				select top 1 stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '') 
-												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
-						--dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(la.LOTATRB1 +' '+ la.LOTATRB2))),10) numero, 
+				select top 1 
+						--stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '') 
+						--						, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
+						case when dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) = '' then
+								stuff(stuff(stuff(REPLACE(
+													la.LOTNUMBR, ' ', '') 
+													, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ')
+							else 
+								stuff(stuff(stuff(REPLACE(
+													dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10), 
+													' ', '') 
+													, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ')
+						end NumeroPedimento
 				  from SOP10201 sl WITH (NOLOCK) 
 					INNER JOIN IV00301 la WITH (NOLOCK) --iv_lot_attributes [ITEMNMBR LOTNUMBR]
 					ON sl.ITEMNMBR = la.ITEMNMBR 
@@ -112,9 +57,21 @@ begin
 					AND sl.SOPNUMBE = @SOPNUMBE
 					AND sl.LNITMSEQ = @LNITMSEQ 
 					AND sl.CMPNTSEQ = @CMPNTSEQ
-					and len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
-					and isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
-					and left(la.LOTNUMBR, 2) between '11' and '99' --últimos dos dígitos del año de validación
+					and (
+						len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
+						or 
+						dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) BETWEEN 14 AND 15
+						)
+					and (
+						isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
+						or
+						isnumeric(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10)) = 1
+						)
+					and (
+						left(la.LOTNUMBR, 2) between '11' and '99' --últimos dos dígitos del año de validación
+						or
+						left(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10), 2) between '11' and '99'
+						)
 
 				union all
 

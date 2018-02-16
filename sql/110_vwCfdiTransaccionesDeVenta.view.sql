@@ -21,6 +21,7 @@ alter view dbo.vwCfdiTransaccionesDeVenta as
 --30/11/17 jcf Reestructura para cfdi 3.3
 --12/12/17 jcf Agrega mensaje en docs anulados
 --16/01/18 jcf Agrega fCfdiGeneraDocumentoVentaComercioExteriorXML
+--16/02/18 jcf Permite mostrar las facturas incluso si no está configurada la compañía como Emisor
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
 	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.montoActualOriginal, tv.voidstts, 
@@ -50,7 +51,7 @@ select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora,
 	tv.curncyid isocurrc,
 	dbo.fCfdAddendaXML(tv.custnmbr,  tv.soptype, tv.sopnumbe, tv.docid, tv.cstponbr, tv.curncyid, tv.docdate, tv.xchgrate, tv.subtotal, tv.total, emi.incluyeAddendaDflt) addenda
 from dbo.vwCfdiSopTransaccionesVenta tv
-	cross join dbo.fCfdEmisor() emi
+	outer apply dbo.fCfdEmisor() emi
 	outer apply dbo.fCfdCertificadoVigente(tv.fechahora) fv
 	outer apply dbo.fCfdCertificadoPAC(tv.fechahora) pa
 	left join cfdlogfacturaxml lf

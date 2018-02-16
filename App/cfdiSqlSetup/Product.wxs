@@ -131,8 +131,8 @@
     <Binary Id="Createtrig35" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\035_RegistraHoradeFacturaElectronica.trigger.sql"/>
     
     <!--Atención: Varía de acuerdo a la VERSION GP-->
-    <Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\040_ObtieneConfiguracionCartasEmail.viewgp2013oAnt.sql"/>
-    <!--<Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\040_ObtieneConfiguracionCartasEmail.viewGP2015.sql"/>-->
+    <!--<Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\040_ObtieneConfiguracionCartasEmail.viewgp2013oAnt.sql"/>-->
+    <Binary Id="Createview40" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\040_ObtieneConfiguracionCartasEmail.viewGP2015.sql"/>
     
     <Binary Id="Createfun50" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\050_ObtieneDireccionesCorreoClientes.function.sql"/>
     <Binary Id="Createtable60" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\060_OPCIONALCreaMaestroDeCertificadosYFolios.table.sql"/>

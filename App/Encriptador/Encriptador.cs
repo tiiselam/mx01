@@ -19,6 +19,10 @@ namespace Encriptador
         public string noCertificado = "";
         public string certificadoFormatoPem = "";
 
+        public TecnicaDeEncriptacion()
+        {
+        }
+
         /// <summary>
         /// Constructor. Inicializa los datos públicos y privados del certificado.
         /// El archivo de llave privada debe estar en formato DER con extensión key
@@ -164,6 +168,32 @@ namespace Encriptador
                 ultimoMensaje += " [MD5HashAndSignBytes] Error al firmar la cadena original. " + e.Message;
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Verificación de de la integridad del comprobante
+        /// </summary>
+        /// <param name="cadenaOriginal"></param>
+        /// <param name="firmaCodificadaEnBase64"></param>
+        /// <param name="pemCertificate"></param>
+        /// <returns></returns>
+        public bool VerificaIntegridadDeDatosSellados(String cadenaOriginal, String firmaCodificadaEnBase64, String pemCertificate)
+        {
+            bool verificado = false;
+
+                byte[] DataToVerify = Encoding.UTF8.GetBytes(cadenaOriginal);
+
+                byte[] SignedData = System.Convert.FromBase64String(firmaCodificadaEnBase64);
+                byte[] rawCertificate = System.Convert.FromBase64String(pemCertificate);
+
+                X509Certificate2 certificate = new X509Certificate2(rawCertificate);
+                RSACryptoServiceProvider rsaprovider = (RSACryptoServiceProvider)certificate.PublicKey.Key;
+                
+                if (rsaprovider.VerifyData(DataToVerify, "SHA256", SignedData))
+                {
+                    verificado = true;
+                }
+            return verificado;
         }
 
         /// <summary>
