@@ -56,14 +56,15 @@ where s.sopnumbe like '00001057'
 
 select *
 from vwCfdiTransaccionesDeVenta s
-where s.sopnumbe like '0000013%'
+where s.sopnumbe like '00000175%'
 
 
 
-select *
---update s set ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
+select docncorr,*
+--update s set docncorr = '10:32:13:943         '	-- ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
 from sop30200 s
-where s.sopnumbe = '00000882'
+where s.sopnumbe in ( '00001419', '00001420', '00001421', '00001422', '00001423')
+and soptype = 3
 
 select stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim('111015544'), 10)
 												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ')

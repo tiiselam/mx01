@@ -324,23 +324,20 @@ IF OBJECT_ID ('dbo.fCfdiConceptos') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptos
 GO
 
-create function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6))
+create function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
 returns table 
 as
 --Propósito. Obtiene las líneas de una factura 
 --			Elimina carriage returns, line feeds, tabs, secuencias de espacios y caracteres especiales.
 --20/11/17 jcf Creación cfdi 3.3
 --05/01/18 jcf Agrega idExporta
+--05/04/18 jcf Agrega descuento a nc
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
 			Concepto.ITEMDESC, Concepto.CMPNTSEQ, Concepto.ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10)  NoIdentificacion,
-			--case when Concepto.ITMTRKOP = 2 then --tracking option: serie
-			--	dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.SERLTNUM))),10) 
-			--	else null
-			--end NoIdentificacion,
 			Concepto.quantity			Cantidad, 
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
@@ -367,7 +364,7 @@ return(
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
 			@p_subtotal		ValorUnitario,
 			@p_subtotal		Importe,
-			null			Descuento,
+			@p_descuento	Descuento,
 			Concepto.idExporta
 		from vwCfdiSopLineasTrxVentas Concepto
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
@@ -389,7 +386,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptosXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptosXML
 GO
 
-create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @DOCID char(15))
+create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6), @DOCID char(15))
 returns xml 
 as
 --Propósito. Obtiene las líneas de una factura en formato xml para CFDI
@@ -398,6 +395,7 @@ as
 --03/01/18 jcf Corrige infor aduanera
 --05/01/18 jcf No debe generar info aduanera cuando es exportación
 --15/01/18 jcf No debe generar descuento = 0
+--05/04/18 jcf Agrega descuento a nc
 --
 begin
 	declare @cncp xml;
@@ -405,17 +403,20 @@ begin
 	begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @cncp = (
-				select ClaveProdServ '@ClaveProdServ',
-					Cantidad '@Cantidad',
-					ClaveUnidad '@ClaveUnidad',
-					Descripcion '@Descripcion', 
-					cast(ValorUnitario as numeric(19,2)) '@ValorUnitario',
-					cast(Importe as numeric(19,2)) '@Importe',
-					dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos'
-				from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal) Concepto
-				where Concepto.importe != 0          
-				FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
-				)
+			select ClaveProdServ				'@ClaveProdServ',
+				Cantidad						'@Cantidad',
+				ClaveUnidad						'@ClaveUnidad',
+				Descripcion						'@Descripcion', 
+				cast(ValorUnitario as numeric(19,2)) '@ValorUnitario',
+				cast(Importe as numeric(19,2))	'@Importe',
+				case when Descuento = 0 then null
+					else cast(Descuento as numeric(19, 2))		
+				end								'@Descuento',
+				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos'
+			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal, @p_descuento) Concepto
+			where Concepto.importe != 0          
+			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
+			)
 	end
 	else 
 	begin
@@ -441,7 +442,7 @@ begin
 			    end,
 
 				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, @DOCID) 
-			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0) Concepto
+			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0, 0) Concepto
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 		)
@@ -696,6 +697,7 @@ as
 --Propósito. Elabora un comprobante xml para factura electrónica cfdi
 --Requisitos. El total de impuestos de la factura debe corresponder a la suma del detalle de impuestos. 
 --15/01/18 jcf Creación Complemento de comercio exterior para cfdi 3.3
+--05/04/18 jcf Agrega descuento a nc
 --
 begin
 	declare @cfd xml;
@@ -782,7 +784,7 @@ begin
 			else 'P01'
 		END													'cfdi:Receptor/@UsoCFDI',
 
-		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.docid),
+		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.descuento, tv.docid),
 		
 		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
 		dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0, 0)	'cfdi:Impuestos',
@@ -821,6 +823,7 @@ as
 --23/10/17 jcf Creación cfdi 3.3
 --12/12/17 jcf No debe mostrar descuento si no hay descuento en el detalle
 --16/01/18 jcf No incluir CondicionesDePago si está vacío
+--05/04/18 jcf Agrega descuento a nc
 --
 begin
 	declare @cfd xml;
@@ -905,7 +908,7 @@ begin
 			else 'P01'
 		END													'cfdi:Receptor/@UsoCFDI',
 
-		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.docid),
+		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.descuento, tv.docid),
 		
 		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
 		dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0, 0)	'cfdi:Impuestos',

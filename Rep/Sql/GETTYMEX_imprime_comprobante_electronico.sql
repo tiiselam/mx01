@@ -13,6 +13,7 @@ AS
 --29/08/13 jcf Cambios varios para cfdi
 --10/09/13 jcf Agrega county. Convierte fechaTimbrado a datetime. Agrega imagen de código de barras
 --22/11/17 jcf Modifica estructura para cfdi 33
+--05/04/18 jcf Ajusta parámetro de Conceptos
 --
 SELECT A.SOPTYPE, A.SOPNUMBE, 1 LINEA, C.LNITMSEQ, A.DOCDATE, A.PYMTRCVD, A.DOCID, 
 	A.CURNCYID, A.XCHGRATE, A.ORMRKDAM, A.ORTDISAM TRDISAMT, A.ORSUBTOT SUBTOTAL, A.ORTAXAMT TAXAMNT, A.ORDOCAMT DOCAMNT, A.ORACTAMT ACCTAMNT, 
@@ -175,7 +176,7 @@ SELECT A.SOPTYPE, A.SOPNUMBE, 1 LINEA, C.LNITMSEQ, A.DOCDATE, A.PYMTRCVD, A.DOCI
 	dbo.fCfdObtieneImagenC(FE.rutaFileDrive) codigoBarras
 	--dbo.fCfdObtieneImagenC('file://C:\GETTY' + Stuff(rutaYNomArchivoNet, 1, 14, '')) codigoBarras
 FROM SOP30200 A 
-	OUTER APPLY dbo.fCfdiConceptos(A.soptype, A.sopnumbe, A.ORSUBTOT + A.ORMRKDAM) C
+	OUTER APPLY dbo.fCfdiConceptos(A.soptype, A.sopnumbe, A.ORSUBTOT + A.ORMRKDAM, 0) C
 	--INNER JOIN SOP30300 C ON A.SOPTYPE = C.SOPTYPE AND A.SOPNUMBE = C.SOPNUMBE
 	INNER JOIN RM00101 B ON A.CUSTNMBR = B.CUSTNMBR
 	LEFT OUTER  JOIN dbo.vwCfdiDocumentosAImprimir FE ON A.SOPTYPE = FE.soptype AND A.SOPNUMBE = FE.SOPNUMBE
