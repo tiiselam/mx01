@@ -1,4 +1,6 @@
 --cobros
+use mex10
+go
 
 select top 1000 *
 from vwCfdiTrxCobros
@@ -60,11 +62,11 @@ where s.sopnumbe like '00000175%'
 
 
 
-select docncorr,*
---update s set docncorr = '10:32:13:943         '	-- ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
+select docncorr,replace(docncorr, '09:', '18:'), *
+--update s set docncorr = replace(docncorr, '09:', '18:')	-- ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
 from sop30200 s
-where s.sopnumbe in ( '00001419', '00001420', '00001421', '00001422', '00001423')
+where datediff(day, '4/11/18', docdate) = 0
+
+s.sopnumbe in ( '00001419', '00001420', '00001421', '00001422', '00001423')
 and soptype = 3
 
-select stuff(stuff(stuff(dbo.fCfdReemplazaSecuenciaDeEspacios(rtrim('111015544'), 10)
-												, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ')

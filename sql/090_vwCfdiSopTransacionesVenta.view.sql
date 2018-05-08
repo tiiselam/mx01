@@ -9,6 +9,7 @@ alter view dbo.vwCfdiSopTransaccionesVenta
 --24/10/17 jcf Creación cfdi 3.3 
 --05/01/18 jcf Agrega ccode, taxexmt1
 --19/01/18 JCF Corrige zipcode
+--12/04/18 jcf Agrega hora para fechas no contabilizadas.
 --
 AS
 
@@ -62,7 +63,12 @@ SELECT	'contabilizado' estadoContabilizado,
  union all
  select 'en lote' estadoContabilizado, cab.custnmbr idImpuestoCliente, cab.CUSTNMBR, cab.CUSTNAME nombreCliente,
 		rtrim(cab.docid) docid, cab.SOPTYPE, rtrim(cab.sopnumbe) sopnumbe, 
-		cab.docdate, cab.docdate fechaHora,
+		cab.docdate, 
+		CONVERT(datetime, 
+				replace(convert(varchar(20), cab.DOCDATE, 102), '.', '-')+'T'+
+				case when substring(cab.DOCNCORR, 3, 1) = ':' then rtrim(LEFT(cab.docncorr, 8)) --+'.'+ right(rtrim(cab.docncorr), 3) 
+				else '00:00:00' end,
+				126) fechaHora,
 		cab.ORDOCAMT total, cab.ORSUBTOT subtotal, cab.ORTAXAMT impuesto, 0, cab.ORTDISAM, cab.ORTDISAM descuento, 
 		cab.orpmtrvd, rtrim(cab.curncyid) curncyid, 
 		cab.xchgrate, 
