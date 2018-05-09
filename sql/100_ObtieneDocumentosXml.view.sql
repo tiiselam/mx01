@@ -258,6 +258,34 @@ ELSE PRINT 'Error en la creación de: fCfdiParteXML()'
 GO
 
 --------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.fCfdiCuentaPredial') IS NOT NULL
+begin
+   DROP FUNCTION dbo.fCfdiCuentaPredial
+   print 'función fCfdiCuentaPredial eliminada'
+end
+GO
+
+create function dbo.fCfdiCuentaPredial(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int)
+returns table 
+--Propósito. Nodo CuentaPredial
+--08/05/18 jcf Creación
+--
+return (
+		select
+			dbo.fCfdEsVacio(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(comment_1)+rtrim(comment_2)+rtrim(comment_3)), 10)) Numero
+		from sop10202 cmt	--sop_line_cmt_work_hist
+ 		where cmt.SOPTYPE = @p_soptype
+			and cmt.SOPNUMBE = @p_sopnumbe
+			and cmt.LNITMSEQ = @p_LNITMSEQ
+			and cmt.CMPNTSEQ = 0
+		)
+go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de la función: fCfdiCuentaPredial()'
+ELSE PRINT 'Error en la creación de la función: fCfdiCuentaPredial()'
+GO
+
+--------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiImpuestosTrasladadosXML') IS NOT NULL
 begin
    DROP FUNCTION dbo.fCfdiImpuestosTrasladadosXML
@@ -396,6 +424,7 @@ as
 --05/01/18 jcf No debe generar info aduanera cuando es exportación
 --15/01/18 jcf No debe generar descuento = 0
 --05/04/18 jcf Agrega descuento a nc
+--09/05/18 jcf Agrega cuenta predial
 --
 begin
 	declare @cncp xml;
@@ -412,8 +441,14 @@ begin
 				case when Descuento = 0 then null
 					else cast(Descuento as numeric(19, 2))		
 				end								'@Descuento',
-				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos'
+				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos',
+				case when upper(isnull(p.param1, 'NO')) = 'SI' 
+					then cup.Numero
+					else null
+				end 'cfdi:CuentaPredial/@Numero'
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal, @p_descuento) Concepto
+				outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
+				outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 			)
@@ -440,9 +475,15 @@ begin
 					then null
 					else dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SOPTYPE , Concepto.SOPNUMBE , Concepto.LNITMSEQ , Concepto.CMPNTSEQ )
 			    end,
+				case when upper(isnull(p.param1, 'NO')) = 'SI' 
+					then cup.Numero
+					else null
+				end 'cfdi:CuentaPredial/@Numero',
 
 				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, @DOCID) 
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0, 0) Concepto
+				outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
+				outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 		)
