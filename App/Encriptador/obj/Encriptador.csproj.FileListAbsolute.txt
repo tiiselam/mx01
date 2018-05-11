@@ -1,0 +1,54 @@
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\bin\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\bin\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\bin\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\bin\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Encriptador\obj\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\x86\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\x86\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\x86\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\x86\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Release\Encriptador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\x86\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Debug\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\Encriptador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\Encriptador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Debug\Encriptador.dll.config
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.dll.config
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\bin\Release\Encriptador.XmlSerializers.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Encriptador\obj\Release\Encriptador.XmlSerializers.dll

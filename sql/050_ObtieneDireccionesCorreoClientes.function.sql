@@ -41,11 +41,19 @@ IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[vwCfdClienteDire
     DROP view dbo.[vwCfdClienteDireccionesCorreo];
 GO
 
+--11/04/18 jcf Los correos ingresados en el campo CC de la compañía, son agregados a los correos ingresados en el campo CC del cliente
+--
 create view dbo.vwCfdClienteDireccionesCorreo as
-select ms.CUSTNMBR, dc.emailTo, dc.emailCC, dc.emailCCO
+select ms.CUSTNMBR, dc.emailTo, 
+	concat(rtrim(dc.emailCC), 
+			case when datalength(em.EmailCcAddress) = 0 then '' else ',' end, 
+			replace(cast (em.EmailCcAddress as varchar(max)), ';', ',')) emailCC, 
+	dc.emailCCO
 from rm00101 ms
 cross apply (select emailTo, emailCC, emailCCO 
-			from dbo.fnCfdGetDireccionesCorreo(ms.CUSTNMBR)) dc
+   from dbo.fnCfdGetDireccionesCorreo(ms.CUSTNMBR)) dc
+outer apply [dbo].[fCfdiParametros]('na', 'na', '', 'na', 'na', 'na', 'PREDETERMINADO') em
+
 go
 
 IF (@@Error = 0) PRINT 'Creación exitosa de la vista: vwCfdClienteDireccionesCorreo'

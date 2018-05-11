@@ -13,7 +13,7 @@ as
 --
 return
 ( 
-	select ctrl.USRDEF05
+	select ctrl.USRDEF05, ctrl.usrtab01
 	from SOP10106 ctrl					--campos def. por el usuario.
 	where ctrl.soptype = @soptype
 	and ctrl.sopnumbe = @sopnumbe

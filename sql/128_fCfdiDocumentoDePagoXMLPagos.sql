@@ -1,7 +1,9 @@
-USE [MEX10]
+IF OBJECT_ID ('dbo.fCfdiDocumentoDePagoXMLPagos') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiDocumentoDePagoXMLPagos
 GO
 
-alter function [dbo].fCfdiDocumentoDePagoXMLPagos (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
+
+create function [dbo].fCfdiDocumentoDePagoXMLPagos (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
 returns xml 
 as
 --Propósito. Obtiene nodo Pagos
@@ -22,3 +24,9 @@ begin
 	return @cnp;
 end
 
+go
+
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: [fCfdiDocumentoDePagoXMLPagos]()'
+ELSE PRINT 'Error en la creación de: [fCfdiDocumentoDePagoXMLPagos]()'
+GO
