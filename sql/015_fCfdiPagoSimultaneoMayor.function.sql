@@ -2,7 +2,7 @@ IF OBJECT_ID ('dbo.fCfdiPagoSimultaneoMayor') IS NOT NULL
    DROP FUNCTION dbo.fCfdiPagoSimultaneoMayor
 GO
 
-alter function dbo.fCfdiPagoSimultaneoMayor(@soptype smallint, @sopnumbe varchar(21))
+create function dbo.fCfdiPagoSimultaneoMayor(@soptype smallint, @sopnumbe varchar(21))
 returns table
 --Propósito. Obtiene la forma de pago del pago más grande. Este pago ha sido ingresado simultáneamente con la factura.
 --24/10/17 jcf Creación

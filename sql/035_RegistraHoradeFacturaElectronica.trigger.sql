@@ -77,6 +77,8 @@ BEGIN catch
  RAISERROR (@l_error , 16, 1)
 end catch
 
+go
+
 -------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('trgupd_sop10100_registraHora','TR') IS NOT NULL
    DROP TRIGGER dbo.trgupd_sop10100_registraHora

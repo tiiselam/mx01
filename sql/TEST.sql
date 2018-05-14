@@ -1,5 +1,5 @@
 --cobros
-use mex10
+use mtp1
 go
 
 
@@ -59,9 +59,13 @@ select *
 from sop10107 s
 where s.sopnumbe like '00001057'
 
-select *
+select top 100 *
 from vwCfdiTransaccionesDeVenta s
-where s.sopnumbe like '00000694'
+where year(fechahora) = 2018
+and month(fechahora) = 5
+
+s.sopnumbe like '00000694'
+
 
 SELECT *
 FROM dbo.fCfdiPagoSimultaneoMayor(3, '00000694') pg

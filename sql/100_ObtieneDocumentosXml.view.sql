@@ -352,7 +352,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptos') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptos
 GO
 
-create function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
+CREATE function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
 returns table 
 as
 --Propósito. Obtiene las líneas de una factura 
@@ -360,6 +360,7 @@ as
 --20/11/17 jcf Creación cfdi 3.3
 --05/01/18 jcf Agrega idExporta
 --05/04/18 jcf Agrega descuento a nc
+--09/05/18 jcf Agrega cuenta predial
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
@@ -373,8 +374,11 @@ return(
 			Concepto.ORUNTPRC 		ValorUnitario,
 			Concepto.importe  		Importe,
 			Concepto.descuento 		Descuento,
-			Concepto.idExporta
+			Concepto.idExporta,
+			p.param1, cup.Numero cpredial
 		from vwCfdiSopLineasTrxVentas Concepto
+			outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+			outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
 		and Concepto.sopnumbe = @p_sopnumbe
@@ -393,8 +397,11 @@ return(
 			@p_subtotal		ValorUnitario,
 			@p_subtotal		Importe,
 			@p_descuento	Descuento,
-			Concepto.idExporta
+			Concepto.idExporta,
+			p.param1, cup.Numero cpredial
 		from vwCfdiSopLineasTrxVentas Concepto
+			outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+			outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
 		and Concepto.sopnumbe = @p_sopnumbe
@@ -414,7 +421,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptosXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptosXML
 GO
 
-create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6), @DOCID char(15))
+CREATE function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6), @DOCID char(15))
 returns xml 
 as
 --Propósito. Obtiene las líneas de una factura en formato xml para CFDI
@@ -442,13 +449,11 @@ begin
 					else cast(Descuento as numeric(19, 2))		
 				end								'@Descuento',
 				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos',
-				case when upper(isnull(p.param1, 'NO')) = 'SI' 
-					then cup.Numero
+				case when upper(isnull(Concepto.param1, 'NO')) = 'SI' 
+					then Concepto.cpredial
 					else null
 				end 'cfdi:CuentaPredial/@Numero'
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal, @p_descuento) Concepto
-				outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
-				outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 			)
@@ -475,15 +480,13 @@ begin
 					then null
 					else dbo.fCfdiInfoAduaneraXML(Concepto.ITEMNMBR, Concepto.SOPTYPE , Concepto.SOPNUMBE , Concepto.LNITMSEQ , Concepto.CMPNTSEQ )
 			    end,
-				case when upper(isnull(p.param1, 'NO')) = 'SI' 
-					then cup.Numero
+				case when upper(isnull(Concepto.param1, 'NO')) = 'SI' 
+					then Concepto.cpredial
 					else null
 				end 'cfdi:CuentaPredial/@Numero',
 
 				dbo.fCfdiParteXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, @DOCID) 
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, 0, 0) Concepto
-				outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
-				outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			where Concepto.importe != 0          
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 		)
