@@ -6,6 +6,7 @@ create function dbo.fCfdiFormaPagoSimultaneo(@chekbkid varchar(15), @pymttype sm
 returns table
 --Propósito. Obtiene la forma de pago de un cobro simultáneo con la factura.
 --24/10/17 jcf Creación
+--09/05/18 jcf Corrige medio de pago vía tarjeta de crédito
 --
 as
 return(
@@ -22,7 +23,15 @@ return(
 		end	FormaPago
 	from CM00100 cm
 	where cm.chekbkid = @chekbkid
-)
+	union all
+	select top(1) @chekbkid,  
+			case @pymttype 
+ 				when 6 then left(@cardname,2)	--tarjeta
+				else null 
+			end
+	from CM00100 cm
+	where @chekbkid = ''
+	)
 go
 IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiFormaPagoSimultaneo()'
 ELSE PRINT 'Error en la creación de: fCfdiFormaPagoSimultaneo()'
@@ -37,6 +46,7 @@ create function dbo.fCfdiFormaPagoManual(@chekbkid varchar(15), @CSHRCTYP smalli
 returns table
 --Propósito. Obtiene la forma de pago de un recibo de cobro
 --24/10/17 jcf Creación
+--09/05/18 jcf Corrige medio de pago vía tarjeta de crédito
 --
 as
 return(
@@ -53,6 +63,14 @@ return(
 			end	FormaPago	
 	from CM00100 cm
 	where cm.chekbkid = @chekbkid
+	union all
+	select top(1) @chekbkid,  
+			case @CSHRCTYP 
+ 				when 2 then left(@FRTSCHID,2)	--tarjeta
+				else null 
+			end
+	from CM00100 cm
+	where @chekbkid = ''
 )
 go
 IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiFormaPagoManual()'
