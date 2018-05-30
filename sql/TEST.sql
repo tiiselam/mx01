@@ -59,6 +59,16 @@ select *
 from sop10107 s
 where s.sopnumbe like '00001057'
 
+select dbo.fCfdiGeneraDocumentoDeVentaXML (3, '00001790')
+select tx.TXDTLPCT, *--@existeImpuestos = sum(tx.TXDTLPCT)
+							from sop10105 imp	--sop_tax_work_hist
+							inner join tx00201 tx
+								on tx.taxdtlid = imp.taxdtlid
+ 							where imp.SOPTYPE = 3
+							  and imp.SOPNUMBE = '00001792'
+							  --and imp.LNITMSEQ = @p_LNITMSEQ
+							  and tx.TXDTLPCT >= 0
+
 select top 100 *
 from vwCfdiTransaccionesDeVenta s
 where year(fechahora) = 2018

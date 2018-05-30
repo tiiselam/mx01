@@ -296,7 +296,8 @@ GO
 create function dbo.fCfdiImpuestosTrasladadosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
 returns xml 
 --Propósito. Obtiene los impuestos trasladados, nodo Traslados/traslado
---05/01/17 jcf Si sólo existen conceptos exentos, el nodo Traslados a nivel de comprobante no debe existir. GuíaAnexo20.pdf Pag. 32 
+--05/01/17 jcf Si el comprobante sólo tiene conceptos exentos, el nodo Traslados a nivel de comprobante no debe existir. GuíaAnexo20.pdf Pag. 32 
+--30/05/18 jcf Si el comprobante sólo tiene conceptos exentos, el nodo Traslados a nivel de detalle no debe existir. (m chavez Getty Mex)
 --
 as
 begin
@@ -304,16 +305,16 @@ begin
 	select @impu = null;
 	select @existeImpuestos = 1;
 
-	if (@p_esdetalle = 0)
-		select @existeImpuestos = sum(tx.TXDTLPCT)
-							from sop10105 imp	--sop_tax_work_hist
-							inner join tx00201 tx
-								on tx.taxdtlid = imp.taxdtlid
- 							where imp.SOPTYPE = @p_soptype
-							  and imp.SOPNUMBE = @p_sopnumbe
-							  and imp.LNITMSEQ = @p_LNITMSEQ
-							  and tx.TXDTLPCT >= 0
-							  ;
+	--if (@p_esdetalle = 0)
+	select @existeImpuestos = sum(tx.TXDTLPCT)
+						from sop10105 imp	--sop_tax_work_hist
+						inner join tx00201 tx
+							on tx.taxdtlid = imp.taxdtlid
+ 						where imp.SOPTYPE = @p_soptype
+							and imp.SOPNUMBE = @p_sopnumbe
+							--and imp.LNITMSEQ = @p_LNITMSEQ
+							and tx.TXDTLPCT >= 0
+							;
 
     if (isnull(@existeImpuestos, 0) > 0)
 	begin
