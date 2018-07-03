@@ -21,6 +21,7 @@ ALTER VIEW [dbo].[TII_SOPINVOICE] AS
 --17/01/18 jcf Corrige OXTNDPRC cuando la venta es por lote
 --16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
 --05/04/18 jcf Ajusta parámetro de Conceptos
+--09/05/18 jcf Agrega cuenta predial
 --
 SELECT 
 		SOPHEADER.DOCSTATUS,
@@ -109,6 +110,7 @@ SELECT
 		--SOPDETAIL.Importe OXTNDPRC,
 		SOPDETAIL.descuento ormrkdamDetail,
 		SOPDETAIL.Cantidad QUANTITY,
+		SOPDETAIL.cpredial,
 
 		case when dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB1)) + ltrim(rtrim(SOPDETAILSERIALLOT.LOTATRB2))),10) = '' then
 				SOPDETAILSERIALLOT.SERLTNUM
