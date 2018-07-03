@@ -2,7 +2,7 @@
 --Proyectos:		GETTY
 --Propósito:		Genera funciones y vistas de FACTURAS para la facturación electrónica en GP - MEXICO
 --Referencia:		
---		01/11/11 Versión CFD 1 -	100823 Normativa formal Anexo 20.pdf, 
+--		01/11/11 Versión CFD 1 - 100823 Normativa formal Anexo 20.pdf, 
 --		10/02/12 Versión CFD 2.2 - 111230 Normativa Anexo20.doc
 --		25/04/12 Versión CFDI 3.2 - 111230 Normativa Anexo20.doc
 --		23/10/17 Versión CFDI 3.3 - cfdv33.pdf
@@ -117,6 +117,7 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --Requisito. Atención ! DEBE usar unidades de medida listadas en el SAT. 
 --30/11/17 JCF Creación cfdi 3.3
 --05/01/18 jcf Agrega parámetro id de exportación, uscatvls_5
+--03/07/18 jcf Agrega uscatvls_4
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	dt.QUANTITY, dt.UOFM,
@@ -145,6 +146,7 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 				else pa.param3 
 			end
 	end ClaveProdServ,
+	ma.uscatvls_4,
 	ma.uscatvls_5, 
 	ma.uscatvls_6, 
 	dt.ormrkdam,
@@ -581,19 +583,20 @@ alter view dbo.vwCfdiComercioExteriorMercancias
 as
 --Propósito. Obtiene las líneas de una factura de comercio exterior
 --11/01/18 jcf Creación cfdi 3.3
+--03/07/18 jcf Agrega uscatvls_4
 --
 		select Concepto.soptype, Concepto.sopnumbe,
 			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10) itemnmbr,
 			Concepto.uscatvls_5, 
 			sum(Concepto.quantity) sumQuantity,
-			pa.param1,
+			Concepto.uscatvls_4, --pa.param1,
 			sum(Concepto.importe)/sum(Concepto.quantity) sumValorUnitario,
 			sum(Concepto.importe) sumImporte
 		from dbo.vwCfdiSopLineasTrxVentas Concepto
 			outer apply dbo.fcfdiparametros('COEXUM'+RTRIM(Concepto.UOFM),'na','na','na','NA','NA','PREDETERMINADO') pa
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		AND Concepto.importe != 0  
-		group by Concepto.soptype, Concepto.sopnumbe, Concepto.itemnmbr, Concepto.uscatvls_5, pa.param1
+		group by Concepto.soptype, Concepto.sopnumbe, Concepto.itemnmbr, Concepto.uscatvls_5, Concepto.uscatvls_4
 go
 
 IF (@@Error = 0) PRINT 'Creación exitosa de: vwCfdiComercioExteriorMercancias()'
@@ -611,6 +614,7 @@ as
 --Propósito. Obtiene las líneas de una factura en formato xml para complemento de comercio exterior
 --11/01/18 jcf Creación cfdi 3.3
 --02/02/18 jcf No incluir fracción arancelaria si está en blanco
+--03/07/18 jcf Agrega uscatvls_4
 --
 begin
 	declare @cncp xml;
@@ -622,7 +626,7 @@ begin
 					else rtrim(uscatvls_5)		
 				end										'@FraccionArancelaria', 
 				cast(sumQuantity as numeric(19,3))		'@CantidadAduana',
-				param1			'@UnidadAduana',
+				rtrim(uscatvls_4)						'@UnidadAduana',
 				cast(sumValorUnitario as numeric(19,2)) '@ValorUnitarioAduana',
 				cast(sumImporte as numeric(19,2))  		'@ValorDolares'
 			from dbo.vwCfdiComercioExteriorMercancias
