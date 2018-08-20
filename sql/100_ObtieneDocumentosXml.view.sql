@@ -355,7 +355,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptos') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptos
 GO
 
-CREATE function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
+create function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
 returns table 
 as
 --Propósito. Obtiene las líneas de una factura 
@@ -424,7 +424,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptosXML') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptosXML
 GO
 
-CREATE function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6), @DOCID char(15))
+create function dbo.fCfdiConceptosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6), @DOCID char(15))
 returns xml 
 as
 --Propósito. Obtiene las líneas de una factura en formato xml para CFDI
@@ -435,6 +435,7 @@ as
 --15/01/18 jcf No debe generar descuento = 0
 --05/04/18 jcf Agrega descuento a nc
 --09/05/18 jcf Agrega cuenta predial
+--27/07/18 jcf Agrega UOFMsat_descripcion
 --
 begin
 	declare @cncp xml;
@@ -445,6 +446,7 @@ begin
 			select ClaveProdServ				'@ClaveProdServ',
 				Cantidad						'@Cantidad',
 				ClaveUnidad						'@ClaveUnidad',
+				UOFMsat_descripcion				'@Unidad',
 				Descripcion						'@Descripcion', 
 				cast(ValorUnitario as numeric(19,2)) '@ValorUnitario',
 				cast(Importe as numeric(19,2))	'@Importe',
@@ -470,6 +472,7 @@ begin
 				NoIdentificacion						'@NoIdentificacion',
 				Cantidad								'@Cantidad', 
 				ClaveUnidad								'@ClaveUnidad', 
+				UOFMsat_descripcion						'@Unidad',
 				Descripcion								'@Descripcion', 
 				cast(ValorUnitario as numeric(19, 2))	'@ValorUnitario',
 				cast(Importe as numeric(19,2))			'@Importe',

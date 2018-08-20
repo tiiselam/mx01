@@ -2,14 +2,16 @@ IF (OBJECT_ID ('dbo.vwCfdiSopTransaccionesVenta', 'V') IS NULL)
    exec('create view dbo.vwCfdiSopTransaccionesVenta as SELECT 1 as t');
 go
 
+--05/01/18 jcf Agrega ccode, taxexmt1
+--19/01/18 JCF Corrige zipcode
+--12/04/18 jcf Agrega hora para fechas no contabilizadas.
+--20/08/18 jcf Reemplaza caracter " en el nombre del cliente
+go
 alter view dbo.vwCfdiSopTransaccionesVenta
 --Propósito. Obtiene las transacciones de venta SOP. 
 --Utiliza:	vwRmTransaccionesTodas
 --Requisitos. No muestra facturas registradas en cuentas por cobrar. 
 --24/10/17 jcf Creación cfdi 3.3 
---05/01/18 jcf Agrega ccode, taxexmt1
---19/01/18 JCF Corrige zipcode
---12/04/18 jcf Agrega hora para fechas no contabilizadas.
 --
 AS
 
@@ -19,7 +21,7 @@ SELECT	'contabilizado' estadoContabilizado,
 			else rtrim(dbo.fCfdReemplazaCaracteresNI(rtrim(left(replace(cn.TXRGNNUM, '-', ''), 23))))	--loc argentina usa los 23 caracteres de la izquierda
 		end idImpuestoCliente,
 		cab.CUSTNMBR,
-		dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(cab.CUSTNAME))), 10)	nombreCliente,
+		dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(replace(dbo.fCfdReemplazaCaracteresNI(cab.CUSTNAME), '"', ''))), 10)	nombreCliente,
 		rtrim(cab.docid) docid, cab.SOPTYPE, 
 		rtrim(cab.sopnumbe) sopnumbe, 
 		cab.docdate, 

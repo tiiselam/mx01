@@ -59,7 +59,7 @@ select *
 from sop10107 s
 where s.sopnumbe like '00001057'
 
-select dbo.fCfdiGeneraDocumentoDeVentaXML (3, '00001790')
+select dbo.fCfdiGeneraDocumentoDeVentaXML (3, '00000682')
 select tx.TXDTLPCT, *--@existeImpuestos = sum(tx.TXDTLPCT)
 							from sop10105 imp	--sop_tax_work_hist
 							inner join tx00201 tx
@@ -74,11 +74,9 @@ from vwCfdiTransaccionesDeVenta s
 where year(fechahora) = 2018
 and month(fechahora) = 5
 
-s.sopnumbe like '00000694'
-
 
 SELECT *
-FROM dbo.fCfdiPagoSimultaneoMayor(3, '00000694') pg
+FROM dbo.fCfdiPagoSimultaneoMayor(3, '00000682') pg
 
 SELECT *
 	from CM00100 cm
@@ -94,7 +92,7 @@ select *
 select docncorr,replace(docncorr, '09:', '18:'), *
 --update s set docncorr = replace(docncorr, '09:', '18:')	-- ITEMDESC = 'Contratacion del servicio de banco de imagenes correspondiente al mes de Diciembre 2017'
 from sop30200 s
-where datediff(day, '4/11/18', docdate) = 0
+where datediff(day, '4/11/18', docdate) >= 0
 
 s.sopnumbe in ( '00001419', '00001420', '00001421', '00001422', '00001423')
 and soptype = 3

@@ -149,7 +149,7 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'MTR
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'INH') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'INH', 'Pulgada');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'HUR') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'HUR', 'Hora');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'A76') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'A76', 'Galón');
-if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'E48') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'E48', 'Unidad de servicio');
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'E48') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'E48', 'Servicio');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'MON') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'MON', 'Mes ');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'XUN') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'XUN', 'Unidad');
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'UDM' and clave = 'XKI') insert into cfdiCatalogo(tipo, clave, descripcion) values('UDM', 'XKI', '-');
