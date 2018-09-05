@@ -10,8 +10,8 @@
 *.sln.docstates
 TEST*.*
 *TEST.*
-TEST.*
-sql/TEST.*
+TEST.sql
+sql/TEST.sql
 sql/*TEST.*
 sql/TEST*.*
 
