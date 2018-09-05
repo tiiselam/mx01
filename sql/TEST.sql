@@ -1,6 +1,3 @@
---cobros
-use mtp1
-go
 
 
 select top 1000 *

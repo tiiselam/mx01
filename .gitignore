@@ -11,6 +11,9 @@
 TEST*.*
 *TEST.*
 TEST.*
+sql/TEST.*
+sql/*TEST.*
+sql/TEST*.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
