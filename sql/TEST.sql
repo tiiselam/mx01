@@ -1,4 +1,3 @@
---x
 
 select top 1000 *
 from vwCfdiTrxCobros
