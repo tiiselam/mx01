@@ -4,16 +4,15 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
+TEST.sql
+TEST*.sql
+*TEST.sql
+00_mainCFDI.sql
+
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-TEST*.*
-*TEST.*
-TEST.sql
-sql/TEST.sql
-sql/*TEST.*
-sql/TEST*.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

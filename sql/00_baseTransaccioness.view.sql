@@ -1,2 +1,0 @@
---ejecutar rmTransaccionesTodas.view.sql
--- ivVwIvTransaccionesTH.view.sql
