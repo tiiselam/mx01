@@ -58,6 +58,7 @@ namespace cfd.FacturaElectronica
                 ReportProgress(0, "Iniciando proceso...\r\n");
                 do
                 {
+                    _Param.PrefijoDefaultFactura = trxVenta.Sopnumbe.Substring(0, 4);
                     msj = String.Empty;
                     try
                     {

@@ -44,6 +44,7 @@ namespace cfd.FacturaElectronica
                 trxVenta.Rewind();                   //move to first record
                 do
                 {
+                    _Param.PrefijoDefaultFactura = trxVenta.Sopnumbe.Substring(0, 4);
                     if (CancellationPending) { e.Cancel = true; return; }
                     msj = "";
                     if (maquina.ValidaTransicion(_Param.tipoDoc, "IMPRIME PDF", trxVenta.EstadoActual, "impreso"))

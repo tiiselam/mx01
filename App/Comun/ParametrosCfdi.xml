@@ -14,6 +14,8 @@
     </PAC>
     <reporteador>CRYSTAL</reporteador>
     <reporteExtensiones>
+      <PrefijoFacturaExporta>FV E</PrefijoFacturaExporta>
+      <FacturaExporta>_exp.rpt</FacturaExporta>
       <Factura>.rpt</Factura>
       <Cobro>.COB.rpt</Cobro>
       <Traslado>.REM.rpt</Traslado>

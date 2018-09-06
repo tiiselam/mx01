@@ -14,9 +14,11 @@
     </PAC>
     <reporteador>[valor: CRYSTAL o SSRS]</reporteador>
     <reporteExtensiones>
-       <Factura>EJ: .rpt</Factura>
-	     <Cobro>ej: .COB.rpt</Cobro>
-	     <Traslado>ej: .REM.rpt</Traslado>
+      <PrefijoFacturaExporta>Deben ser 4 caracteres EJ: FV E</PrefijoFacturaExporta>
+      <FacturaExporta>EJ: _exp.rpt</FacturaExporta>
+      <Factura>EJ: .rpt</Factura>
+	    <Cobro>ej: .COB.rpt</Cobro>
+	    <Traslado>ej: .REM.rpt</Traslado>
     </reporteExtensiones>
     <rutaReporteCrystal tipo="default">
       <Ruta>[RUTA DEL ARCHIVO CRYSTAL RPT. Indicar la extensión en el tag reporteExtensiones]</Ruta>

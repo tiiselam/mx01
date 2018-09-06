@@ -10,7 +10,10 @@
 *.sln.docstates
 TEST*.*
 *TEST.*
-TEST.*
+TEST.sql
+sql/TEST.sql
+sql/*TEST.*
+sql/TEST*.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

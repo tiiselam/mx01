@@ -64,7 +64,9 @@ namespace Comun
         private string _extFactura;
         private string _extCobro;
         private string _extTraslado;
-        private string _extDefault="";
+        private string _extDefaultTab="";
+        private string _extensionDefault = string.Empty;
+        private string _prefijoDefaultFactura = "";
         private string _rutaReporteCrystal = "";
         private string _bottomMargin = "";
         private string _topMargin = "";
@@ -96,6 +98,8 @@ namespace Comun
         private string _emailAdjImprm = "na";   //default no aplica
         private string _imprimeEnImpresora;
         private string _nombreImpresora;
+        private string _extFacturaExporta = string.Empty;
+        private string _prefijoFacturaExporta = string.Empty;
 
         public Parametros()
         {
@@ -164,6 +168,8 @@ namespace Comun
                 _zip = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/zip/text()").Value;
                 _reporteador = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteador/text()").Value;
                 _extFactura = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Factura/text()").Value;
+                _prefijoFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/PrefijoFacturaExporta/text()").Value;
+                _extFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/FacturaExporta/text()").Value;
                 _extCobro = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Cobro/text()").Value;
                 _extTraslado = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Traslado/text()").Value;
 
@@ -360,7 +366,7 @@ namespace Comun
         {
             get
             {
-                return _extDefault;
+                return _extDefaultTab;
             }
 
             set
@@ -381,10 +387,10 @@ namespace Comun
                         _ext = String.Empty;
                         break;
                 }
-
+                _extensionDefault = _ext;
                 _rutaReporteCrystal += _ext;
                 _rutaReporteSSRS += _ext;
-                _extDefault = value;
+                _extDefaultTab = value;
             }
         }
 
@@ -630,5 +636,38 @@ namespace Comun
             get { return _emailAdjImprm; }
         }
 
+        public string PrefijoDefaultFactura
+        {
+            get
+            {
+                return _prefijoDefaultFactura;
+            }
+
+            set
+            {
+                string nuevaExtension = String.Empty;
+                if (value == PrefijoFacturaExporta)
+                    nuevaExtension = _extFacturaExporta == null ? _extensionDefault : _extFacturaExporta;
+                else
+                    nuevaExtension = _extensionDefault;
+
+                _rutaReporteCrystal = _rutaReporteCrystal.Replace(_extensionDefault, nuevaExtension);
+                _rutaReporteSSRS = _rutaReporteSSRS.Replace(_extensionDefault, nuevaExtension);
+                _prefijoDefaultFactura = value;
+            }
+        }
+
+        public string PrefijoFacturaExporta
+        {
+            get
+            {
+                return _prefijoFacturaExporta;
+            }
+
+            set
+            {
+                _prefijoFacturaExporta = value;
+            }
+        }
     }
 }
