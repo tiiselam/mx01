@@ -5,6 +5,10 @@
 
 # User-specific files
 TEST.sql
+TEST*.sql
+*TEST.sql
+00_mainCFDI.sql
+
 *.suo
 *.user
 *.userosscache
