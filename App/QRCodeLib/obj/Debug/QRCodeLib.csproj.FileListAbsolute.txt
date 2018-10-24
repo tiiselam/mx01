@@ -25,4 +25,3 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCode
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\QRCodeLib.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\QRCodeLib.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csprojResolveAssemblyReference.cache
