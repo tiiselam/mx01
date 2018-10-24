@@ -88,6 +88,43 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '99
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = 'NA')
 	insert into cfdiCatalogo(tipo, clave, descripcion)
 	values('FRPG', 'NA', 'NA');
+----------------------------------------------------------------------------------------
+--Forma de pago bancarizada
+--En la descripción indicar los flags 1 ó 0 para cada atributo
+--Bancarizado|	Número de operación|	RFC del Emisor de la cuenta ordenante|	Cuenta Ordenante|	RFC del Emisor Cuenta de Beneficiario|	Cuenta de Benenficiario| Tipo Cadena Pago|	Nombre del Banco emisor de la cuenta ordenante en caso de extranjero
+--  1                2                       3                                      4                          5                                 6                        7                           8
+--Se asume que los que no están en la lista, tienen todos los flags en cero
+--El flag cero indica que no se incluye aunque esté configurado
+--El flag uno indica que se incluye si está configurado
+--
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '02')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '02', '11111101');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '03')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '03', '11111101');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '04')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '04', '11111101');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '05')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '05', '11111101');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '06')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '06', '11110000');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '28')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '28', '11111101');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPGB' and clave = '29')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPGB', '29', '11111101');
+
 -----------------------------------------------------------------------------------------
 --Método de pago
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'MTDPG' and clave = 'PUE')
