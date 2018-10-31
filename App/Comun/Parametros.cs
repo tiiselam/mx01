@@ -646,7 +646,7 @@ namespace Comun
             set
             {
                 string nuevaExtension = String.Empty;
-                if (value == PrefijoFacturaExporta)
+                if (value == _prefijoFacturaExporta)
                     nuevaExtension = _extFacturaExporta == null ? _extensionDefault : _extFacturaExporta;
                 else
                     nuevaExtension = _extensionDefault;

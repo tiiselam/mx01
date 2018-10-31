@@ -198,7 +198,7 @@ namespace EjecutableEncriptador
             }
             catch (Exception eCia)
             {
-                ultimoMensaje = "Contacte al administrador. No se puede acceder a la base de datos. [CargaCompannias] " + DatosConexionDB.ultimoMensaje + " - " + eCia.Message;
+                ultimoMensaje = "Contacte al administrador. No se puede acceder a la base de datos. [CargaCompannias] " + DatosConexionDB.Elemento.Usuario + " " + DatosConexionDB.ultimoMensaje + " - " + eCia.Message;
             }
             return false;
         }

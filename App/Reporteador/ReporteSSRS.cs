@@ -6,6 +6,7 @@ using Comun;
 using Reporteador.RepServerWSExec;
 using System.Net;
 using Microsoft.Reporting.WinForms;
+using System.Diagnostics;
 
 namespace Reporteador
 {
@@ -68,8 +69,10 @@ namespace Reporteador
             //TraceSource trace = new TraceSource("trSource", SourceLevels.All);
             //trace.Listeners.Clear();
             //trace.Listeners.Add(textListener);
-            //trace.TraceInformation("render pdf " + RutaPDF);
-
+            //trace.TraceInformation("render pdf: " + RutaPDF);
+            //trace.TraceInformation("reporte ssrs: " + _param.rutaReporteSSRS);
+            //trace.TraceInformation("prefijo exp: " + _param.PrefijoFacturaExporta);
+            //trace.Flush();
             ultimoMensaje = "";
             numError = 0;
             // Prepare Render arguments
