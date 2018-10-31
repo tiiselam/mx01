@@ -38,13 +38,14 @@ namespace cfd.FacturaElectronica
                 int i = 1; int errores = 0;
                 string eBinario = "";
                 string eBase = "";
-                cfdReglasFacturaXml DocumentoEmitido = new cfdReglasFacturaXml(_Conex, _Param);     //log de facturas xml emitidas y anuladas
+                cfdReglasFacturaXml DocumentoEmitido = null;
                 ReglasME maquina = new ReglasME(_Param);
 
                 trxVenta.Rewind();                   //move to first record
                 do
                 {
                     _Param.PrefijoDefaultFactura = trxVenta.Sopnumbe.Substring(0, 4);
+                    DocumentoEmitido = new cfdReglasFacturaXml(_Conex, _Param);     //log de facturas xml emitidas y anuladas
                     if (CancellationPending) { e.Cancel = true; return; }
                     msj = "";
                     if (maquina.ValidaTransicion(_Param.tipoDoc, "IMPRIME PDF", trxVenta.EstadoActual, "impreso"))
