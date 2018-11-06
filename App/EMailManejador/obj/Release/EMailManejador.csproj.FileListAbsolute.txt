@@ -19,3 +19,4 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\bin\Release
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Release\EMailManejador.csproj.ResolveComReference.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Release\EMailManejador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Release\EMailManejador.pdb
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Release\EMailManejador.csprojResolveAssemblyReference.cache
