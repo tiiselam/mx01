@@ -14,7 +14,7 @@
     </PAC>
     <reporteador>[valor: CRYSTAL o SSRS]</reporteador>
     <reporteExtensiones>
-      <PrefijoFacturaExporta>Deben ser 4 caracteres EJ: FV E</PrefijoFacturaExporta>
+      <PrefijoFacturaExporta>E</PrefijoFacturaExporta>
       <FacturaExporta>EJ: _exp.rpt</FacturaExporta>
       <Factura>EJ: .rpt</Factura>
 	    <Cobro>ej: .COB.rpt</Cobro>

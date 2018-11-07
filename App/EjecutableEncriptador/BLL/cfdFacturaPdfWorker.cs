@@ -44,7 +44,7 @@ namespace cfd.FacturaElectronica
                 trxVenta.Rewind();                   //move to first record
                 do
                 {
-                    _Param.PrefijoDefaultFactura = trxVenta.Sopnumbe.Substring(0, 4);
+                    _Param.PrefijoDefaultFactura = trxVenta.Sopnumbe.Substring(_Param.PosicionPrefijoFactura, 1);
                     DocumentoEmitido = new cfdReglasFacturaXml(_Conex, _Param);     //log de facturas xml emitidas y anuladas
                     if (CancellationPending) { e.Cancel = true; return; }
                     msj = "";

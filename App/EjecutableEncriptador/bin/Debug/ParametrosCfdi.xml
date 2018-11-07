@@ -82,9 +82,9 @@
 		<PAC>
 			<urlWebService>na</urlWebService>
 		</PAC>
-		<reporteador>SSRS</reporteador>
+		<reporteador>SSRSxx</reporteador>
 		<reporteExtensiones>
-			<PrefijoFacturaExporta>FV E</PrefijoFacturaExporta >
+			<PrefijoFacturaExporta>E</PrefijoFacturaExporta >
 			<FacturaExporta>Gral_exp</FacturaExporta>
 			<Factura>Gral</Factura>
 			<Cobro>.rdl</Cobro>
