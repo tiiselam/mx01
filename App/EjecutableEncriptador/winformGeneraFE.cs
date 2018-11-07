@@ -652,7 +652,7 @@ namespace EjecutableEncriptador
                     prmSopType = Convert.ToInt16(dgridTrxFacturas.CurrentRow.Cells[idxSoptype].Value.ToString());
 
                     if (!string.IsNullOrEmpty(prmFolioDesde) && prmFolioDesde.Length > 3)
-                        configCfd.PrefijoDefaultFactura = prmFolioDesde.Substring(0, 4);
+                        configCfd.PrefijoDefaultFactura = prmFolioDesde.Substring(configCfd.PosicionPrefijoFactura, 1);
 
                     //En el caso de una compañía que debe emitir xml, controlar que la factura ha sido emitida antes de imprimir.
                     if (configCfd.emite)
@@ -725,7 +725,7 @@ namespace EjecutableEncriptador
                 prmSopType = Convert.ToInt16(dgridTrxFacturas.CurrentRow.Cells[idxSoptype].Value.ToString());
 
                 if (!string.IsNullOrEmpty(prmFolioDesde) && prmFolioDesde.Length > 3)
-                    configCfd.PrefijoDefaultFactura = prmFolioDesde.Substring(0, 4);
+                    configCfd.PrefijoDefaultFactura = prmFolioDesde.Substring(configCfd.PosicionPrefijoFactura, 1);
 
                 //En el caso de una compañía que debe emitir xml, controlar que la factura ha sido emitida antes de imprimir.
                 if (configCfd.emite)

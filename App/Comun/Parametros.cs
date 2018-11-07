@@ -66,12 +66,12 @@ namespace Comun
         private string _extTraslado;
         private string _extDefaultTab="";
         private string _extensionDefault = string.Empty;
-        private string _prefijoDefaultFactura = "";
-        private string _rutaReporteCrystal = "";
-        private string _bottomMargin = "";
-        private string _topMargin = "";
-        private string _leftMargin = "";
-        private string _rightMargin = "";
+        private string _prefijoDefaultFactura = string.Empty;
+        private string _rutaReporteCrystal = string.Empty;
+        private string _bottomMargin = "0";
+        private string _topMargin = "0";
+        private string _leftMargin = "0";
+        private string _rightMargin = "0";
         private string _rutaReporteSSRS = "";
         private string _SSRSServer = "";
         private List<PrmtrsReporte> _ListaParametrosReporte = new List<PrmtrsReporte>();
@@ -86,20 +86,21 @@ namespace Comun
         private string _publica = "0";
         private string _envia = "0";
         private string _zip = "0";              //default no comprime
-        private string _emailSmtp = "";
-        private string _emailPort = "";
-        private string _emailAccount = "";
-        private string _emailUser = "";
-        private string _emailPwd = "";
-        private string _emailSsl = "";
-        private string _replyto = "";
-        private string _emailCarta = "";
+        private string _emailSmtp = string.Empty;
+        private string _emailPort = string.Empty;
+        private string _emailAccount = string.Empty;
+        private string _emailUser = string.Empty;
+        private string _emailPwd = string.Empty;
+        private string _emailSsl = string.Empty;
+        private string _replyto = string.Empty;
+        private string _emailCarta = string.Empty;
         private string _emailAdjEmite = "na";   //default no aplica
         private string _emailAdjImprm = "na";   //default no aplica
-        private string _imprimeEnImpresora;
-        private string _nombreImpresora;
+        private string _imprimeEnImpresora = "0";
+        private string _nombreImpresora = string.Empty;
         private string _extFacturaExporta = string.Empty;
         private string _prefijoFacturaExporta = string.Empty;
+        private Int16 _posicionPrefijoFactura = 3;
 
         public Parametros()
         {
@@ -140,11 +141,12 @@ namespace Comun
                     _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
                     _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
                     _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
-
+                    _URLConsulta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLConsulta/text()").Value;
+                    _URLwebServPAC = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/PAC/urlWebService/text()").Value;
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener los parámetros URLArchivoXSD, URLArchivoXSLT o URLArchivoPagosXSD en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros: URLArchivoXSD, URLArchivoXSLT, URLArchivoPagosXSD, URLConsulta o PAC/urlWebService en " + IdCompannia + ". [Parametros(Compañía)] ";
                     throw;
                 }
 
@@ -158,85 +160,113 @@ namespace Comun
                     //_URLArchivoComExtXSLT= "na";
                 }
 
-                _URLConsulta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLConsulta/text()").Value;
-                _URLwebServPAC = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/PAC/urlWebService/text()").Value;
-                _emite = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emite/text()").Value;
-                _anula = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/anula/text()").Value;
-                _imprime = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/imprime/text()").Value;
-                _publica = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/publica/text()").Value;
-                _envia = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/envia/text()").Value;
-                _zip = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/zip/text()").Value;
-                _reporteador = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteador/text()").Value;
-                _extFactura = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Factura/text()").Value;
-                _prefijoFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/PrefijoFacturaExporta/text()").Value;
-                _extFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/FacturaExporta/text()").Value;
-                _extCobro = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Cobro/text()").Value;
-                _extTraslado = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Traslado/text()").Value;
-
-                _rutaReporteCrystal = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Ruta/text()").Value;
-                _bottomMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/bottomMargin/text()").Value;
-                _topMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/topMargin/text()").Value;
-                _leftMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/leftMargin/text()").Value;
-                _rightMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/rightMargin/text()").Value;
-                _imprimeEnImpresora = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/imprime/text()").Value;
-                _nombreImpresora = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/nombreImpresora/text()").Value;
-
-                _rutaReporteSSRS = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']/Ruta/text()").Value;
-                _SSRSServer = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']/SSRSServer/text()").Value;
-
-                _emailSmtp = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/smtp/text()").Value;
-                _emailPort = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/puerto/text()").Value;
-                _emailAccount = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/cuenta/text()").Value;
-
                 try
                 {
-                    _emailUser = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/usuario/text()").Value;
+                    _emite = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emite/text()").Value;
+                    _anula = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/anula/text()").Value;
+                    _imprime = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/imprime/text()").Value;
+                    _publica = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/publica/text()").Value;
+                    _envia = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/envia/text()").Value;
+                    _zip = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/zip/text()").Value;
+                    _reporteador = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteador/text()").Value;
 
                 }
                 catch (Exception)
                 {
-                    _emailUser = string.Empty;
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros: emite, anula, imprime, publica, envia, zip o reporteador en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw;
                 }
 
                 try
                 {
-                    _emailPwd = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/clave/text()").Value;
+                    _extFactura = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Factura/text()").Value;
+                    _prefijoFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/PrefijoFacturaExporta/text()").Value;
+                    _extFacturaExporta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/FacturaExporta/text()").Value;
+                    _extCobro = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Cobro/text()").Value;
+                    _extTraslado = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/reporteExtensiones/Traslado/text()").Value;
 
+                }
+                catch (Exception)
+                {
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag reporteExtensiones: Factura, PrefijoFacturaExporta, FacturaExporta, Cobro o Traslado en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw;
+                }
+                try
+                {
+                    if (_reporteador.Contains("CRYSTAL"))
+                    {
+                        _rutaReporteCrystal = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Ruta/text()").Value;
+                        _bottomMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/bottomMargin/text()").Value;
+                        _topMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/topMargin/text()").Value;
+                        _leftMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/leftMargin/text()").Value;
+                        _rightMargin = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/Margenes/rightMargin/text()").Value;
+                        _imprimeEnImpresora = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/imprime/text()").Value;
+                        _nombreImpresora = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']/nombreImpresora/text()").Value;
+
+                        XmlNodeList listaElementos = listaParametros.DocumentElement.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']").ChildNodes;
+                        foreach (XmlNode n in listaElementos)
+                        {
+                            if (n.Name.Equals("Parametro"))
+                            {
+                                this._ListaParametrosReporte.Add(new PrmtrsReporte(n.SelectSingleNode("Nombre/text()").Value,
+                                                                                    n.SelectSingleNode("Tipo/text()").Value));
+                            }
+                        }
+
+                    }
+                }
+                catch (Exception)
+                {
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag rutaReporteCrystal: Ruta, Margenes/bottomMargin, Margenes/topMargin, Margenes/leftMargin, Margenes/rightMargin, imprime, nombreImpresora o Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw;
+                }
+
+                try
+                {
+                    if (_reporteador.Contains("SSRS"))
+                    {
+                        _rutaReporteSSRS = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']/Ruta/text()").Value;
+                        _SSRSServer = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']/SSRSServer/text()").Value;
+
+                        XmlNodeList listaElementos = listaParametros.DocumentElement.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']").ChildNodes;
+                        foreach (XmlNode n in listaElementos)
+                        {
+                            if (n.Name.Equals("Parametro"))
+                            {
+                                this._ListaParametrosRepSSRS.Add(new PrmtrsReporte(n.SelectSingleNode("Nombre/text()").Value,
+                                                                                    n.SelectSingleNode("Tipo/text()").Value));
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag ReporteSSRS: Ruta, SSRSServero Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw;
+                }
+                try
+                {
+                    _emailSmtp = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/smtp/text()").Value;
+                    _emailPort = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/puerto/text()").Value;
+                    _emailAccount = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/cuenta/text()").Value;
+                    _emailUser = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/usuario/text()").Value;
+                    _emailPwd = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/clave/text()").Value;
+                    _emailSsl = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/ssl/text()").Value;
+                    _replyto = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/replyto/text()").Value;
+                    _emailCarta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/carta/text()").Value;
+                    _emailAdjEmite = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/adjuntoEmite/text()").Value;
+                    _emailAdjImprm = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/adjuntoImprime/text()").Value;
                 }
                 catch (Exception)
                 {
                     _emailPwd = string.Empty;
                 }
- 
-                _emailSsl = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/ssl/text()").Value;
-                _replyto = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/replyto/text()").Value;
-                _emailCarta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/carta/text()").Value;
-                _emailAdjEmite = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/adjuntoEmite/text()").Value;
-                _emailAdjImprm = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/emailSetup/adjuntoImprime/text()").Value;
-                
-                XmlNodeList listaElementos = listaParametros.DocumentElement.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/rutaReporteCrystal[@tipo='default']").ChildNodes;
-                foreach (XmlNode n in listaElementos)
-                {
-                    if (n.Name.Equals("Parametro"))
-                    {
-                        this._ListaParametrosReporte.Add(new PrmtrsReporte(n.SelectSingleNode("Nombre/text()").Value, 
-                                                                            n.SelectSingleNode("Tipo/text()").Value));
-                    }
-                }
 
-                listaElementos = listaParametros.DocumentElement.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/ReporteSSRS[@tipo='default']").ChildNodes;
-                foreach (XmlNode n in listaElementos)
-                {
-                    if (n.Name.Equals("Parametro"))
-                    {
-                        this._ListaParametrosRepSSRS.Add(new PrmtrsReporte(n.SelectSingleNode("Nombre/text()").Value,
-                                                                            n.SelectSingleNode("Tipo/text()").Value));
-                    }
-                }
+
             }
             catch (Exception eprm)
             {
-                ultimoMensaje = "Contacte al administrador. No se pudo obtener la configuración de la compañía " + IdCompannia + ". [Parametros(Compañía)] " + eprm.Message;
+                ultimoMensaje = "Contacte al administrador. No se pudo encontrar el archivo de configuración de la compañía " + IdCompannia + ". [Parametros(Compañía)] " + eprm.Message;
             }
         }
 
@@ -388,8 +418,6 @@ namespace Comun
                         break;
                 }
                 _extensionDefault = _ext;
-                _rutaReporteCrystal += _ext;
-                _rutaReporteSSRS += _ext;
                 _extDefaultTab = value;
             }
         }
@@ -436,7 +464,7 @@ namespace Comun
         public string rutaReporteCrystal
         {
             get {
-                return _rutaReporteCrystal;
+                return _rutaReporteCrystal + _extensionDefault;
             }
             set { _rutaReporteCrystal = value; }
 
@@ -505,7 +533,7 @@ namespace Comun
         {
             get
             {
-                return _rutaReporteSSRS;
+                return _rutaReporteSSRS + _extensionDefault;
             }
             set { _rutaReporteSSRS = value; }
         }
@@ -645,14 +673,10 @@ namespace Comun
 
             set
             {
-                string nuevaExtension = String.Empty;
-                if (value == _prefijoFacturaExporta)
-                    nuevaExtension = _extFacturaExporta == null ? _extensionDefault : _extFacturaExporta;
-                else
-                    nuevaExtension = _extensionDefault;
-
-                _rutaReporteCrystal = _rutaReporteCrystal.Replace(_extensionDefault, nuevaExtension);
-                _rutaReporteSSRS = _rutaReporteSSRS.Replace(_extensionDefault, nuevaExtension);
+                if (_extDefaultTab.Equals("tabFacturas"))
+                {
+                    _extensionDefault = value == _prefijoFacturaExporta ? _extFacturaExporta : _extFactura;
+                }
                 _prefijoDefaultFactura = value;
             }
         }
@@ -667,6 +691,19 @@ namespace Comun
             set
             {
                 _prefijoFacturaExporta = value;
+            }
+        }
+
+        public short PosicionPrefijoFactura
+        {
+            get
+            {
+                return _posicionPrefijoFactura;
+            }
+
+            set
+            {
+                _posicionPrefijoFactura = value;
             }
         }
     }

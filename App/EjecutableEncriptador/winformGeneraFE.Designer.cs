@@ -491,7 +491,7 @@
             // 
             this.genFacturaElectrónicaV10ToolStripMenuItem.Name = "genFacturaElectrónicaV10ToolStripMenuItem";
             this.genFacturaElectrónicaV10ToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.3.2";
+            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.3.3";
             // 
             // toolStripMenuItem2
             // 
