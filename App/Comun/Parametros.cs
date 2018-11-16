@@ -146,8 +146,8 @@ namespace Comun
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros: URLArchivoXSD, URLArchivoXSLT, URLArchivoPagosXSD, URLConsulta o PAC/urlWebService en " + IdCompannia + ". [Parametros(Compañía)] ";
-                    throw;
+                    ultimoMensaje = "No se pudo obtener alguno de los parámetros: URLArchivoXSD, URLArchivoXSLT, URLArchivoPagosXSD, URLConsulta o PAC/urlWebService en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw new ArgumentException(ultimoMensaje);
                 }
 
                 try
@@ -173,8 +173,8 @@ namespace Comun
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros: emite, anula, imprime, publica, envia, zip o reporteador en " + IdCompannia + ". [Parametros(Compañía)] ";
-                    throw;
+                    ultimoMensaje = "No se pudo obtener alguno de los parámetros: emite, anula, imprime, publica, envia, zip o reporteador en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw new ArgumentException(ultimoMensaje);
                 }
 
                 try
@@ -188,8 +188,8 @@ namespace Comun
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag reporteExtensiones: Factura, PrefijoFacturaExporta, FacturaExporta, Cobro o Traslado en " + IdCompannia + ". [Parametros(Compañía)] ";
-                    throw;
+                    ultimoMensaje = "No se pudo obtener alguno de los parámetros del tag reporteExtensiones: Factura, PrefijoFacturaExporta, FacturaExporta, Cobro o Traslado en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw new ArgumentException(ultimoMensaje);
                 }
                 try
                 {
@@ -217,8 +217,8 @@ namespace Comun
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag rutaReporteCrystal: Ruta, Margenes/bottomMargin, Margenes/topMargin, Margenes/leftMargin, Margenes/rightMargin, imprime, nombreImpresora o Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
-                    throw;
+                    ultimoMensaje = "No se pudo obtener alguno de los parámetros del tag rutaReporteCrystal: Ruta, Margenes/bottomMargin, Margenes/topMargin, Margenes/leftMargin, Margenes/rightMargin, imprime, nombreImpresora o Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw new ArgumentException(ultimoMensaje);
                 }
 
                 try
@@ -241,8 +241,8 @@ namespace Comun
                 }
                 catch (Exception)
                 {
-                    ultimoMensaje = "Contacte al administrador. No se pudo obtener alguno de los parámetros del tag ReporteSSRS: Ruta, SSRSServero Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
-                    throw;
+                    ultimoMensaje = "No se pudo obtener alguno de los parámetros del tag ReporteSSRS: Ruta, SSRSServero Parametro<Nombre, Tipo> en " + IdCompannia + ". [Parametros(Compañía)] ";
+                    throw new ArgumentException(ultimoMensaje);
                 }
                 try
                 {
@@ -266,7 +266,7 @@ namespace Comun
             }
             catch (Exception eprm)
             {
-                ultimoMensaje = "Contacte al administrador. No se pudo encontrar el archivo de configuración de la compañía " + IdCompannia + ". [Parametros(Compañía)] " + eprm.Message;
+                ultimoMensaje = "Contacte al administrador. Error en el archivo de configuración de la compañía " + IdCompannia + ". [Parametros(Compañía)] " + eprm.Message;
             }
         }
 

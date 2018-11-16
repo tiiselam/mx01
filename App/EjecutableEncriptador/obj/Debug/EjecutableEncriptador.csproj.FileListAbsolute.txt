@@ -96,8 +96,12 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\QRCodeLib.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\Reporteador.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\Microsoft.ReportViewer.WinForms.xml
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.csprojResolveAssemblyReference.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.winformGeneraFE.resources
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.Properties.Resources.resources
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.csproj.GenerateResource.Cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\EjecutableEncriptador.exe.config
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\Encriptador.dll.config
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Debug\Reporteador.dll.config
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.csprojAssemblyReference.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.csproj.CoreCompileInputs.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\obj\Debug\EjecutableEncriptador.csproj.CopyComplete

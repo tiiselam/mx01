@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <listaParametros>
-<servidor>testappgpx1.centralus.cloudapp.azure.com</servidor>
+<servidor>testappgpx1.centralus.cloudapp.azure.com,1434</servidor>
   <seguridadIntegrada>0</seguridadIntegrada>
   <usuariosql>sa</usuariosql>
   <passwordsql>GPAzureDev1</passwordsql>
