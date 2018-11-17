@@ -46,6 +46,7 @@ go
 alter view dbo.vwCfdiPagosDatosDelXml as
 --Propósito. Lista los datos del xml emitido 
 --21/11/17 jcf Creación cfdi 3.3
+--16/11/18 jcf Agrega FormaDePagoP
 --
 select lf.soptype, lf.sopnumbe, lf.secuencia, lf.estado, lf.mensaje, lf.estadoActual, lf.mensajeEA, 
 	--Datos del xml sellado por el PAC:
@@ -55,7 +56,8 @@ select lf.soptype, lf.sopnumbe, lf.secuencia, lf.estado, lf.mensaje, lf.estadoAc
 	isnull(px.NomBancoOrdExt, '') NomBancoOrdExt,
 	isnull(px.CtaOrdenante, '') CtaOrdenante,
 	isnull(px.RfcEmisorCtaBen, '') RfcEmisorCtaBen,
-	isnull(px.CtaBeneficiario, '') CtaBeneficiario
+	isnull(px.CtaBeneficiario, '') CtaBeneficiario,
+	isnull(px.FormaDePagoP, '') FormaDePagoP
 
 from cfdlogfacturaxml lf
 	outer apply dbo.fCfdiPagosDatosXmlParaImpresion (lf.archivoXML) px

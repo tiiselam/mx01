@@ -12,6 +12,7 @@ alter view dbo.vwCfdiSopTransaccionesVenta
 --Utiliza:	vwRmTransaccionesTodas
 --Requisitos. No muestra facturas registradas en cuentas por cobrar. 
 --24/10/17 jcf Creación cfdi 3.3 
+--16/11/18 jcf Agrega usrtab09, ctrl.usrtab03. Tercera resolución de modificaciones 2.7.1.44 SAT
 --
 AS
 
@@ -47,7 +48,7 @@ SELECT	'contabilizado' estadoContabilizado,
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.zipcode), 10) zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(cab.cstponbr), 10) cstponbr,
-		da.USRDEF05, isnull(da.usrtab01, '') usrtab01
+		da.USRDEF05, isnull(da.usrtab01, '') usrtab01, isnull(da.usrtab09, '') usrtab09, isnull(da.usrtab03, '') usrtab03
   from	sop30200 cab							--sop_hdr_hist
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID
@@ -80,7 +81,7 @@ SELECT	'contabilizado' estadoContabilizado,
 		cab.zipcode, 
 		cab.duedate, cab.pymtrmid, cab.glpostdt, 
 		cab.cstponbr,
-		ctrl.USRDEF05, ctrl.usrtab01
+		ctrl.USRDEF05, ctrl.usrtab01, ctrl.usrtab09, ctrl.usrtab03
  from  SOP10100 cab								--sop_hdr_work
 		inner join vwCfdIdDocumentos id
 			on id.docid = cab.DOCID

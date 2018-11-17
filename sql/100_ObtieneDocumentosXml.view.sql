@@ -750,6 +750,7 @@ as
 --Requisitos. El total de impuestos de la factura debe corresponder a la suma del detalle de impuestos. 
 --15/01/18 jcf Creación Complemento de comercio exterior para cfdi 3.3
 --05/04/18 jcf Agrega descuento a nc
+--16/11/18 jcf Agrega usrtab09, ctrl.usrtab03. Tercera resolución de modificaciones 2.7.1.44 SAT
 --
 begin
 	declare @cfd xml;
@@ -770,13 +771,14 @@ begin
 		convert(datetime, tv.fechahora, 126)				'@Fecha',
 		''													'@Sello', 
 
-		case when tv.soptype = 3 
-			then case when tv.orpmtrvd = tv.total 
-					then pg.FormaPago
-					else '99'
-				end
-			else tr.FormaPago
-		end													'@FormaPago',
+		--case when tv.soptype = 3 
+		--	then case when tv.orpmtrvd = tv.total 
+		--			then pg.FormaPago
+		--			else '99'
+		--		end
+		--	else tr.FormaPago
+		--end													
+		mtp.formaPago										'@FormaPago',
 		''													'@NoCertificado', 
 		''													'@Certificado', 
 		case when tv.pymtrmid='' then null 
@@ -800,16 +802,17 @@ begin
 			else 'E' 
 		end													'@TipoDeComprobante',
 
-		case when tv.soptype = 3
-			then case when tv.orpmtrvd = tv.total
-				then 'PUE'
-				Else 'PPD'
-				END
-			else case when tr.FormaPago = '99'
-				then 'PPD'
-				Else 'PUE'
-				END
-		end													'@MetodoPago',
+		--case when tv.soptype = 3
+		--	then case when tv.orpmtrvd = tv.total
+		--		then 'PUE'
+		--		Else 'PPD'
+		--		END
+		--	else case when tr.FormaPago = '99'
+		--		then 'PPD'
+		--		Else 'PUE'
+		--		END
+		--end													
+		mtp.metodoPago										'@MetodoPago',
 		emi.codigoPostal									'@LugarExpedicion',
 
         tr.TipoRelacion										'cfdi:CfdiRelacionados/@TipoRelacion',
@@ -847,6 +850,7 @@ begin
 		outer apply dbo.fCfdiPagoSimultaneoMayor(tv.soptype, tv.sopnumbe) pg
 		outer apply dbo.fCfdiDatosDeUnaRelacion(tv.soptype, tv.sopnumbe, tv.docid) tr
 		outer apply dbo.fCfdiParametrosCliente(tv.CUSTNMBR, 'UsoCFDI', 'na', 'na', 'na', 'na', 'na', 'PREDETERMINADO') pc
+		outer apply dbo.fCfdiMetodoYFormaPago(tv.soptype, tv.orpmtrvd, tv.total, left(upper(tv.usrtab09), 3), tr.FormaPago, pg.FormaPago, left(upper(tv.usrtab03), 2)) mtp
 	where tv.sopnumbe =	@sopnumbe		
 	and tv.soptype = @soptype
 	FOR XML path('cfdi:Comprobante'), type
@@ -876,6 +880,7 @@ as
 --12/12/17 jcf No debe mostrar descuento si no hay descuento en el detalle
 --16/01/18 jcf No incluir CondicionesDePago si está vacío
 --05/04/18 jcf Agrega descuento a nc
+--16/11/18 jcf Agrega usrtab09, ctrl.usrtab03. Tercera resolución de modificaciones 2.7.1.44 SAT
 --
 begin
 	declare @cfd xml;
@@ -893,14 +898,7 @@ begin
 		rtrim(tv.sopnumbe)									'@Folio',
 		convert(datetime, tv.fechahora, 126)				'@Fecha',
 		''													'@Sello', 
-
-		case when tv.soptype = 3 
-			then case when tv.orpmtrvd = tv.total 
-					then pg.FormaPago
-					else '99'
-				end
-			else tr.FormaPago
-		end													'@FormaPago',
+		mtp.formaPago										'@FormaPago',
 		''													'@NoCertificado', 
 		''													'@Certificado', 
 		case when tv.pymtrmid='' then null 
@@ -924,16 +922,7 @@ begin
 			else 'E' 
 		end													'@TipoDeComprobante',
 
-		case when tv.soptype = 3
-			then case when tv.orpmtrvd = tv.total
-				then 'PUE'
-				Else 'PPD'
-				END
-			else case when tr.FormaPago = '99'
-				then 'PPD'
-				Else 'PUE'
-				END
-		end													'@MetodoPago',
+		mtp.metodoPago										'@MetodoPago',
 		emi.codigoPostal									'@LugarExpedicion',
 
         tr.TipoRelacion										'cfdi:CfdiRelacionados/@TipoRelacion',
@@ -968,10 +957,11 @@ begin
 		''													'cfdi:Complemento'
 	from dbo.vwCfdiSopTransaccionesVenta tv
 		cross join dbo.fCfdEmisor() emi
-		outer apply dbo.fCfdiPagoSimultaneoMayor(tv.soptype, tv.sopnumbe) pg
 		outer apply dbo.fCfdiDatosDeUnaRelacion(tv.soptype, tv.sopnumbe, tv.docid) tr
+		outer apply dbo.fCfdiPagoSimultaneoMayor(tv.soptype, tv.sopnumbe) pg
 		outer apply dbo.fCfdiParametrosCliente(tv.CUSTNMBR, 'UsoCFDI', 'na', 'na', 'na', 'na', 'na', 'PREDETERMINADO') pc
-	where tv.sopnumbe =	@sopnumbe		
+		outer apply dbo.fCfdiMetodoYFormaPago(tv.soptype, tv.orpmtrvd, tv.total, left(upper(tv.usrtab09), 3), tr.FormaPago, pg.FormaPago, left(upper(tv.usrtab03), 2)) mtp
+ 	where tv.sopnumbe =	@sopnumbe		
 	and tv.soptype = @soptype
 	FOR XML path('cfdi:Comprobante'), type
 	)
@@ -982,3 +972,4 @@ go
 IF (@@Error = 0) PRINT 'Creación exitosa de la función: fCfdiGeneraDocumentoDeVentaXML ()'
 ELSE PRINT 'Error en la creación de la función: fCfdiGeneraDocumentoDeVentaXML ()'
 GO
+
