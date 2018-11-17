@@ -10,10 +10,11 @@ as
 --Propósito. Devuelve datos adicionales de la factura
 --Requisitos. -
 --24/10/17 jcf Creación cfdi
+--16/11/18 jcf Agrega usrtab02, ctrl.usrtab03. Tercera resolución de modificaciones 2.7.1.44 SAT
 --
 return
 ( 
-	select ctrl.USRDEF05, ctrl.usrtab01
+	select ctrl.USRDEF05, ctrl.usrtab01, ctrl.usrtab09, ctrl.usrtab03
 	from SOP10106 ctrl					--campos def. por el usuario.
 	where ctrl.soptype = @soptype
 	and ctrl.sopnumbe = @sopnumbe

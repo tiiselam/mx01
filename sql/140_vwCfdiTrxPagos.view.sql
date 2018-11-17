@@ -69,6 +69,7 @@ alter view dbo.vwCfdiCobrosAImprimir as
 --Propósito. Lista los cobros que están listos para imprimir
 --			Incluye los datos del cfdi.
 --20/11/17 jcf Creación cfdi 3.3
+--16/11/18 jcf Agrega FormaDePagoP
 --
 select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision, 
 	tv.regimen regimenFiscal, isnull(rgfs.descripcion, 'NA') rgfs_descripcion, tv.codigoPostal, 
@@ -104,6 +105,7 @@ select tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora fechaHoraEmision,
 	px.CtaOrdenante,
 	px.RfcEmisorCtaBen,
 	px.CtaBeneficiario,
+	px.FormaDePagoP,
 	--tv.rutaxml								+ 'cbb\' + replace(tv.mensaje, 'Almacenado en '+tv.rutaxml, '')+'.jpg' rutaYNomArchivoNet,
 	'file://'+replace(tv.rutaxml, '\', '/') + 'cbb/' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaYNomArchivo, 
 	tv.rutaxml								+ 'cbb\' + RIGHT( tv.mensaje, CHARINDEX( '\', REVERSE( tv.mensaje ) + '\' ) - 1 ) +'.jpg' rutaYNomArchivoNet,

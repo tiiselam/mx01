@@ -48,6 +48,7 @@ create function dbo.fCfdiPagosDatosXmlParaImpresion(@archivoXml xml)
 --Usado por. vwCfdiCobrosAImprimir
 --Requisitos. CFDI
 --21/11/17 jcf Creación cfdi 3.3
+--16/11/18 jcf Agrega FormaDePagoP
 --
 returns table
 return(
@@ -59,7 +60,8 @@ return(
 	@archivoXml.value('(//pago10:Pago/@NomBancoOrdExt)[1]', 'varchar(50)') NomBancoOrdExt,
 	@archivoXml.value('(//pago10:Pago/@CtaOrdenante)[1]', 'varchar(50)') CtaOrdenante,
 	@archivoXml.value('(//pago10:Pago/@RfcEmisorCtaBen)[1]', 'varchar(15)') RfcEmisorCtaBen,
-	@archivoXml.value('(//pago10:Pago/@CtaBeneficiario)[1]', 'varchar(50)') CtaBeneficiario
+	@archivoXml.value('(//pago10:Pago/@CtaBeneficiario)[1]', 'varchar(50)') CtaBeneficiario,
+	@archivoXml.value('(//pago10:Pago/@FormaDePagoP)[1]', 'varchar(5)') FormaDePagoP
 	)
 	go
 
