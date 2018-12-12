@@ -118,7 +118,7 @@ namespace EMailManejador
             {
                 ultimoMensaje = "";
                 string TextToValidate = emailAddress;
-                Regex expression = new Regex(@"\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}");
+                Regex expression = new Regex(@"\w+@[a-zA-Z_-]+?\.[a-zA-Z]{2,3}");
 
                 // test email address with expression
                 return (expression.IsMatch(TextToValidate));
