@@ -10,6 +10,7 @@ as
 --21/11/16 jcf Creación 
 --14/09/17 jcf Agrega inet7 y 8
 --13/10/17 jcf Agrega datos de dir PREDETERMINADO
+--11/04/18 jcf Agrega EmailCcAddress, EmailToAddress
 --
 return
 (
@@ -32,7 +33,7 @@ return
 		CASE when charindex(@tag6+'=', ia.inetinfo) > 0 and  charindex(char(13), ia.inetinfo) > 0 then
 			substring(ia.inetinfo, charindex(@tag6+'=', ia.inetinfo)+ len(@tag6)+1, charindex(char(13), ia.inetinfo, charindex(@tag6+'=', ia.inetinfo)) - charindex(@tag6+'=', ia.inetinfo) - len(@tag6)-1)
 		else 'no existe tag: '+@tag6 end param6,
-		ia.INET7, ia.INET8
+  ia.INET7, ia.INET8, ia.EmailCcAddress, ia.EmailToAddress
 	from SY01200 ia					--coInetAddress Dirección de la compañía
 	inner join DYNAMICS..SY01500 ci	--sy_company_mstr 
 		on ia.Master_Type = 'CMP'

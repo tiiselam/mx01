@@ -1,0 +1,69 @@
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\bin\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\bin\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\bin\Debug\Comun.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\bin\Debug\Comun.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\obj\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\FacturaDigitalMexico\Reporteador\obj\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Debug\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Debug\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Debug\Comun.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Debug\Comun.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Release\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\x86\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Release\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Release\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Release\Reporteador.dll
+C:\JCTii\Desarrollo\GETTY Factura Electrónica\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\x86\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX Factura electrónica cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E. Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.dll.config
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Debug\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.dll.config
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.XmlSerializers.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\bin\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\ResolveAssemblyReference.cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.winVisorDeReportes.resources
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.csproj.GenerateResource.Cache
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.dll
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.pdb
+C:\JCTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_Aplicación\Reporteador\obj\Release\Reporteador.XmlSerializers.dll

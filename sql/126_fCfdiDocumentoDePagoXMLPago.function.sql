@@ -1,13 +1,16 @@
-USE [MEX10]
+IF OBJECT_ID ('dbo.fCfdiDocumentoDePagoXMLPago') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiDocumentoDePagoXMLPago
 GO
 
 
-alter function [dbo].fCfdiDocumentoDePagoXMLPago (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
+create function [dbo].fCfdiDocumentoDePagoXMLPago (@RMDTYPAL smallint, @DOCNUMBR varchar(21))
 returns xml 
 as
 --Propósito. DEVOLVER UN XML PARA UN COBRO TOTALMENTE APLICADO Y CONTABILIZADO, DE OTRO MODO DEVOLVER NULL
---Requisitos. EL COBRO DEBE ESTAR TOTALMENTE APLICA Y CONTABILIZADO
---24/10/2017  Creación cfdi
+--Requisitos. EL COBRO DEBE ESTAR TOTALMENTE APLICADO Y CONTABILIZADO. 
+--24/10/17 lt Creación cfdi
+--10/11/17 jcf Correcciones varias
+--14/09/18 jcf Ajuste debido a cambios en fCfdiDocumentoDePago. Campos de pago de la cuenta origen y destino
 --
 begin
 	declare @cnp xml;
@@ -17,21 +20,32 @@ begin
 	)
 	select @cnp = 
 		(SELECT  
-			convert(datetime, hdr.docdate, 126)					'@FechaPago',
-			''													'@FormaDePagoP',
-			c.ISOCURRC											'@MonedaP',
-			case when c.ISOCURRC<>'MXN' THEN cast(m.XCHGRATE as numeric(19,6)) else null END
-																'@TipoCambioP',
-			cast(hdr.ORTRXAMT as numeric(19,2))					'@Monto',
-			[dbo].[fCfdiDocumentoDePagoXML_Nodo_Relacionado] (@RMDTYPAL, @DOCNUMBR)
-		FROM RM20101  AS hdr
-			left join RM00101 cl on cl.CUSTNMBR=hdr.CUSTNMBR
-			left join MC020102 m on m.DOCNUMBR=hdr.DOCNUMBR and m.RMDTYPAL=hdr.RMDTYPAL
-			left join dynamics.dbo.MC40200 c on c.CURNCYID = hdr.CURNCYID
-		where hdr.docnumbr =	@docnumbr	
-		and hdr.RMDTYPAL = @rmdtypal
-		FOR XML PATH('pago10:Pago'), Type	--, root('pago10:Pagos')
+			convert(datetime, hdr.docdate, 126)	'@FechaPago',
+			hdr.FormaDePagoP '@FormaDePagoP',
+ 			hdr.MonedaP '@MonedaP',
+			cast(hdr.TipoCambioP as numeric(19,6)) '@TipoCambioP',
+			cast(hdr.Monto as numeric(19,2)) '@Monto',
+
+			CASE when rtrim(hdr.NumOperacion) != '' then rtrim(hdr.NumOperacion) else null end '@NumOperacion',
+			hdr.RfcEmisorCtaOrd '@RfcEmisorCtaOrd',
+			hdr.NomBancoOrdExt '@NomBancoOrdExt',
+			hdr.CtaOrdenante '@CtaOrdenante',
+			rtrim(hdr.RfcEmisorCtaBen) '@RfcEmisorCtaBen',
+			rtrim(hdr.CtaBeneficiario) '@CtaBeneficiario',
+
+			[dbo].[fCfdiDocumentoDePagoXML_Nodo_Relacionado] (hdr.RMDTYPAL, hdr.DOCNUMBR)
+		FROM dbo.fCfdiDocumentoDePago(@RMDTYPAL, @DOCNUMBR) hdr
+		where hdr.docnumbr = @DOCNUMBR	
+			and hdr.RMDTYPAL = @RMDTYPAL
+			FOR XML PATH('pago10:Pago'), Type	--, root('pago10:Pagos')
 		)
 	return @cnp;
 end
+
+go
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: [fCfdiDocumentoDePagoXMLPago]()'
+ELSE PRINT 'Error en la creación de: [fCfdiDocumentoDePagoXMLPago]()'
+GO
+
 
