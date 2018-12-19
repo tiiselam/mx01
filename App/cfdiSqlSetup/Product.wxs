@@ -6,7 +6,7 @@
   <Product Id="0B05B2FB-CA8F-46A3-8370-2B62E5895FF8"
            Name="GP Factura Digital Sql Setup"
            Language="1033"
-           Version="7.0.0.1"
+           Version="7.3.4"
            Manufacturer="JCF"
            UpgradeCode="8E607B01-0D14-4C3E-B135-53631A6B44FF">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
@@ -113,10 +113,10 @@
     <Binary Id="Createview01" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\001_DynObtieneBdsQueEmitenFElectronica.view.sql"/>
     <Binary Id="Grants02" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\002_DynDaPermisosFacturaElectronica.grant.sql"/>
 
-    <Binary Id="CreateBaseView02" SourceFile="C:\JCTii\GPRelational\rmvwRmTransaccionesTodas.view.sql"/>
-    <Binary Id="CreateBaseView04" SourceFile="C:\JCTii\GPRelational\rmVwTrxAplicadas.view.sql"/>
-    <Binary Id="CreateBaseView06" SourceFile="C:\JCTii\GPRelational\rmVwRmTrxAplicadasExtendidas.view.sql"/>
-    <Binary Id="CreateBaseView08" SourceFile="C:\JCTii\GPRelational\ivVwIvTransaccionesTH.view.sql"/>
+    <Binary Id="CreateBaseView02" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\000_10_rmvwRmTransaccionesTodas.view.sql"/>
+    <Binary Id="CreateBaseView04" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\000_15_rmVwTrxAplicadas.view.sql"/>
+    <Binary Id="CreateBaseView06" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\000_20_rmVwRmTrxAplicadasExtendidas.view.sql"/>
+    <Binary Id="CreateBaseView08" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\000_25_ivVwIvTransaccionesTH.view.sql"/>
     
 
     <Binary Id="CreateFun03" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\003_fcfdiParametros.function.sql"/>
@@ -169,12 +169,11 @@
     <Binary Id="Grants190" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\190_DaPermisosFacturaElectronicaCia.grant.sql"/>
     
     <!--Reportes y permisos STANDARD-->
-    <Binary Id="Createfunc210" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\10_tii_invoice_amount_letters.function.igarcia120622.sql"/>
-    <Binary Id="Createview220" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\20_tii_sopinvoice.view.sql"/>
-    <Binary Id="Createview225" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\25_vwRmImprimeCobros.view.sql"/>
-    <Binary Id="Createview227" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\27_vwCfdiTrasladoParaReporte.view.sql"/>
-
-    <Binary Id="Grants230" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\30_tii_sopinvoice.grant.sql"/>
+    <Binary Id="Createfunc210" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\310_tii_invoice_amount_letters.function.igarcia120622.sql"/>
+    <Binary Id="Createview220" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\320_tii_sopinvoice.view.sql"/>
+    <Binary Id="Createview225" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\325_vwRmImprimeCobros.view.sql"/>
+    <Binary Id="Createview227" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\327_vwCfdiTrasladoParaReporte.view.sql"/>
+    <Binary Id="Grants230" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\330_tii_sopinvoice.grant.sql"/>
 
     <util:User Id="SQLUser" Name="[SQLUSER]" Password="[SQLPASSWORD]"></util:User>
     <!--Variables SQL-->

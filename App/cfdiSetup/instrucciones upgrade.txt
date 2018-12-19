@@ -12,6 +12,8 @@
   2. Indicar la nueva versión en los siguientes lugares: 
 		tag Product, atributo Version
 		tag Upgrade, atributo Maximum
+
+
   3. Si necesita ejecutar scripts SQL:
 	a. Deshabilite el tag Upgrade. Sección: Actualiza una versión anterior
 	b. Cambie el atributo Level=1 del tag Feature Id=SqlFeature y SqlFeatureDyn para ejecutar scripts sql
