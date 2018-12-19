@@ -18,6 +18,7 @@ grant execute on proc_cfdLogFacturaXMLUpdate to rol_cfdigital, dyngrp;
 grant execute on proc_cfdLogFacturaXMLInsert to rol_cfdigital, dyngrp;
 grant execute on proc_cfdLogFacturaXMLDelete to rol_cfdigital, dyngrp;
 
+grant select on dbo.fCfdEmisor to rol_cfdigital;
 grant select on dbo.vwCfdiPagosSimultaneos to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdiTransaccionesDeVenta to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdiDocumentosAImprimir to rol_cfdigital, dyngrp;
