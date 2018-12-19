@@ -4,13 +4,13 @@
      xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
 
   <Product Id="6E38CD38-3415-4FC5-9620-3879DBC6B670" Name="GP Factura Digital Athos"
-           Language="1033" Version="7.2.0.0" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
+           Language="1033" Version="7.3.4" Manufacturer="JCF" UpgradeCode="44281eba-a31e-4e51-92b8-ff8327561a96">
     <Package Id="*" InstallerVersion="200" Manufacturer="JCF" Compressed="yes" />
     <WixVariable Id="WixUIBannerBmp" Value="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\Recursos\banner.bmp" />
 
     <!--Actualiza una versión anterior-->
     <Upgrade Id='BC4441BF-5570-42F6-BF37-249A39071F08'>
-      <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' Minimum='6.0.0.0' IncludeMinimum='yes' Maximum='7.2.0.0' IncludeMaximum='no'/>
+      <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' Minimum='6.0.0.0' IncludeMinimum='yes' Maximum='7.3.4' IncludeMaximum='no'/>
     </Upgrade>
 
     <InstallExecuteSequence>
@@ -25,15 +25,15 @@
     <util:User Id="SQLUser" Name="[SQLUSER]" Password="[SQLPASSWORD]"></util:User>
 
     <Feature Id="Complete" Title="GP Factura Digital" Level="1" Description="Objetos sql y archivos de programa." Display="expand" ConfigurableDirectory="INSTALLFOLDER">
-      <Feature Id="SqlFeatureDyn" Title="Objetos Sql Dynamics" Description="Tablas, vistas y procedimientos almacenados de Dynamics." Level="0">
+      <!--<Feature Id="SqlFeatureDyn" Title="Objetos Sql Dynamics" Description="Tablas, vistas y procedimientos almacenados de Dynamics." Level="0">
         <ComponentRef Id="SqlComponentDyn" />
         <ComponentGroupRef Id="ProductComponents" />
-      </Feature>
+      </Feature>-->
 
-      <Feature Id="SqlFeature" Title="Objetos Sql Compañía" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="0">
+      <!--<Feature Id="SqlFeature" Title="Objetos Sql Compañía" Description="Tablas, vistas y procedimientos almacenados de la Compañía." Level="0">
         <ComponentRef Id="SqlComponent" />
         <ComponentGroupRef Id="ProductComponents" />
-      </Feature>
+      </Feature>-->
 
       <Feature Id="Parametros" Title="Parámetros" Description="Archivo de parámetros." Level="1">
         <ComponentRef Id="Parametros" />
@@ -154,14 +154,14 @@
               <File Id="ManualUsuario" Name="Manual de Usuario GP Factura Digital cfdi.pdf" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Manual de Usuario GP Factura Digital cfdi.pdf" DiskId="1" KeyPath="no"/>
             </Component>
 
-            <Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">
+            <!--<Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">
               <sql:SqlDatabase Id="SqlDatabaseDyn" User="SQLUser" Server="[SQLSERVER]" Database="DYNAMICS" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes">
                 <sql:SqlScript Id="Createview01" BinaryKey="Createview01" ExecuteOnInstall="yes" Sequence="30" ContinueOnError="no"/>
                 <sql:SqlScript Id="Grants02" BinaryKey="Grants02" ExecuteOnInstall="yes" Sequence="1000" ContinueOnError="no"/>
               </sql:SqlDatabase>
-            </Component>
+            </Component>-->
 
-            <Component Id="SqlComponent" Guid="7c32cf65-e060-4c7f-b5dd-d85c181da89c" KeyPath="yes">
+            <!--<Component Id="SqlComponent" Guid="7c32cf65-e060-4c7f-b5dd-d85c181da89c" KeyPath="yes">
               <sql:SqlDatabase Id="SqlDatabase" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
                 <sql:SqlScript Id="CreateBaseView02" BinaryKey="CreateBaseView02" ExecuteOnInstall="yes" Sequence="02" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="CreateBaseView04" BinaryKey="CreateBaseView04" ExecuteOnInstall="yes" Sequence="04" ExecuteOnReinstall="yes"/>
@@ -209,13 +209,13 @@
                 <sql:SqlScript Id="CreateObj140" BinaryKey="CreateObj140" ExecuteOnInstall="yes" Sequence="140" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Grants190" BinaryKey="Grants190" ExecuteOnInstall="yes" Sequence="190" ExecuteOnReinstall="yes"/>
 
-                <!--<sql:SqlScript Id="Createfunc219" BinaryKey="Createfunc119" ExecuteOnInstall="yes" Sequence="119" ExecuteOnReinstall="yes"/>-->
+                --><!--<sql:SqlScript Id="Createfunc219" BinaryKey="Createfunc119" ExecuteOnInstall="yes" Sequence="119" ExecuteOnReinstall="yes"/>--><!--
                 <sql:SqlScript Id="Createfunc210" BinaryKey="Createfunc210" ExecuteOnInstall="yes" Sequence="210" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview220" BinaryKey="Createview220" ExecuteOnInstall="yes" Sequence="220" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Createview225" BinaryKey="Createview225" ExecuteOnInstall="yes" Sequence="225" ExecuteOnReinstall="yes"/>
                 <sql:SqlScript Id="Grants230" BinaryKey="Grants230" ExecuteOnInstall="yes" Sequence="230" ExecuteOnReinstall="yes"/>
               </sql:SqlDatabase>
-            </Component>
+            </Component>-->
 
     </ComponentGroup>
       <Binary Id="Createview01" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\001_DynObtieneBdsQueEmitenFElectronica.view.sql"/>
@@ -269,10 +269,10 @@
       <Binary Id="Grants190" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\190_DaPermisosFacturaElectronicaCia.grant.sql"/>
 
       <!--Reportes y permisos STANDARD-->
-      <Binary Id="Createfunc210" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\10_tii_invoice_amount_letters.function.igarcia120622.sql"/>
-      <Binary Id="Createview220" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\20_tii_sopinvoice.view.sql"/>
-      <Binary Id="Createview225" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\25_vwRmImprimeCobros.view.sql"/>
-      <Binary Id="Grants230" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\30_tii_sopinvoice.grant.sql"/>
+      <Binary Id="Createfunc210" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\310_tii_invoice_amount_letters.function.igarcia120622.sql"/>
+      <Binary Id="Createview220" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\320_tii_sopinvoice.view.sql"/>
+      <Binary Id="Createview225" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\325_vwRmImprimeCobros.view.sql"/>
+      <Binary Id="Grants230" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\Rep\Sql\330_tii_sopinvoice.grant.sql"/>
 
     </Fragment>
 </Wix>

@@ -6,7 +6,7 @@
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>c7429618-5339-489c-8b70-c9b4e963c184</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>cfdiSetup</OutputName>
+    <OutputName>cfdiSetupV734</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
