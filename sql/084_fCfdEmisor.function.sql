@@ -17,10 +17,12 @@ as
 --14/09/17 jcf Usa fCfdiParametros y agrega estado a lugarExpedicion
 --19/12/17 jcf Agrega utc
 --11/01/18 jcf Agrega comercioExterior
+--19/12/18 jcf Agrega nombreLoc
 --
 return
 ( 
 select rtrim(replace(ci.TAXREGTN, 'RFC ', '')) rfc, 
+	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(ci.locatnnm)), 10) nombreLoc, 
 	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(ci.ADRCNTCT)), 10) nombre, 
 	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ci.ADDRESS1)), 10) calle, 
 	dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(rtrim(ci.ADDRESS2)), 10) colonia, 
