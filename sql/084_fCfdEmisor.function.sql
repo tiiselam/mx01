@@ -18,6 +18,7 @@ as
 --19/12/17 jcf Agrega utc
 --11/01/18 jcf Agrega comercioExterior
 --19/12/18 jcf Agrega nombreLoc
+--18/01/19 jcf Agrega ruta y nombre del logo
 --
 return
 ( 
@@ -40,8 +41,12 @@ select rtrim(replace(ci.TAXREGTN, 'RFC ', '')) rfc,
 	nt.param3 otrosDatos,	--cfdi 3.2 deprecated
 	nt.param4 incluyeAddendaDflt,
 	nt.param5 utc,
-	nt.param6 comercioExterior
-from DYNAMICS..SY01500 ci			--sy_company_mstr
+	nt.param6 comercioExterior,
+	'file:'+ replace(img.fileName, '\', '/')  rutaYNombreDelLogo
+from DYNAMICS..SY01500 ci				--sy_company_mstr
+outer apply (select top(1) im.fileName 
+			from DYNAMICS..SY01501 im	--img
+			where im.cmpanyid = ci.cmpanyid) img
 cross apply dbo.fCfdiParametros('VERSION', 'IMPUESTOS', 'OTROS', 'ADDENDADFLT', 'UTC', 'CFDIEXPORTA', ci.LOCATNID) nt
 where ci.INTERID = DB_NAME()
 )

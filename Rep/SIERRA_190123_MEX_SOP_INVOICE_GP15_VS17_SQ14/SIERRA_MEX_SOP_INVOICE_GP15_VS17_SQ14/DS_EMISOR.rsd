@@ -3,7 +3,7 @@
   <DataSet Name="DataSet1">
     <Query>
       <DataSourceReference>GPZMMEX</DataSourceReference>
-      <CommandText>SELECT rfc, nombreLoc, calle, colonia, ciudad, municipio, estado, pais, codigoPostal
+      <CommandText>SELECT rfc, nombreLoc, calle, colonia, ciudad, municipio, estado, pais, codigoPostal, rutaYNombreDelLogo
 FROM dbo.fCfdEmisor()</CommandText>
     </Query>
     <Fields>
@@ -41,6 +41,10 @@ FROM dbo.fCfdEmisor()</CommandText>
       </Field>
       <Field Name="codigoPostal">
         <DataField>codigoPostal</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="rutaYNombreDelLogo">
+        <DataField>rutaYNombreDelLogo</DataField>
         <rd:TypeName>System.String</rd:TypeName>
       </Field>
     </Fields>
