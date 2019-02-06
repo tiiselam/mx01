@@ -51,7 +51,6 @@
         <ComponentRef Id="QRCodeLib"/>
         <ComponentRef Id="Compresor"/>
         <ComponentRef Id="Reporteador"/>
-        <ComponentRef Id="Documentacion"/>
         <ComponentGroupRef Id="ProductComponents"/>
       </Feature>
     </Feature>
@@ -149,72 +148,9 @@
               <File Id="Compresor" Name="Ionic.Zip.Reduced.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Ionic.Zip.Reduced.dll" DiskId="1" KeyPath="yes"/>
             </Component>
 
-            <Component Id="Documentacion" Guid="6495A0D2-610D-49e5-99E2-E6EB3F0357C5">
+            <!--<Component Id="Documentacion" Guid="6495A0D2-610D-49e5-99E2-E6EB3F0357C5">
               <File Id="DocInstalacion" Name="Instalación de GP factura digital cfdi.pdf" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Instalación de GP factura digital cfdi.pdf" DiskId="1" KeyPath="yes"/>
               <File Id="ManualUsuario" Name="Manual de Usuario GP Factura Digital cfdi.pdf" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Manual de Usuario GP Factura Digital cfdi.pdf" DiskId="1" KeyPath="no"/>
-            </Component>
-
-            <!--<Component Id="SqlComponentDyn" Guid="116E3271-192B-4ea7-8CB3-E91CDA1B8C03" KeyPath="yes">
-              <sql:SqlDatabase Id="SqlDatabaseDyn" User="SQLUser" Server="[SQLSERVER]" Database="DYNAMICS" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes">
-                <sql:SqlScript Id="Createview01" BinaryKey="Createview01" ExecuteOnInstall="yes" Sequence="30" ContinueOnError="no"/>
-                <sql:SqlScript Id="Grants02" BinaryKey="Grants02" ExecuteOnInstall="yes" Sequence="1000" ContinueOnError="no"/>
-              </sql:SqlDatabase>
-            </Component>-->
-
-            <!--<Component Id="SqlComponent" Guid="7c32cf65-e060-4c7f-b5dd-d85c181da89c" KeyPath="yes">
-              <sql:SqlDatabase Id="SqlDatabase" User="SQLUser" Server="[SQLSERVER]" Database="[SQLDATABASE]" CreateOnInstall="no" DropOnUninstall="no" ContinueOnError="yes" >
-                <sql:SqlScript Id="CreateBaseView02" BinaryKey="CreateBaseView02" ExecuteOnInstall="yes" Sequence="02" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateBaseView04" BinaryKey="CreateBaseView04" ExecuteOnInstall="yes" Sequence="04" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateBaseView06" BinaryKey="CreateBaseView06" ExecuteOnInstall="yes" Sequence="06" ExecuteOnReinstall="yes"/>
-
-                <sql:SqlScript Id="CreateFun03" BinaryKey="CreateFun03" ExecuteOnInstall="yes" Sequence="07" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj03" BinaryKey="CreateObj03" ExecuteOnInstall="yes" Sequence="08" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj04" BinaryKey="CreateObj04" ExecuteOnInstall="yes" Sequence="08" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj10" BinaryKey="CreateObj10" ExecuteOnInstall="yes" Sequence="09" ExecuteOnReinstall="yes"/>
-
-                <sql:SqlScript Id="Createview10" BinaryKey="Createview10" ExecuteOnInstall="yes" Sequence="10" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfun12" BinaryKey="Createfun12" ExecuteOnInstall="yes" Sequence="12" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj15" BinaryKey="CreateObj15" ExecuteOnInstall="yes" Sequence="15" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj18" BinaryKey="CreateObj18" ExecuteOnInstall="yes" Sequence="18" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createtrig35" BinaryKey="Createtrig35" ExecuteOnInstall="yes" Sequence="35" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview40" BinaryKey="Createview40" ExecuteOnInstall="yes" Sequence="40" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfun50" BinaryKey="Createfun50" ExecuteOnInstall="yes" Sequence="50" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createtable60" BinaryKey="Createtable60" ExecuteOnInstall="yes" Sequence="60" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createtable70" BinaryKey="Createtable70" ExecuteOnInstall="yes" Sequence="70" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfun72" BinaryKey="Createfun72" ExecuteOnInstall="yes" Sequence="72" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj75" BinaryKey="CreateObj75" ExecuteOnInstall="yes" Sequence="75" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createsp80" BinaryKey="Createsp80" ExecuteOnInstall="yes" Sequence="80" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview83" BinaryKey="Createview83" ExecuteOnInstall="yes" Sequence="83" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview84" BinaryKey="Createview84" ExecuteOnInstall="yes" Sequence="84" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfunc85" BinaryKey="Createfunc85" ExecuteOnInstall="yes" Sequence="85" ExecuteOnReinstall="yes"/>
-
-                <sql:SqlScript Id="Createview90" BinaryKey="Createview90" ExecuteOnInstall="yes" Sequence="90" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj92" BinaryKey="CreateObj92" ExecuteOnInstall="yes" Sequence="92" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj94" BinaryKey="CreateObj94" ExecuteOnInstall="yes" Sequence="94" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createfunc98" BinaryKey="Createfunc98" ExecuteOnInstall="yes" Sequence="98" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview100" BinaryKey="Createview100" ExecuteOnInstall="yes" Sequence="100" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview110" BinaryKey="Createview110" ExecuteOnInstall="yes" Sequence="110" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview115" BinaryKey="Createview115" ExecuteOnInstall="yes" Sequence="115" ExecuteOnReinstall="yes"/>
-
-                <sql:SqlScript Id="CreateObj117" BinaryKey="CreateObj117" ExecuteOnInstall="yes" Sequence="117" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj120" BinaryKey="CreateObj120" ExecuteOnInstall="yes" Sequence="120" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj122" BinaryKey="CreateObj122" ExecuteOnInstall="yes" Sequence="122" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj123" BinaryKey="CreateObj123" ExecuteOnInstall="yes" Sequence="123" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj124" BinaryKey="CreateObj124" ExecuteOnInstall="yes" Sequence="124" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj125" BinaryKey="CreateObj125" ExecuteOnInstall="yes" Sequence="125" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj126" BinaryKey="CreateObj126" ExecuteOnInstall="yes" Sequence="126" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj128" BinaryKey="CreateObj128" ExecuteOnInstall="yes" Sequence="128" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj129" BinaryKey="CreateObj129" ExecuteOnInstall="yes" Sequence="129" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj130" BinaryKey="CreateObj130" ExecuteOnInstall="yes" Sequence="130" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="CreateObj140" BinaryKey="CreateObj140" ExecuteOnInstall="yes" Sequence="140" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Grants190" BinaryKey="Grants190" ExecuteOnInstall="yes" Sequence="190" ExecuteOnReinstall="yes"/>
-
-                --><!--<sql:SqlScript Id="Createfunc219" BinaryKey="Createfunc119" ExecuteOnInstall="yes" Sequence="119" ExecuteOnReinstall="yes"/>--><!--
-                <sql:SqlScript Id="Createfunc210" BinaryKey="Createfunc210" ExecuteOnInstall="yes" Sequence="210" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview220" BinaryKey="Createview220" ExecuteOnInstall="yes" Sequence="220" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Createview225" BinaryKey="Createview225" ExecuteOnInstall="yes" Sequence="225" ExecuteOnReinstall="yes"/>
-                <sql:SqlScript Id="Grants230" BinaryKey="Grants230" ExecuteOnInstall="yes" Sequence="230" ExecuteOnReinstall="yes"/>
-              </sql:SqlDatabase>
             </Component>-->
 
     </ComponentGroup>

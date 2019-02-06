@@ -9,5 +9,5 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_App\cfdiS
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\E_Implementation\MxFElctr_App\cfdiSetup\bin\Release\cfdiSetup.wixpdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\cfdiSetup\bin\Release\cfdiSetup.msi
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\cfdiSetup\bin\Release\cfdiSetup.wixpdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Release\cfdiSetup.msi
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Release\cfdiSetup.wixpdb
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Release\cfdiSetupV734.msi
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\cfdiSetup\bin\Release\cfdiSetupV734.wixpdb

@@ -50,10 +50,10 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Debug\Ioni
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Debug\stdole.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Debug\Comun.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Debug\Microsoft.ReportViewer.WinForms.xml
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.Cache
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.csprojAssemblyReference.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.winVisorDeReportes.resources
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.csproj.GenerateResource.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.csproj.CoreCompileInputs.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.csproj.CopyComplete
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.dll
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\obj\Debug\Reporteador.pdb
