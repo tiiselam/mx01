@@ -19,11 +19,11 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\QRCodeLib\obj\Deb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\QRCodeLib\obj\Debug\QRCodeLib.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\QRCodeLib\QRCodeLib.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\QRCodeLib\QRCodeLib.pdb
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csprojAssemblyReference.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\ThoughtWorks.QRCode.Properties.Resources.resources
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csproj.GenerateResource.Cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csproj.GenerateResource.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csproj.CoreCompileInputs.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\QRCodeLib.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\QRCodeLib.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csprojAssemblyReference.cache
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\QRCodeLib\obj\Debug\QRCodeLib.csproj.CoreCompileInputs.cache

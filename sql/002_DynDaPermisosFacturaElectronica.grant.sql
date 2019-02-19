@@ -13,6 +13,7 @@ grant select on dbo.sy01500 to rol_cfdigital, dyngrp;
 grant select on dbo.vwCfdCompannias to rol_cfdigital, dyngrp;
 grant select on dbo.MC40200 to rol_cfdigital, dyngrp;
 grant select on dbo.MC00100 to rol_cfdigital, dyngrp;
+grant select on dbo.SY01501 to rol_cfdigital, dyngrp;
 
 --use dynamics
 --EXEC sp_addrolemember 'rol_cfdigital', 'ARGTII-DIR-02\Invitado' ;

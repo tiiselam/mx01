@@ -38,7 +38,9 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\En
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Comun.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Ionic.Zip.Reduced.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Comun.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.csprojResolveAssemblyReference.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.pdb
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.XmlSerializers.dll
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.csprojAssemblyReference.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.csproj.CoreCompileInputs.cache
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\obj\Release\Encriptador.csproj.CopyComplete

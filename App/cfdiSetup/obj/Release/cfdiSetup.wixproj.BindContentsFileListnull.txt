@@ -1,11 +1,9 @@
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Ionic.Zip.Reduced.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Comun.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Instalación de GP factura digital cfdi.pdf
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\EjecutableEncriptador.exe
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\bin\Release\EMailManejador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Encriptador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Encriptador.XmlSerializers.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\G_Deployment_And_Training\Manual de Usuario GP Factura Digital cfdi.pdf
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\MaquinaDeEstados.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.Common.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.dll
