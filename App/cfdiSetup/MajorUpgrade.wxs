@@ -142,7 +142,8 @@
               <File Id="Microsoft.ReportViewer.WinForms.xml" Name="Microsoft.ReportViewer.WinForms.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.xml" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="QRCodeLib" Guid="CC0250EC-B886-42e4-9CDB-B570C71CB385">
-              <File Id="QRCodeLib" Name="$(var.QRCodeLib.TargetFileName)" Source="$(var.QRCodeLib.TargetPath)" DiskId="1" KeyPath="yes"/>
+              <File Id="BarCodeInterface" Name="$(var.BarCodeInterface.TargetFileName)" Source="$(var.BarCodeInterface.TargetPath)" DiskId="1" KeyPath="yes"/>
+              <File Id="QRCoder" Name="$(var.QRCoder.TargetFileName)" Source="$(var.QRCoder.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Compresor" Guid="FC22CA1D-4E4F-47e5-AE5C-8D6AD882E1DD">
               <File Id="Compresor" Name="Ionic.Zip.Reduced.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Ionic.Zip.Reduced.dll" DiskId="1" KeyPath="yes"/>

@@ -535,7 +535,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(272, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(152, 24);
             this.menuStrip1.TabIndex = 14;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -567,7 +567,7 @@
             // 
             this.genFacturaElectrónicaV10ToolStripMenuItem.Name = "genFacturaElectrónicaV10ToolStripMenuItem";
             this.genFacturaElectrónicaV10ToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.3.4";
+            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.8.3.4";
             // 
             // toolStripMenuItem2
             // 

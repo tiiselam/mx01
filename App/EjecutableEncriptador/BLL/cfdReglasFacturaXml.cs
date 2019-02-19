@@ -12,7 +12,8 @@ using EjecutableEncriptador;
 using Comun;
 using Reporteador;
 using MaquinaDeEstados;
-using QRCodeLib;
+using BarCodeInterface;
+//using QRCodeLib;
 
 namespace cfd.FacturaElectronica
 {
@@ -22,7 +23,7 @@ namespace cfd.FacturaElectronica
         private int numMensajeError = 0;
         private ConexionAFuenteDatos _Conexion = null;
         private Parametros _Param = null;
-        CodigoDeBarras codigobb;
+        ICodigoDeBarras codigobb;
         Documento reporte;
         vwCfdTransaccionesDeVenta cfdiTransacciones;
         vwCfdiDatosDelXml_wrapper cfdiDatosXml;
@@ -50,8 +51,8 @@ namespace cfd.FacturaElectronica
             reporte = new Documento(_Conexion, _Param);
             codigobb = new CodigoDeBarras();
 
-            numMensajeError = codigobb.iErr + reporte.numErr;
-            ultimoMensaje = codigobb.strMensajeErr + reporte.mensajeErr;
+            numMensajeError = reporte.numErr;
+            ultimoMensaje = reporte.mensajeErr;
 
             if (numMensajeError != 0)
                 throw new ArgumentException(ultimoMensaje);
@@ -198,8 +199,8 @@ namespace cfd.FacturaElectronica
         /// <returns></returns>
         public void ActualizaFacturaEmitida(short Soptype, string Sopnumbe, string idusuario, string eBaseAnterior, string eBaseNuevo, string eBinarioActual, string mensajeEA)
         {
-            ultimoMensaje = "";
-            numMensajeError = 0;
+            //ultimoMensaje = "";
+            //numMensajeError = 0;
             cfdLogFacturaXML xmlEmitido = new cfdLogFacturaXML(_Conexion.ConnStr);
             xmlEmitido.Where.Soptype.Value = Soptype;
             xmlEmitido.Where.Soptype.Operator = WhereParameter.Operand.Equal;
@@ -209,30 +210,30 @@ namespace cfd.FacturaElectronica
             xmlEmitido.Where.Estado.Conjuction = WhereParameter.Conj.And;
             xmlEmitido.Where.Estado.Value = eBaseAnterior;      // "emitido";
             xmlEmitido.Where.Estado.Operator = WhereParameter.Operand.Equal;
-            try
+            //try
+            //{
+            if (xmlEmitido.Query.Load())
             {
-                if (xmlEmitido.Query.Load())
-                {
-                    if (!eBaseAnterior.Equals(eBaseNuevo))
-                        xmlEmitido.Estado = eBaseNuevo;         // "anulado";
-                    xmlEmitido.FechaAnulacion = DateTime.Now;
-                    xmlEmitido.IdUsuarioAnulacion = Utiles.Derecha(idusuario, 10);
-                    xmlEmitido.EstadoActual = eBinarioActual;
-                    xmlEmitido.MensajeEA = Utiles.Derecha(mensajeEA, 255);
-                    xmlEmitido.Save();
-                    //ultimoMensaje = "Completado.";
-                }
-                else
-                {
-                    ultimoMensaje = "No está en la bitácora con estado 'emitido'.";
-                    numMensajeError++;
-                }
+                if (!eBaseAnterior.Equals(eBaseNuevo))
+                    xmlEmitido.Estado = eBaseNuevo;         // "anulado";
+                xmlEmitido.FechaAnulacion = DateTime.Now;
+                xmlEmitido.IdUsuarioAnulacion = Utiles.Derecha(idusuario, 10);
+                xmlEmitido.EstadoActual = eBinarioActual;
+                xmlEmitido.MensajeEA = Utiles.Derecha(mensajeEA, 255);
+                xmlEmitido.Save();
             }
-            catch (Exception eAnula)
+            else
             {
-                ultimoMensaje = "Contacte al administrador. Error al acceder la base de datos. [ActualizaFacturaEmitida] " + eAnula.Message;
-                numMensajeError++;
+                throw new KeyNotFoundException(Sopnumbe.Trim() + " No está en la bitácora con estado 'emitido'.");
+                //ultimoMensaje = "No está en la bitácora con estado 'emitido'.";
+                //numMensajeError++;
             }
+            //}
+            //catch (Exception eAnula)
+            //{
+            //    ultimoMensaje = "Contacte al administrador. Error al acceder la base de datos. [ActualizaFacturaEmitida] " + eAnula.Message;
+            //    numMensajeError++;
+            //}
         }
 
         /// <summary>
@@ -263,26 +264,24 @@ namespace cfd.FacturaElectronica
                 RegistraLogDePagosSimultaneos(trxVenta.Soptype, trxVenta.Sopnumbe, mEstados.eBinarioNuevo, mEstados.EnLetras(mEstados.eBinarioNuevo), mEstados.eBinActualConError, mEstados.EnLetras(mEstados.eBinActualConError));
 
                 //Genera y guarda código de barras bidimensional
-                codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + uuid.Trim() + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" +  Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(sello, 8)
-                                                        , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
+                codigobb.GeneraCodigoDeBarras(string.Empty, 
+                                            _Param.URLConsulta + "?&id=" + uuid.Trim() + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" +  Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(sello, 8)
+                                            , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
                 //Genera pdf
-                if (codigobb.iErr == 0)
-                    reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
+                reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
 
                 //Comprime el archivo xml
                 if (_Param.zip)
                     Utiles.Zip(rutaYNomArchivo, ".xml");
 
-                numMensajeError = codigobb.iErr + reporte.numErr + Utiles.numErr;
-                ultimoMensaje = codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr;
+                numMensajeError = reporte.numErr + Utiles.numErr;
+                ultimoMensaje = reporte.mensajeErr + " " + Utiles.msgErr;
 
-                //Si hay error en cbb o pdf o zip anota en la bitácora
-                if (codigobb.iErr + reporte.numErr + Utiles.numErr != 0)
+                //Si hay error en pdf o zip anota en la bitácora
+                if (numMensajeError != 0)
                     ActualizaFacturaEmitida(trxVenta.Soptype, trxVenta.Sopnumbe, _Conexion.Usuario, "emitido", "emitido", mEstados.eBinActualConError,
                                             mEstados.EnLetras(mEstados.eBinActualConError) + ultimoMensaje.Trim());
 
-                if (numMensajeError + codigobb.iErr + reporte.numErr + Utiles.numErr != 0)
-                    throw new ArgumentNullException(codigobb.strMensajeErr + " " + reporte.mensajeErr + " " + Utiles.msgErr + " " + ultimoMensaje);
             }
             catch (DirectoryNotFoundException dn)
             {
@@ -294,10 +293,6 @@ namespace cfd.FacturaElectronica
                 ultimoMensaje = "Verifique permisos de escritura en: " + trxVenta.RutaXml + ". No se pudo guardar el archivo xml ni registrar el documento en la bitácora. ";
                 throw new IOException(ultimoMensaje, ioe);
             }
-            catch (ArgumentNullException)
-            {
-                throw;
-            }
             catch (Exception eAFE)
             {
                 if (eAFE.Message.Contains("denied"))
@@ -306,6 +301,9 @@ namespace cfd.FacturaElectronica
                     ultimoMensaje = "Contacte al administrador. No se pudo guardar el archivo XML y/o registrar la Bitácora. " + eAFE.Message;
                 throw new Exception(ultimoMensaje, eAFE);
             }
+
+            if (numMensajeError != 0)
+                throw new ArgumentNullException(ultimoMensaje);
         }
 
         private void getDatosDelXml(short soptype, string sopnumbe)
@@ -348,11 +346,6 @@ namespace cfd.FacturaElectronica
         /// <returns></returns>
         public bool AlmacenaEnRepositorio(vwCfdTransaccionesDeVenta trxVenta, string eBase, string eBinario, string enLetras)
         {
-            ultimoMensaje = "";
-            numMensajeError = 0;
-
-            try
-            {
                 string nomArchivo = Utiles.FormatoNombreArchivo(trxVenta.Docid + trxVenta.Sopnumbe + "_" + trxVenta.s_CUSTNMBR, trxVenta.s_NombreCliente, 20);
                 string rutaYNomArchivo = trxVenta.RutaXml.Trim() + nomArchivo;
 
@@ -360,27 +353,19 @@ namespace cfd.FacturaElectronica
                 if (_Param.emite)
                 {
                     getDatosDelXml(trxVenta.Soptype, trxVenta.Sopnumbe);
-                    codigobb.GenerarQRBidimensional(_Param.URLConsulta + "?&id=" + x_uuid + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(x_sello, 8)
+                    codigobb.GeneraCodigoDeBarras(string.Empty,
+                                                _Param.URLConsulta + "?&id=" + x_uuid + "&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente + "&tt=" + Math.Abs(trxVenta.Total).ToString() + "&fe=" + Utiles.Derecha(x_sello, 8)
                                                 , trxVenta.RutaXml.Trim() + "cbb\\" + nomArchivo + ".jpg");
                 }
                 //Genera pdf
-                if (codigobb.iErr == 0)
-                    reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
+                reporte.generaEnFormatoPDF(rutaYNomArchivo, trxVenta.Soptype, trxVenta.Sopnumbe, trxVenta.EstadoContabilizado);
 
-                numMensajeError =  reporte.numErr + codigobb.iErr;
-                ultimoMensaje = reporte.mensajeErr + codigobb.strMensajeErr;
+                ultimoMensaje = reporte.mensajeErr;
 
-                if (reporte.numErr==0 && codigobb.iErr==0)
+                if (reporte.numErr==0)
                     RegistraLogDeArchivoXML(trxVenta.Soptype, trxVenta.Sopnumbe, "Almacenado en " + rutaYNomArchivo, "0", _Conexion.Usuario, "", eBase, eBinario, enLetras);
 
                 return ultimoMensaje.Equals(string.Empty);
-            }
-            catch (Exception eAFE)
-            {
-                ultimoMensaje = "Contacte a su administrador. No se pudo guardar el archivo PDF ni registrar la Bitácora. [AlmacenaEnRepositorio()] " + eAFE.Message;
-                numMensajeError++;
-                return false;
-            }
         }
     }
 }

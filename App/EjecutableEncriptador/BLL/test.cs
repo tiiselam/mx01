@@ -9,7 +9,7 @@ using Comun;
 using EjecutableEncriptador;
 using Encriptador;
 using MaquinaDeEstados;
-using QRCodeLib;
+using BarCodeInterface;
 
 namespace cfd.FacturaElectronica
 {
@@ -118,7 +118,7 @@ namespace cfd.FacturaElectronica
                 cfdi.Add(new CfdiUUID() { Sopnumbe = "00000783", Uuid = "F345941F-CA20-4E33-9130-B984E7FF2E17", Sello = "MMiO7ZXe/SYdUtmCPhcrs0QCnoR26uwBt7GZ979+jk06vDd70ybDrc/Y4RcbJnsP935Ql9QQmk/BVKS3ZlzTCnI4H9Xlerb5QxrSuvecmvio/+GnAuVhVmgFN4fRzo/FASJJ/9rJQmABWw5EUdrX1I2ERrKl1vxicmiYWlijDJ8nv9OLyXgp1mMaQvlty8nh5Psfpfq5rhMMfWxfsuPA5DfnQQ7fsS7N95tlnSI7R5xvmiMHZyK9NdZ1bMXweOdu0IaQhq99SLEG2/CD/02gKNKqY1Cq9aTO9EVzeX9AwybLUP3OWtMS7Um2VeMS3z6tuN/MHdmEVx/DIf9aIynGmQ==" });
                 cfdi.Add(new CfdiUUID() { Sopnumbe = "00000784", Uuid = "E88A5388-9EBA-4B23-A040-7769F7A57C9C", Sello = "K87rBYFBobO7QrHq5/AfKcqb/JW3HH0jaEjd3iz+lAWnHqBd7FTSw8oy/ilT+TyVkOmSVQNZzheaDFQC82hM3XlzW6fdDeBgb/r4TP4V00o++20wN3ZRqi3iQgb56Yi9783hWRUnGGtmQ425cxPdox19+gEqzNy43Iueagc/zdWOzN16QVY77vHspjd4HUPCnwiFtVI37sHRven4tg9px0llwVaOO6tN1Tlx/zCG1VC0aq5x5wfEg6cLImMgT04wDrAPY+jl3uKXA5hXdehOOdGruk4B08xLU6SB93I3US2JtDuzUhkgLRQjE5xuLMtYtiRC1PwbfsDOaVDvCOk2QA==" });
                 cfdi.Add(new CfdiUUID() { Sopnumbe = "00000785", Uuid = "E380760F-F6EA-40AD-A800-EC2F7CA0D4A7", Sello = "f664+FXDnXPajlIsVX2tRTrZEwqJg9Zdov1fXZUvjvCtD0g7D8Yu/khFdda9vKsHN9rxmn59crSmj1Fcq/ewTKAfbddOXMDDAX5wsFd+Gk3FXlWiFH2tBKocWhEdDu5wuqfxetu7zPzAn7D+FqeYy05YJ6TUNkEzvzDdN/sp0zkHRkidogwe+dkENZzZ1WKklJ3DJFpVKdC1MoKcBF/9FxrL9Ktga8ucml5qMFuA9rpxCAkpdBaE/Guvd0qoTDsTZJZ56jWkHtyCdfMbrQuhM/ceW1Uxs/38xb4fc5nm7xJsERvo4qYaxA4asMHezU3d95lwdq34c0WY2ZLDjUusaQ==" });
-                cfdi.Add(new CfdiUUID() { Sopnumbe = "00000786", Uuid = "FB188095-E257-462A-875D-185F74387EA2", Sello = "S5uLMkMw70I3rz7kdLHD0wHARXFiTASkNzchS0SGScmKQDolVz2tICRz/7FYbQynRo7ypIdT8yk8b5V1DJWCiiIy5mxLEBA+XBA+Ms3vPv259wi7W7qdD5OAXpcN027byeYvXexjlldw+64rN2nrBpcNe/KKgXBPrN8zKC6SoVDqRIZz5qOpMA/Fr05/5o4dYF2SBvtkC/w1lmMuQF4+lLYq4r15if40BCupcx591D8MsiF2n9uweahWdCHiONO7r4713iSpmo68NrSZ0QLi/A3O3EMyE8OnkQatpu3sJuhiOQSMr7+mAjYdMVaXslUhfYK9xEVvADeVzodbTN5DHg==" });
+                cfdi.Add(new CfdiUUID() { Sopnumbe = "A1880", Uuid = "FB188095-E257-462A-875D-185F74387EA2", Sello = "S5uLMkMw70I3rz7kdLHD0wHARXFiTASkNzchS0SGScmKQDolVz2tICRz/7FYbQynRo7ypIdT8yk8b5V1DJWCiiIy5mxLEBA+XBA+Ms3vPv259wi7W7qdD5OAXpcN027byeYvXexjlldw+64rN2nrBpcNe/KKgXBPrN8zKC6SoVDqRIZz5qOpMA/Fr05/5o4dYF2SBvtkC/w1lmMuQF4+lLYq4r15if40BCupcx591D8MsiF2n9uweahWdCHiONO7r4713iSpmo68NrSZ0QLi/A3O3EMyE8OnkQatpu3sJuhiOQSMr7+mAjYdMVaXslUhfYK9xEVvADeVzodbTN5DHg==" });
 
               do
                 {
@@ -129,9 +129,10 @@ namespace cfd.FacturaElectronica
 
                         var comp = cfdi.Where(x => x.Sopnumbe == trxVenta.Sopnumbe).First();
 
-                        CodigoDeBarras cbb = new CodigoDeBarras();
-                        cbb.GenerarQRBidimensional(_Param.URLConsulta + "?&id="+comp.Uuid+"&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" + trxVenta.Total.ToString() + "&fe="+ Utiles.Derecha(comp.Sello, 8)
-                                                    , @"C:\GPUsuario\GPCfdi\feGettyMex\" + "cbb\\"+ nomArchivo + ".jpg");
+                        ICodigoDeBarras cbb = new CodigoDeBarras();
+                        cbb.GeneraCodigoDeBarras(string.Empty, 
+                                                _Param.URLConsulta + "?&id="+comp.Uuid+"&re=" + trxVenta.Rfc + "&rr=" + trxVenta.IdImpuestoCliente.Trim() + "&tt=" + trxVenta.Total.ToString() + "&fe="+ Utiles.Derecha(comp.Sello, 8)
+                                                , trxVenta.RutaXml + "cbb\\"+ nomArchivo + ".jpg");
                     }
                     catch (Exception lo)
                     {

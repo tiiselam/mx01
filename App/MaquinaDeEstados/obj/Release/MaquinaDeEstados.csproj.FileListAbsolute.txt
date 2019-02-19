@@ -22,13 +22,3 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\MaquinaDeEstados\
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.csprojResolveAssemblyReference.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mxfe\MxFElctr_App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\MaquinaDeEstados.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\MaquinaDeEstados.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\Comun.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\Ionic.Zip.Reduced.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\bin\Release\Comun.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.dll
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.csprojAssemblyReference.cache
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.csproj.CoreCompileInputs.cache
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\MaquinaDeEstados\obj\Release\MaquinaDeEstados.csproj.CopyComplete
