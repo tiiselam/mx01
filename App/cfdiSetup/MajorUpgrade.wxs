@@ -129,21 +129,21 @@
             </Component>
             <Component Id="Encriptador" Guid="AE9D4AE3-A494-44b5-BF8A-45B5FA987BB8">
               <File Id="Encriptador" Name="$(var.Encriptador.TargetFileName)" Source="$(var.Encriptador.TargetPath)" DiskId="1" KeyPath="yes"/>
-              <File Id="Encriptador.XmlSerializers" Name="Encriptador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Encriptador\bin\Release\Encriptador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Encriptador.XmlSerializers" Name="Encriptador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\Encriptador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="MyGeneration.dOOdads_2005" Guid="336CAF4D-F98E-45e0-AE15-DF23EAB24D75">
               <File Id="MyGeneration.dOOdads_2005" Name="$(var.MyGeneration.dOOdads_2005.TargetFileName)" Source="$(var.MyGeneration.dOOdads_2005.TargetPath)" DiskId="1" KeyPath="yes"/>
             </Component>
             <Component Id="Reporteador" Guid="B6471120-14DB-43c4-A784-7C6DB1531489">
               <File Id="Reporteador" Name="$(var.Reporteador.TargetFileName)" Source="$(var.Reporteador.TargetPath)" DiskId="1" KeyPath="yes"/>
-              <File Id="Reporteador.XmlSerializers" Name="Reporteador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Reporteador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.Common" Name="Microsoft.ReportViewer.Common.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.Common.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.WinForms" Name="Microsoft.ReportViewer.WinForms.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.dll" DiskId="1" KeyPath="no"/>
-              <File Id="Microsoft.ReportViewer.WinForms.xml" Name="Microsoft.ReportViewer.WinForms.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Reporteador\bin\Release\Microsoft.ReportViewer.WinForms.xml" DiskId="1" KeyPath="no"/>
+              <File Id="Reporteador.XmlSerializers" Name="Reporteador.XmlSerializers.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\Reporteador.XmlSerializers.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.Common" Name="Microsoft.ReportViewer.Common.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\Microsoft.ReportViewer.Common.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.WinForms" Name="Microsoft.ReportViewer.WinForms.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\Microsoft.ReportViewer.WinForms.dll" DiskId="1" KeyPath="no"/>
+              <File Id="Microsoft.ReportViewer.WinForms.xml" Name="Microsoft.ReportViewer.WinForms.xml" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\Microsoft.ReportViewer.WinForms.xml" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="QRCodeLib" Guid="CC0250EC-B886-42e4-9CDB-B570C71CB385">
-              <File Id="BarCodeInterface" Name="$(var.BarCodeInterface.TargetFileName)" Source="$(var.BarCodeInterface.TargetPath)" DiskId="1" KeyPath="yes"/>
-              <File Id="QRCoder" Name="$(var.QRCoder.TargetFileName)" Source="$(var.QRCoder.TargetPath)" DiskId="1" KeyPath="yes"/>
+              <File Id="BarCodeInterface" Name="BarCodeInterface.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\BarCodeInterface.dll" DiskId="1" KeyPath="yes"/>
+              <File Id="QRCoder" Name="QRCoder.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EjecutableEncriptador\bin\Release\QRCoder.dll" DiskId="1" KeyPath="no"/>
             </Component>
             <Component Id="Compresor" Guid="FC22CA1D-4E4F-47e5-AE5C-8D6AD882E1DD">
               <File Id="Compresor" Name="Ionic.Zip.Reduced.dll" Source="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\bin\Release\Ionic.Zip.Reduced.dll" DiskId="1" KeyPath="yes"/>
