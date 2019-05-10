@@ -20,3 +20,4 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Debug\E
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Debug\EMailManejador.csproj.CoreCompileInputs.cache
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Debug\EMailManejador.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Debug\EMailManejador.pdb
+C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\EMailManejador\obj\Debug\EMailManejador.csprojAssemblyReference.cache

@@ -308,8 +308,6 @@ namespace cfd.FacturaElectronica
 
         private void getDatosDelXml(short soptype, string sopnumbe)
         {
-            try
-            {
                 x_uuid = string.Empty;
                 x_sello = string.Empty;
                 cfdiDatosXml.Where.Sopnumbe.Value = sopnumbe;
@@ -327,11 +325,6 @@ namespace cfd.FacturaElectronica
                     x_sello = cfdiDatosXml.Sello;
                 }
 
-            }
-            catch (Exception eIddoc)
-            {
-                ultimoMensaje = "Contacte al administrador. No se puede acceder a la base de datos." + eIddoc.Message;
-            }
         }
 
         /// <summary>

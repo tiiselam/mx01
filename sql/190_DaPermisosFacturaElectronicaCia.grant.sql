@@ -33,3 +33,4 @@ grant select on dbo.vwCfdiTrxCobros to rol_cfdigital;
 
 grant select on dbo.vwCfdiTrasladosUserInterface to rol_cfdigital;
 grant select on dbo.vwCfdiTrasladosDatosParaImprimir to rol_cfdigital;
+grant select on dbo.vwCfdiDatosDelXml to rol_cfdigital;

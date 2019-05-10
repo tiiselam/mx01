@@ -19,4 +19,3 @@ C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Debug\Comun.cspr
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Debug\Comun.csproj.CopyComplete
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Debug\Comun.dll
 C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Debug\Comun.pdb
-C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\App\Comun\obj\Debug\Comun.csprojAssemblyReference.cache

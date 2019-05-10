@@ -5,6 +5,7 @@
   <usuariosql>[valor: indicar na si la seguridad es integrada]</usuariosql>
   <passwordsql>na</passwordsql>
   <compannia bd="[NOMBRE BD DE LA COMPAÑIA]">
+    <testQR>[1: probar generar sólo qr 0: normal]</testQR>
     <URLArchivoXSD>[RUTA Y ARCHIVO XSD DE FACTURAS]</URLArchivoXSD>
     <URLArchivoPagosXSD>[RUTA Y ARCHIVO XSD DE PAGOS]</URLArchivoPagosXSD>
     <URLArchivoXSLT>[RUTA Y ARCHIVO XSLT]</URLArchivoXSLT>

@@ -5,7 +5,8 @@
   <usuariosql>sa</usuariosql>
   <passwordsql>-</passwordsql>
 	<compannia bd="GPEX">
-		<URLArchivoXSD>na</URLArchivoXSD>
+    <testQR>1</testQR>
+    <URLArchivoXSD>na</URLArchivoXSD>
 		<URLArchivoPagosXSD>na</URLArchivoPagosXSD>
 		<URLArchivoXSLT>na</URLArchivoXSLT>
 		<URLConsulta>na</URLConsulta>
