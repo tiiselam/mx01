@@ -354,7 +354,7 @@ IF OBJECT_ID ('dbo.fCfdiConceptos') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptos
 GO
 
-create function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
+alter function dbo.fCfdiConceptos(@p_soptype smallint, @p_sopnumbe varchar(21), @p_subtotal numeric(19,6), @p_descuento numeric(19,6))
 returns table 
 as
 --Propósito. Obtiene las líneas de una factura 
@@ -363,6 +363,7 @@ as
 --05/01/18 jcf Agrega idExporta
 --05/04/18 jcf Agrega descuento a nc
 --09/05/18 jcf Agrega cuenta predial
+--04/06/19 jcf Agrega descripción ampliada de int_sopline_data para Getty. Se debe crear la tabla int_sopline_data previamente.
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
@@ -372,13 +373,21 @@ return(
 			Concepto.quantity			Cantidad, 
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
-			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
+			case when rtrim(isnull(isd.ARTIC_DESC, '')) = '' then
+				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) 
+			else
+				dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(isd.ARTIC_NAME) +' '+ RTRIM(isd.ARTIC_DESC)), 10) 
+			end Descripcion, 
 			Concepto.ORUNTPRC 		ValorUnitario,
 			Concepto.importe  		Importe,
 			Concepto.descuento 		Descuento,
 			Concepto.idExporta,
 			p.param1, cup.Numero cpredial
 		from vwCfdiSopLineasTrxVentas Concepto
+			left join dbo.INT_SOPLINE_DATA isd
+				on isd.sopnumbe = Concepto.sopnumbe
+				and isd.LNITMSEQ = Concepto.LNITMSEQ
+				and isd.soptype = Concepto.soptype
 			outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
