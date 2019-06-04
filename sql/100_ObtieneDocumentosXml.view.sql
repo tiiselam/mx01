@@ -22,6 +22,7 @@ as
 --24/10/17 jcf Creación cfdi 3.3
 --03/01/18 jcf Corrige numPedimento
 --16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
+--03/06/19 jcf Corrige filtro por longitud del código de pedimento cuando viene en los artributos del lote
 --
 begin
 	declare @cncp xml;
@@ -31,10 +32,8 @@ begin
 		select @cncp = (
 		   select ad.NumeroPedimento	--, ad.fecha
 		   from (
-				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
+				--En caso de usar número de lote, la info aduanera viene en el número de lote o los atributos del lote
 				select top 1 
-						--stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '') 
-						--						, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 						case when dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) = '' then
 								stuff(stuff(stuff(REPLACE(
 													la.LOTNUMBR, ' ', '') 
@@ -60,7 +59,7 @@ begin
 					and (
 						len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
 						or 
-						dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) BETWEEN 14 AND 15
+						len(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10)) BETWEEN 14 AND 15
 						)
 					and (
 						isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
