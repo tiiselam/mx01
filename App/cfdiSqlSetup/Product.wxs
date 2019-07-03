@@ -66,7 +66,9 @@
           <sql:SqlScript Id="Createfunc87" BinaryKey="Createfunc87" ExecuteOnInstall="yes" Sequence="87" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="Createview90" BinaryKey="Createview90" ExecuteOnInstall="yes" Sequence="90" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="CreateObj92" BinaryKey="CreateObj92" ExecuteOnInstall="yes" Sequence="92" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj93" BinaryKey="CreateObj93" ExecuteOnInstall="yes" Sequence="93" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="CreateObj94" BinaryKey="CreateObj94" ExecuteOnInstall="yes" Sequence="94" ExecuteOnReinstall="yes"/>
+          <sql:SqlScript Id="CreateObj95" BinaryKey="CreateObj95" ExecuteOnInstall="yes" Sequence="95" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="Createfunc98" BinaryKey="Createfunc98" ExecuteOnInstall="yes" Sequence="98" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="Createview100" BinaryKey="Createview100" ExecuteOnInstall="yes" Sequence="100" ExecuteOnReinstall="yes"/>
           <sql:SqlScript Id="Createview110" BinaryKey="Createview110" ExecuteOnInstall="yes" Sequence="110" ExecuteOnReinstall="yes"/>
@@ -148,7 +150,9 @@
     <Binary Id="Createfunc87" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\087_fCfdMetodoPago.function.sql"/>
     <Binary Id="Createview90" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\090_vwCfdiSopTransacionesVenta.view.sql"/>
     <Binary Id="CreateObj92" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\092_FCFDIoBTIENEuuid.function.sql"/>
-    <Binary Id="CreateObj94" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\094_fCfdiRelacionados.functions.sql"/>
+    <Binary Id="CreateObj93" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\093_fCfdiObtieneUuidDeSOP.function.sql"/>
+    <Binary Id="CreateObj94" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\093_fCfdiObtieneUuidDeAR.function.sql"/>
+    <Binary Id="CreateObj95" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\094_fCfdiRelacionados.functions.sql"/>
     <Binary Id="Createfunc98" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\098_Addenda.function.sql"/>
     <Binary Id="Createview100" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\100_ObtieneDocumentosXml.view.sql"/>
     <Binary Id="Createview110" SourceFile="C:\jcTii\Desarrollo\MEX_Factura_digital_cfdi\mx01\sql\110_vwCfdiTransaccionesDeVenta.view.sql"/>
