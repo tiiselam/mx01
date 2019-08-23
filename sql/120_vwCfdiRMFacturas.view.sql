@@ -7,6 +7,7 @@ alter VIEW [dbo].[vwCfdiRMFacturas]
 --26/10/17 lt Creación
 --27/10/17 jcf Agrega y modifica llamada a funciones
 --17/07/19 jcf Agrega caso de cobro que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura AR o de la factura SOP
+--23/08/19 jcf El tipo de cambio DR no depende de si la factura es en MXN
 --
 AS
 SELECT  
@@ -26,12 +27,9 @@ SELECT
 			case when cup.isocurrc = cuf.isocurrc or a.actualapplytoamount = 0
 				then null
 				else 
-					CASE WHEN cuf.ISOCURRC = 'MXN' 
-						THEN 1
-						ELSE --moneda factura / moneda pago
-							round(a.ORAPTOAM / a.actualapplytoamount, 6) - --restar un infinitésimo para que el pago sea mayor
-							case when cup.ISOCURRC = 'MXN' and cuf.ISOCURRC != 'MXN' then 0.000001 else 0 end
-					END  
+					--moneda factura / moneda pago
+					round(a.ORAPTOAM / a.actualapplytoamount, 6) - --restar un infinitésimo para que el pago sea mayor
+					case when cup.ISOCURRC = 'MXN' and cuf.ISOCURRC != 'MXN' then 0.000001 else 0 end
 			end TipoCambioDR,
 
 			CASE WHEN LEFT(UPPER(pago.TRXDSCRN), 1) = '#' and isnumeric(substring(pago.TRXDSCRN, 2, 2)) = 1
