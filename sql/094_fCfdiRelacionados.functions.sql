@@ -20,6 +20,7 @@ as
 --14/02/18 jcf Relacionar el mismo tipo de documento sólo cuando es factura. No incluye el caso excepcíonal de nc que aplica a nc. Para esto se necesita un caso de uso.
 --12/06/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura AR.
 --02/07/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura SOP.
+--12/09/19 jcf Parametriza validación de tipo de relación (param4)
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
@@ -30,7 +31,7 @@ return(
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura
-							else 'doc no anulado'
+							else p.param4									--'doc no anulado'
 						end
 					else 'no existe uuid'
 				end TipoRelacion,
@@ -40,7 +41,7 @@ return(
 				u.FormaPago
 			from sop10107 da	--
 				outer apply dbo.fCfdiObtieneUUID(da.soptype, da.tracking_number) u
-				outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+				outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'VALIDATIPOREL', 'NA', 'NA', 'PREDETERMINADO') p
 				outer apply (
 							select ap.APFRDCTY
 							from dbo.vwRmTrxAplicadas  ap
