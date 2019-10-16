@@ -22,6 +22,7 @@ as
 --24/10/17 jcf Creación cfdi 3.3
 --03/01/18 jcf Corrige numPedimento
 --16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
+--03/06/19 jcf Corrige filtro por longitud del código de pedimento cuando viene en los artributos del lote
 --
 begin
 	declare @cncp xml;
@@ -31,10 +32,8 @@ begin
 		select @cncp = (
 		   select ad.NumeroPedimento	--, ad.fecha
 		   from (
-				--En caso de usar número de lote, la info aduanera viene en el número de lote y los atributos del lote
+				--En caso de usar número de lote, la info aduanera viene en el número de lote o los atributos del lote
 				select top 1 
-						--stuff(stuff(stuff(REPLACE(la.LOTNUMBR, ' ', '') 
-						--						, 3, 0, '  '), 7, 0, '  '), 13, 0, '  ') NumeroPedimento
 						case when dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) = '' then
 								stuff(stuff(stuff(REPLACE(
 													la.LOTNUMBR, ' ', '') 
@@ -60,7 +59,7 @@ begin
 					and (
 						len(REPLACE(la.LOTNUMBR, ' ', '')) BETWEEN 14 AND 15
 						or 
-						dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10) BETWEEN 14 AND 15
+						len(dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(ltrim(rtrim(la.LOTATRB1)) + ltrim(rtrim(la.LOTATRB2))),10)) BETWEEN 14 AND 15
 						)
 					and (
 						isnumeric(REPLACE(la.LOTNUMBR, ' ', '')) = 1
@@ -364,6 +363,7 @@ as
 --05/01/18 jcf Agrega idExporta
 --05/04/18 jcf Agrega descuento a nc
 --09/05/18 jcf Agrega cuenta predial
+--04/06/19 jcf Agrega descripción ampliada de int_sopline_data para Getty. Se debe crear la tabla int_sopline_data previamente.
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
@@ -373,13 +373,21 @@ return(
 			Concepto.quantity			Cantidad, 
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
-			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
+			case when rtrim(isnull(isd.ARTIC_DESC, '')) = '' then
+				dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) 
+			else
+				dbo.fCfdReemplazaSecuenciaDeEspacios(dbo.fCfdReemplazaCaracteresNI(RTRIM(isd.ARTIC_NAME) +' '+ RTRIM(isd.ARTIC_DESC)), 10) 
+			end Descripcion, 
 			Concepto.ORUNTPRC 		ValorUnitario,
 			Concepto.importe  		Importe,
 			Concepto.descuento 		Descuento,
 			Concepto.idExporta,
 			p.param1, cup.Numero cpredial
 		from vwCfdiSopLineasTrxVentas Concepto
+			left join dbo.INT_SOPLINE_DATA isd
+				on isd.sopnumbe = Concepto.sopnumbe
+				and isd.LNITMSEQ = Concepto.LNITMSEQ
+				and isd.soptype = Concepto.soptype
 			outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 			outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
 		where Concepto.CMPNTSEQ = 0					--a nivel kit

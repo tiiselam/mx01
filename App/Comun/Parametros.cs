@@ -55,6 +55,7 @@ namespace Comun
     {
         public string ultimoMensaje = "";
         private string _URLArchivoXSD = "";
+        private string _testQR;
         private string _URLArchivoPagosXSD = String.Empty;
         private string _URLArchivoComExtXSD;
         private string _URLArchivoXSLT = "";
@@ -139,6 +140,7 @@ namespace Comun
                 try
                 {
                     _URLArchivoXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSD/text()").Value;
+                    _testQR = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/testQR/text()").Value;
                     _URLArchivoXSLT = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoXSLT/text()").Value;
                     _URLArchivoPagosXSD = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLArchivoPagosXSD/text()").Value;
                     _URLConsulta = elemento.SelectSingleNode("//compannia[@bd='" + IdCompannia + "']/URLConsulta/text()").Value;
@@ -706,5 +708,7 @@ namespace Comun
                 _posicionPrefijoFactura = value;
             }
         }
+
+        public string TestQR { get => _testQR; set => _testQR = value; }
     }
 }

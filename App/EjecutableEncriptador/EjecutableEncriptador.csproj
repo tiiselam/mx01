@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,7 +13,7 @@
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
     <StartupObject>EjecutableEncriptador.Program</StartupObject>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -44,6 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +53,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +62,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -68,6 +71,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -145,6 +149,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\_DevLibrary\BarCodeInterface\BarCodeInterface.csproj">
+      <Project>{4eb082a0-76a6-4a90-a40c-c39684570cd4}</Project>
+      <Name>BarCodeInterface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\_DevTools\MyGeneration.dOOdads\MyGeneration.dOOdads_2005.csproj">
       <Project>{8666C149-F8D1-47CE-B5E2-BEE0BC844A9A}</Project>
       <Name>MyGeneration.dOOdads_2005</Name>
@@ -165,10 +173,6 @@
     <ProjectReference Include="..\MaquinaDeEstados\MaquinaDeEstados.csproj">
       <Project>{3325D053-41AA-48A1-9166-11DC6AFEA8D7}</Project>
       <Name>MaquinaDeEstados</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QRCodeLib\QRCodeLib.csproj">
-      <Project>{E98126B2-AF17-4783-96B9-856D6744DCA3}</Project>
-      <Name>QRCodeLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Reporteador\Reporteador.csproj">
       <Project>{B2942D0B-1AF0-434C-A9B5-F090D8361E84}</Project>

@@ -92,7 +92,7 @@
             this.toolStripAccionesXMLOtros = new System.Windows.Forms.ToolStrip();
             this.tsButtonConsultaTimbre = new System.Windows.Forms.ToolStripButton();
             this.tsBtnAnulaElimina = new System.Windows.Forms.ToolStripButton();
-            this.tsBtnArchivoMensual = new System.Windows.Forms.ToolStripButton();
+            this.tsBtnTestCodigoQR = new System.Windows.Forms.ToolStripButton();
             this.tsBtnAbrirXML = new System.Windows.Forms.ToolStripButton();
             this.tsConfirmaAnulaXml = new System.Windows.Forms.ToolStrip();
             this.tsLabelConfirma = new System.Windows.Forms.ToolStripLabel();
@@ -567,7 +567,7 @@
             // 
             this.genFacturaElectrónicaV10ToolStripMenuItem.Name = "genFacturaElectrónicaV10ToolStripMenuItem";
             this.genFacturaElectrónicaV10ToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.7.3.4";
+            this.genFacturaElectrónicaV10ToolStripMenuItem.Text = "Factura Electrónica CFDI 3.3 v.8.4.5";
             // 
             // toolStripMenuItem2
             // 
@@ -774,7 +774,7 @@
             this.toolStripAccionesXMLOtros.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsButtonConsultaTimbre,
             this.tsBtnAnulaElimina,
-            this.tsBtnArchivoMensual,
+            this.tsBtnTestCodigoQR,
             this.tsBtnAbrirXML});
             this.toolStripAccionesXMLOtros.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStripAccionesXMLOtros.Location = new System.Drawing.Point(87, 0);
@@ -791,6 +791,7 @@
             this.tsButtonConsultaTimbre.Name = "tsButtonConsultaTimbre";
             this.tsButtonConsultaTimbre.Size = new System.Drawing.Size(112, 20);
             this.tsButtonConsultaTimbre.Text = "Consulta timbre";
+            this.tsButtonConsultaTimbre.Visible = false;
             this.tsButtonConsultaTimbre.Click += new System.EventHandler(this.tsButtonConsultaTimbre_Click);
             // 
             // tsBtnAnulaElimina
@@ -805,17 +806,17 @@
             this.tsBtnAnulaElimina.Visible = false;
             this.tsBtnAnulaElimina.Click += new System.EventHandler(this.tsBtnAnulaElimina_Click);
             // 
-            // tsBtnArchivoMensual
+            // tsBtnTestCodigoQR
             // 
-            this.tsBtnArchivoMensual.Enabled = false;
-            this.tsBtnArchivoMensual.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnArchivoMensual.Image")));
-            this.tsBtnArchivoMensual.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsBtnArchivoMensual.Name = "tsBtnArchivoMensual";
-            this.tsBtnArchivoMensual.Size = new System.Drawing.Size(140, 20);
-            this.tsBtnArchivoMensual.Text = "Genera código qr test";
-            this.tsBtnArchivoMensual.ToolTipText = "Test";
-            this.tsBtnArchivoMensual.Visible = false;
-            this.tsBtnArchivoMensual.Click += new System.EventHandler(this.tsBtnArchivoMensual_Click);
+            this.tsBtnTestCodigoQR.Enabled = false;
+            this.tsBtnTestCodigoQR.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnTestCodigoQR.Image")));
+            this.tsBtnTestCodigoQR.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsBtnTestCodigoQR.Name = "tsBtnTestCodigoQR";
+            this.tsBtnTestCodigoQR.Size = new System.Drawing.Size(118, 20);
+            this.tsBtnTestCodigoQR.Text = "Genera código qr";
+            this.tsBtnTestCodigoQR.ToolTipText = "Test";
+            this.tsBtnTestCodigoQR.Visible = false;
+            this.tsBtnTestCodigoQR.Click += new System.EventHandler(this.tsBtnGenerarCodigoQR_Click);
             // 
             // tsBtnAbrirXML
             // 
@@ -1595,7 +1596,7 @@
         private System.Windows.Forms.ComboBox cmbBxCompannia;
         private System.Windows.Forms.ToolStripButton tsBtnAbrirXML;
         private System.Windows.Forms.ToolStripButton tsBtnAnulaElimina;
-        private System.Windows.Forms.ToolStripButton tsBtnArchivoMensual;
+        private System.Windows.Forms.ToolStripButton tsBtnTestCodigoQR;
         private System.Windows.Forms.ToolStrip toolStripPDF;
         private System.Windows.Forms.ToolStripButton tsBtnGeneraPDF;
         private System.Windows.Forms.ToolStrip toolStrip1;

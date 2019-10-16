@@ -18,6 +18,9 @@ as
 --16/01/18 jcf Agrega sustitución de factura anulada con NC
 --02/02/18 jcf Cuando se anula una factura con nc es posible que quede un saldo en centésimas. Se acepta un rango de 0.05.
 --14/02/18 jcf Relacionar el mismo tipo de documento sólo cuando es factura. No incluye el caso excepcíonal de nc que aplica a nc. Para esto se necesita un caso de uso.
+--12/06/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura AR.
+--02/07/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura SOP.
+--12/09/19 jcf Parametriza validación de tipo de relación (param4)
 --
 return(
 			--relaciona a su mismo tipo de documento. Tipo de relación 02 y 04
@@ -28,15 +31,17 @@ return(
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura
-							else 'doc no anulado'
+							else p.param4									--'doc no anulado'
 						end
 					else 'no existe uuid'
 				end TipoRelacion,
-				da.soptype doctype, da.tracking_number docnumbr, isnull(u.UUID, 'no existe uuid') UUID, u.voidstts, 
+				da.soptype doctype, da.tracking_number docnumbr, 
+				isnull(u.UUID, 'no existe uuid') UUID, 
+				u.voidstts, 
 				u.FormaPago
 			from sop10107 da	--
 				outer apply dbo.fCfdiObtieneUUID(da.soptype, da.tracking_number) u
-				outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+				outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'VALIDATIPOREL', 'NA', 'NA', 'PREDETERMINADO') p
 				outer apply (
 							select ap.APFRDCTY
 							from dbo.vwRmTrxAplicadas  ap
@@ -59,10 +64,14 @@ return(
 						when rtrim(@p_docid) = p.param3 then '03'	--devolución
 						else 'no hay param'
 					end TipoRelacion,
-					ap.aptodcty, ap.aptodcnm, isnull(u.UUID, 'no existe uuid') UUID, u.voidstts, 
-					case when u.FormaPago = '' then '99' else u.FormaPago end FormaPago
+					ap.aptodcty, ap.aptodcnm, 
+					isnull(isnull(isnull(u.UUID, rtrim(nt.uuid)), rtrim(usop.uuid)), 'No existe uuid') UUID, 
+					isnull(u.voidstts, nt.voidstts) voidstts, 
+					case when isnull(u.FormaPago, '') = '' then '99' else u.FormaPago end FormaPago
 				from dbo.vwRmTrxAplicadas  ap
-					outer apply dbo.fCfdiObtieneUUID(ap.aptodcty+2, ap.aptodcnm) u	--tipo factura es 1 en AR
+					outer apply dbo.fCfdiObtieneUUID(ap.aptodcty+2, ap.aptodcnm) u	
+					outer apply dbo.fCfdiObtieneUUIDDeAR(ap.aptodcty, ap.aptodcnm, ap.custnmbr) nt	--tipo factura es 1 en AR
+					outer apply dbo.fCfdiObtieneUUIDDeSOP(ap.aptodcty+2, ap.aptodcnm) usop			--tipo factura es 1 en AR
 					outer apply dbo.fCfdiParametros('TIPORELACION01', 'TIPORELACION02', 'TIPORELACION03', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
 				where ap.APFRDCTY = @soptype+4										--tipo nc es 8 en AR
 				AND ap.apfrdcnm = @p_sopnumbe

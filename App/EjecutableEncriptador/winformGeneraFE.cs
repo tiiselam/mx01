@@ -110,6 +110,8 @@ namespace EjecutableEncriptador
                 vwCfdTransaccionesDeVentaBindingSource.DataSource = regla.CfdiTransacciones.DefaultView;
                 txtbxMensajes.AppendText("Completado: " + regla.CfdiTransacciones.RowCount.ToString() + " documento(s) consultado(s).\r\n");
 
+                tsBtnTestCodigoQR.Enabled = Compannia.TestQR.Equals("1");
+                tsBtnTestCodigoQR.Visible = Compannia.TestQR.Equals("1");
             }
             catch (ArgumentNullException)
             {
@@ -256,7 +258,7 @@ namespace EjecutableEncriptador
             cmbBxCompannia.Enabled = cambiaCia;
             tsButtonGenerar.Enabled = emite;      //Emite xml
             tsBtnAbrirXML.Enabled = false;                          //Emite xml
-            tsBtnArchivoMensual.Enabled = emite;  //Emite xml
+            tsBtnTestCodigoQR.Enabled = emite;  //Emite xml
             tsBtnAnulaElimina.Enabled = anula;    //Elimina xml
             toolStripPDF.Enabled = imprime;       //Imprime
             toolStripImpresion.Enabled = imprime; //Imprime
@@ -443,9 +445,9 @@ namespace EjecutableEncriptador
 
         }
 
-        private void tsBtnArchivoMensual_Click(object sender, EventArgs e)
+        private void tsBtnGenerarCodigoQR_Click(object sender, EventArgs e)
         {
-            //En caso de no generar el código qr, este método puede hacerlo. Atención! Editar el método GeneraQRCode.
+            //En caso de no generar el código qr, este método puede hacerlo. 
 
             Parametros Param = new Parametros(DatosConexionDB.Elemento.Intercompany);
             Param.ExtDefault = this.tabCfdi.SelectedTab.Name;
@@ -457,8 +459,16 @@ namespace EjecutableEncriptador
 
             test t = new test(DatosConexionDB.Elemento, Param);
             t.TrxVenta = regla.CfdiTransacciones;
-            t.GeneraQRCode();
 
+            try
+            {
+                t.GeneraQRCode();
+            }
+            catch (Exception io)
+            {
+                txtbxMensajes.Text = "Error al generar código qr. " + io.Message;
+
+            }
         }
 
         /// <summary>
