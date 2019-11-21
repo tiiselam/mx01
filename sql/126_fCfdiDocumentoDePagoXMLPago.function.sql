@@ -11,6 +11,7 @@ as
 --24/10/17 lt Creación cfdi
 --10/11/17 jcf Correcciones varias
 --14/09/18 jcf Ajuste debido a cambios en fCfdiDocumentoDePago. Campos de pago de la cuenta origen y destino
+--21/11/19 jcf Agrega hora del pago
 --
 begin
 	declare @cnp xml;
@@ -20,7 +21,8 @@ begin
 	)
 	select @cnp = 
 		(SELECT  
-			convert(datetime, hdr.docdate, 126)	'@FechaPago',
+			--convert(datetime, hdr.docdate, 126)	'@FechaPago',
+			hdr.fechaHora '@FechaPago',
 			hdr.FormaDePagoP '@FormaDePagoP',
  			hdr.MonedaP '@MonedaP',
 			cast(hdr.TipoCambioP as numeric(19,6)) '@TipoCambioP',

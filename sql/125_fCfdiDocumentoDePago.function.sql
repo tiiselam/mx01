@@ -11,19 +11,31 @@ as
 --			El catálogo del sat debe estar configurado en el tipo FRPGB para cada forma de pago bancarizada
 --30/11/17 jcf Creación cfdi
 --14/09/18 jcf Agrega flags para incluir o no incluir campos de acuerdo al catálogo del sat: c_formaPago
+--21/11/19 jcf Agrega hora del pago
 --
 return
 		(
 		SELECT 
 			RMDTYPAL, DOCNUMBR, 
 			CONVERT(datetime, 
-						replace(convert(varchar(20), hdr.DOCDATE, 102), '.', '-')+'T'+
-						substring(convert(varchar(30), 
-							DATEADD(hh,
-									case when isnumeric(pa.param1) = 1 then convert(int, pa.param1) else 0 end, 
-									hdr.dex_row_ts
-									)
-							, 126), 12, 8)
+						replace(convert(varchar(20), hdr.DOCDATE, 102), '.', '-')+'T'
+						+case when isnumeric(left(hdr.TRXDSCRN, 6)) = 1 then 
+								case when cast(SUBSTRING(hdr.trxdscrn, 1, 2) as int) between 0 and 24
+									and cast(SUBSTRING(hdr.trxdscrn, 3, 2) as int) <= 60 
+									and cast(SUBSTRING(hdr.trxdscrn, 5, 2)as int) <= 60 then
+									SUBSTRING(hdr.trxdscrn, 1, 2) +':'+SUBSTRING(hdr.trxdscrn, 3, 2)+':'+SUBSTRING(hdr.trxdscrn, 5, 2) + '.000'
+								else '12:00:00.000'
+								end
+						else '12:00:00.000'
+						end
+						--substring(
+						--	convert(varchar(30), 
+						--	DATEADD(hh,
+						--			case when isnumeric(pa.param1) = 1 then convert(int, pa.param1) else 0 end, 
+						--			hdr.dex_row_ts
+						--			)
+						--	, 126)
+						--, 12, 8)
 					,126) 
 			fechaHora,
 			hdr.docdate, hdr.bchsourc, hdr.mscschid, hdr.CSHRCTYP, hdr.FRTSCHID, 
