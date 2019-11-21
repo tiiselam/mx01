@@ -83,7 +83,7 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '29
 
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '99')
 	insert into cfdiCatalogo(tipo, clave, descripcion)
-	values('FRPG', '99', 'Otros');
+	values('FRPG', '99', 'Por definir');
 
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = 'NA')
 	insert into cfdiCatalogo(tipo, clave, descripcion)
