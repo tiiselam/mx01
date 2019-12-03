@@ -6,27 +6,28 @@ GO
 create function dbo.fCfdiPagosRelacionados(@p_doctype smallint, @p_docnumbr varchar(21))
 returns table
 as
---Propósito. Obtiene la relación con otros documentos. 
+--Propósito. Obtiene la relación con otras cobranzas. 
 --		04 sustituye un doc anulado. Puede ser nc, dev, nd, factura
 --
 --Requisito. Se asume que sustituye otra(s) cobranza(s)
 --02/12/19 jcf Creación
 --
 return(
-			--cobros
-			SELECT '04' tipoRelacion, uu.uuid, uu.voidstts, uu.FormaPago
+			SELECT '04' tipoRelacion, uu.uuid --, uu.voidstts, uu.FormaPago
 			FROM  dbo.vwRmTransaccionesTodas rmTrx
+				left join nfmcp20000 mcp --nfMCP_cash_hdr_open Cabecera de recibos de cobro [MCPTYPID],[NUMBERIE]
+					on mcp.NUMBERIE = rmTrx.DOCNUMBR
+					and mcp.RMDTYPAL = rmTrx.RMDTYPAL
 				inner join dbo.SY03900 AS rem 
-				on rem.NOTEINDX = rmTrx.NOTEINDX
-				cross apply dbo.SplitStrings (rem.txtfield, ';') cobro
-				cross apply dbo.fCfdiObtieneUUID(rmTrx.tipoDoc, cobro.item) uu
+					on rem.NOTEINDX = isnull(mcp.NOTEINDX, rmTrx.NOTEINDX)
+				outer apply dbo.SplitStrings (rem.txtfield, ';') cobro
+				left join dbo.vwCfdiDatosDelXml uu
+					on uu.sopnumbe = cobro.Item
+					and uu.soptype = rmTrx.RMDTYPAL
+					and uu.estado = 'emitido'
 			where rmTrx.docnumbr = @p_docnumbr
 			and rmTrx.RMDTYPAL = @p_doctype
 			and @p_doctype = 9
-
-    -- select '04' tipoRelacion, 'aabbdd' uuid
-    -- union ALL
-    -- select '04' tipoRelacion, 'aabbxxx' uuid
 )	
 go
 
