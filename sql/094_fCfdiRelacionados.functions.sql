@@ -6,28 +6,28 @@ GO
 create function dbo.fCfdiRelacionados(@soptype smallint, @p_sopnumbe varchar(21), @p_docid char(15))
 returns table
 as
---Prop髎ito. Obtiene la relaci髇 con otros documentos. 
+--Prop贸sito. Obtiene la relaci贸n con otros documentos. 
 --		04 sustituye un doc anulado. Puede ser nc, dev, nd, factura
 --		02 nd aplica a factura
 --		01, 03 NC y DEV aplican a facturas o nd
 --
 --Requisito. Se asume que sustituye un solo documento del mismo tipo
---		Se asume que una nc o devoluci髇 aplica una o m醩 facturas. Hasta 100 facturas.
---		Un documento debe tener un solo tipo de relaci髇.
---24/10/17 jcf Creaci髇
---16/01/18 jcf Agrega sustituci髇 de factura anulada con NC
---02/02/18 jcf Cuando se anula una factura con nc es posible que quede un saldo en cent閟imas. Se acepta un rango de 0.05.
---14/02/18 jcf Relacionar el mismo tipo de documento s髄o cuando es factura. No incluye el caso excepc韔nal de nc que aplica a nc. Para esto se necesita un caso de uso.
+--		Se asume que una nc o devoluci贸n aplica una o m贸s facturas. Hasta 100 facturas.
+--		Un documento debe tener un solo tipo de relaci贸n.
+--24/10/17 jcf Creaci贸n
+--16/01/18 jcf Agrega sustituci贸n de factura anulada con NC
+--02/02/18 jcf Cuando se anula una factura con nc es posible que quede un saldo en cent贸simas. Se acepta un rango de 0.05.
+--14/02/18 jcf Relacionar el mismo tipo de documento s贸lo cuando es factura. No incluye el caso excepc贸onal de nc que aplica a nc. Para esto se necesita un caso de uso.
 --12/06/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura AR.
 --02/07/19 jcf Agrega caso de NC que aplica a factura no emitida por nosotros. El uuid debe estar en el campo nota de la factura SOP.
---12/09/19 jcf Parametriza validaci髇 de tipo de relaci髇 (param4)
+--12/09/19 jcf Parametriza validaci贸n de tipo de relaci贸n (param4)
 --
 return(
-			--relaciona a su mismo tipo de documento. Tipo de relaci髇 02 y 04
+			--relaciona a su mismo tipo de documento. Tipo de relaci贸n 02 y 04
 			select top(1) 1 orden,	
 				--case when left(da.tracking_number, 1) = 'T' then '06'		--factura generada por traslado previo
-				case when isnull(u.voidstts, -1) = 1 or														--sustituci髇 de factura anulada
-						(isnull(apli.APFRDCTY, -1) = 8 and (abs(u.montoActualOriginal) < 0.05)) then '04'	--sustituci髇 de factura anulada con NC
+				case when isnull(u.voidstts, -1) = 1 or														--sustituci贸n de factura anulada
+						(isnull(apli.APFRDCTY, -1) = 8 and (abs(u.montoActualOriginal) < 0.05)) then '04'	--sustituci贸n de factura anulada con NC
 					when isnull(u.voidstts, -1) = 0 then
 						case when rtrim(@p_docid) = p.param2 and da.soptype = 3 
 							then '02'										--nd que relaciona a factura
@@ -56,12 +56,12 @@ return(
 			
 			union all
 
-			--NC o devoluci髇 que relaciona a factura o nd
+			--NC o devoluci贸n que relaciona a factura o nd
 			SELECT orden, TipoRelacion, aptodcty, aptodcnm, UUID, voidstts, FormaPago
 			from (
 				SELECT top(100) 2 orden,
 					case when rtrim(@p_docid) = p.param1 then '01'	--nc
-						when rtrim(@p_docid) = p.param3 then '03'	--devoluci髇
+						when rtrim(@p_docid) = p.param3 then '03'	--devoluci贸n
 						else 'no hay param'
 					end TipoRelacion,
 					ap.aptodcty, ap.aptodcnm, 
@@ -81,8 +81,8 @@ return(
 )	
 go
 
-IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiRelacionados()'
-ELSE PRINT 'Error en la creaci髇 de: fCfdiRelacionados()'
+IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiRelacionados()'
+ELSE PRINT 'Error en la creaci贸n de: fCfdiRelacionados()'
 GO
 
 --------------------------------------------------------------------------------------------------------
@@ -93,20 +93,20 @@ GO
 create function dbo.fCfdiDatosDeUnaRelacion(@soptype smallint, @p_sopnumbe varchar(21), @p_docid char(15))
 returns table
 as
---Prop髎ito. Obtiene la primera relaci髇. La sustituci髇 tiene precedencia sobre el resto.
+--Prop贸sito. Obtiene la primera relaci贸n. La sustituci贸n tiene precedencia sobre el resto.
 --Requisito. -
---24/10/17 jcf Creaci髇
+--24/10/17 jcf Creaci贸n
 --
 return(
 				select top (1) TipoRelacion, FormaPago
 				from dbo.fCfdiRelacionados(@soptype, @p_sopnumbe, @p_docid)
-				order by orden
+				--order by orden
 
 )	
 go
 
-IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiDatosDeUnaRelacion()'
-ELSE PRINT 'Error en la creaci髇 de: fCfdiDatosDeUnaRelacion()'
+IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiDatosDeUnaRelacion()'
+ELSE PRINT 'Error en la creaci贸n de: fCfdiDatosDeUnaRelacion()'
 GO
 
 --------------------------------------------------------------------------------------------------------
@@ -118,11 +118,11 @@ GO
 create function dbo.fCfdiRelacionadosXML(@soptype smallint, @p_sopnumbe varchar(21), @p_docid char(15), @p_TipoRelacion varchar(15))
 returns xml 
 as
---Prop髎ito. Obtiene la relaci髇 con otros documentos en formato XML. 
+--Prop贸sito. Obtiene la relaci贸n con otros documentos en formato XML. 
 --		04 sustituye un doc anulado. Puede ser nc, dev, nd, factura
 --		02 nd aplica a factura
 --		01, 03 NC y DEV aplican a facturas o nd
---24/01/14 jcf Creaci髇
+--24/01/14 jcf Creaci贸n
 --
 begin
 
@@ -139,8 +139,8 @@ begin
 end
 go
 
-IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiRelacionadosXML()'
-ELSE PRINT 'Error en la creaci髇 de: fCfdiRelacionadosXML()'
+IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiRelacionadosXML()'
+ELSE PRINT 'Error en la creaci贸n de: fCfdiRelacionadosXML()'
 GO
 
 --------------------------------------------------------------------------------------------------------
