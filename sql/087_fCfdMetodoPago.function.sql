@@ -12,6 +12,7 @@ as
 --		Independiente de lo que ingrese el usuario, si el pago es simultáneo el método es PUE
 --Requisitos. -
 --16/11/18 jcf Creación cfdi
+--04/12/19 jcf Método de pago para NC debe ser PUE
 --
 return
 ( 
@@ -24,11 +25,7 @@ return
 					else 'PPD'
 					end
 				END
-			else 
-				case when @FormaPagoRel = '99' then
-					'PPD'
-				Else 'PUE'
-				END
+			else 'PUE'
 			end	metodoPago,
 			
 			case when @soptype = 3 then
