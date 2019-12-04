@@ -1,7 +1,8 @@
 name: Release Drafter
 
 on:
-  pull_request:
+  pull_request_review:
+    types: submitted
     # branches to consider in the event; optional, defaults to all
     branches:
       - master
