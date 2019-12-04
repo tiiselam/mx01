@@ -6,11 +6,11 @@ GO
 create function dbo.fCfdiPagosRelacionados(@p_doctype smallint, @p_docnumbr varchar(21))
 returns table
 as
---Prop贸sito. Obtiene la relaci贸n con otras cobranzas. 
+--Prop髎ito. Obtiene la relaci髇 con otras cobranzas. 
 --		04 sustituye un doc anulado. Puede ser nc, dev, nd, factura
 --
 --Requisito. Se asume que sustituye otra(s) cobranza(s)
---02/12/19 jcf Creaci贸n
+--02/12/19 jcf Creaci髇
 --
 return(
 			SELECT '04' tipoRelacion, uu.uuid --, uu.voidstts, uu.FormaPago
@@ -22,7 +22,7 @@ return(
 					on rem.NOTEINDX = isnull(mcp.NOTEINDX, rmTrx.NOTEINDX)
 				outer apply dbo.SplitStrings (rem.txtfield, ';') cobro
 				left join dbo.vwCfdiDatosDelXml uu
-					on uu.sopnumbe = cobro.Item
+					on uu.sopnumbe = replace(replace(cobro.item, char(13), ''), char(10), '')
 					and uu.soptype = rmTrx.RMDTYPAL
 					and uu.estado = 'emitido'
 			where rmTrx.docnumbr = @p_docnumbr
@@ -31,8 +31,8 @@ return(
 )	
 go
 
-IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiPagosRelacionados()'
-ELSE PRINT 'Error en la creaci贸n de: fCfdiPagosRelacionados()'
+IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiPagosRelacionados()'
+ELSE PRINT 'Error en la creaci髇 de: fCfdiPagosRelacionados()'
 GO
 
 --------------------------------------------------------------------------------------------------------
@@ -44,8 +44,8 @@ GO
 create function dbo.fCfdiUuidPagosRelacionadosXML(@p_doctype smallint, @p_docnumbr varchar(21))
 returns xml 
 as
---Prop贸sito. Obtiene la relaci贸n con otros pagos en formato XML. 
---02/12/19 jcf Creaci贸n
+--Prop髎ito. Obtiene la relaci髇 con otros pagos en formato XML. 
+--02/12/19 jcf Creaci髇
 --
 begin
 
@@ -61,8 +61,8 @@ begin
 end
 go
 
-IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiUuidPagosRelacionadosXML()'
-ELSE PRINT 'Error en la creaci贸n de: fCfdiUuidPagosRelacionadosXML()'
+IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiUuidPagosRelacionadosXML()'
+ELSE PRINT 'Error en la creaci髇 de: fCfdiUuidPagosRelacionadosXML()'
 GO
 
 --------------------------------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ GO
 create function dbo.fCfdiPagosRelacionadosXML(@p_doctype smallint, @p_docnumbr varchar(21))
 returns xml 
 as
---Prop贸sito. Obtiene la relaci贸n con otros pagos en formato XML. 
+--Prop髎ito. Obtiene la relaci髇 con otros pagos en formato XML. 
 --		04 sustituye un doc anulado. Puede ser nc, dev, nd, factura
---02/12/19 jcf Creaci贸n
+--02/12/19 jcf Creaci髇
 --
 begin
 
@@ -94,8 +94,8 @@ begin
 end
 go
 
-IF (@@Error = 0) PRINT 'Creaci贸n exitosa de: fCfdiPagosRelacionadosXML()'
-ELSE PRINT 'Error en la creaci贸n de: fCfdiPagosRelacionadosXML()'
+IF (@@Error = 0) PRINT 'Creaci髇 exitosa de: fCfdiPagosRelacionadosXML()'
+ELSE PRINT 'Error en la creaci髇 de: fCfdiPagosRelacionadosXML()'
 GO
 
 --------------------------------------------------------------------------------------------------------
