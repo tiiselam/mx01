@@ -117,6 +117,7 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --30/11/17 JCF Creación cfdi 3.3
 --05/01/18 jcf Agrega parámetro id de exportación, uscatvls_5
 --03/07/18 jcf Agrega uscatvls_4
+--12/12/19 jcf Agrega descripción del primer item en caso de nc
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	dt.QUANTITY, dt.UOFM,
@@ -130,7 +131,7 @@ select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	end UOFMsat_descripcion,
 	um.UOFMLONGDESC, 
 	case when dt.soptype = 4 then
-		prod.descripcion
+		ISNULL(prod.descripcion, dt.ITEMDESC)
 	else
 		dt.ITEMDESC
 	end ITEMDESC, 
