@@ -11,6 +11,7 @@ as
 --10/11/17 jcf Correcciones varias
 --24/01/18 jcf Usa montoActualOriginal para validar que los pagos estén totalmente pagados 
 --02/12/19 jcf Agrega pagos relacionados
+--11/12/19 jcf Modifica importe = 0 y valorUnitario = 0
 --
 begin
 	declare @cfd xml;
@@ -61,8 +62,8 @@ begin
 		pa.param4											'cfdi:Conceptos/cfdi:Concepto/@ClaveUnidad',
 		1													'cfdi:Conceptos/cfdi:Concepto/@Cantidad',
 		'Pago'												'cfdi:Conceptos/cfdi:Concepto/@Descripcion',
-		0.00												'cfdi:Conceptos/cfdi:Concepto/@ValorUnitario',
-		0.00												'cfdi:Conceptos/cfdi:Concepto/@Importe',
+		0													'cfdi:Conceptos/cfdi:Concepto/@ValorUnitario',
+		0													'cfdi:Conceptos/cfdi:Concepto/@Importe',
 
 		dbo.fCfdiDocumentoDePagoXMLPagos(tv.rmdtypal,tv.docnumbr) 'cfdi:Complemento'
 															
