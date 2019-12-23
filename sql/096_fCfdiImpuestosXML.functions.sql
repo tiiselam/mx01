@@ -24,27 +24,6 @@ IF (@@Error = 0) PRINT 'Creación exitosa de: vwCfdiImpuestosYRetencionesDetalle'
 ELSE PRINT 'Error en la creación de: vwCfdiImpuestosYRetencionesDetalle'
 GO
 
---------------------------------------------------------------------------------------------------------
-IF OBJECT_ID ('dbo.fCfdiImpuestosYRetencionesTotales') IS NOT NULL
-   DROP FUNCTION dbo.fCfdiImpuestosYRetencionesTotales
-GO
-
-create function dbo.fCfdiImpuestosYRetencionesTotales(@p_soptype smallint, @p_sopnumbe varchar(21))
-returns table 
-return(
-    select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
-        sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
-    from dbo.vwCfdiImpuestosYRetencionesDetalle
-    where sopnumbe = @p_sopnumbe
-    and soptype = @p_soptype
-    and lnitmseq != 0
-)
-GO
-
-IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiImpuestosYRetencionesTotales()'
-ELSE PRINT 'Error en la creación de: fCfdiImpuestosYRetencionesTotales()'
-GO
-
 
 --------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiImpuestosRetenidosXML') IS NOT NULL
@@ -67,12 +46,19 @@ begin
 		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
 		select @impu = (
 			select
-				case when @p_esdetalle = 1 then imp.Base 
+				case when @p_esdetalle = 1 then 
+					imp.Base 
 					else null
 				end Base,
 				imp.CodImpuesto Impuesto,
-				imp.TipoFactor, 
-				imp.TasaOCuota,
+				case when @p_esdetalle = 1 then 
+					imp.TipoFactor
+					else null
+				end TipoFactor, 
+				case when @p_esdetalle = 1 then 
+					imp.TasaOCuota
+					else null
+				end TasaOCuota, 
 				imp.Importe
 			from dbo.vwCfdiImpuestosYRetencionesDetalle imp
  			where imp.SOPNUMBE = @p_sopnumbe
@@ -147,6 +133,39 @@ ELSE PRINT 'Error en la creación de la función: fCfdiImpuestosTrasladadosXML()'
 GO
 
 --------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.fCfdiImpuestosYRetencionesTotales') IS NOT NULL
+   DROP FUNCTION dbo.fCfdiImpuestosYRetencionesTotales
+GO
+
+create function dbo.fCfdiImpuestosYRetencionesTotales(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
+returns table 
+return(
+
+    select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
+        sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
+    from dbo.vwCfdiImpuestosYRetencionesDetalle
+    where sopnumbe = @p_sopnumbe
+    and soptype = @p_soptype
+    and lnitmseq != 0
+	and @p_esdetalle = 0
+
+	union ALL
+
+    select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
+        sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
+    from dbo.vwCfdiImpuestosYRetencionesDetalle
+    where sopnumbe = @p_sopnumbe
+    and soptype = @p_soptype
+    and lnitmseq = @p_LNITMSEQ
+	and @p_esdetalle = 1
+)
+GO
+
+IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiImpuestosYRetencionesTotales()'
+ELSE PRINT 'Error en la creación de: fCfdiImpuestosYRetencionesTotales()'
+GO
+
+--------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiNodoImpuestosXML') IS NOT NULL
 begin
    DROP FUNCTION dbo.fCfdiNodoImpuestosXML
@@ -157,7 +176,7 @@ GO
 create function dbo.fCfdiNodoImpuestosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
 returns xml 
 --Propósito. Obtiene los impuestos trasladados y retenidos
---18/12/19 jcf Creación
+--18/12/19 jcf Creación. El orden de los nodos es importante a nivel de detalle y cabecera
 --
 as
 begin
@@ -169,9 +188,17 @@ begin
 		select 
             case when isnull(totales.SumaImpuestos, 0) = 0 or @p_esdetalle = 1 then null else totales.SumaImpuestos end       'TotalImpuestosTrasladados',
             case when isnull(totales.SumaRetenciones, 0) = 0 or @p_esdetalle = 1 then null else totales.SumaRetenciones end   'TotalImpuestosRetenidos',
-            dbo.fCfdiImpuestosTrasladadosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle),
-			dbo.fCfdiImpuestosRetenidosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle)
-        from dbo.fCfdiImpuestosYRetencionesTotales(@p_soptype, @p_sopnumbe) totales
+			case when @p_esdetalle = 1 then 
+	            dbo.fCfdiImpuestosTrasladadosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle)
+				else
+				dbo.fCfdiImpuestosRetenidosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle)
+			end,
+			case when @p_esdetalle = 1 then 
+				dbo.fCfdiImpuestosRetenidosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle)
+				else
+	            dbo.fCfdiImpuestosTrasladadosXML(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle)
+			end
+        from dbo.fCfdiImpuestosYRetencionesTotales(@p_soptype, @p_sopnumbe, @p_LNITMSEQ, @p_esdetalle) totales
         where isnull(totales.SumaImpuestos, 0) != 0
         or isnull(totales.SumaRetenciones, 0) != 0
 		FOR XML raw('cfdi:Impuestos'), TYPE
