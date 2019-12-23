@@ -288,69 +288,6 @@ ELSE PRINT 'Error en la creación de la función: fCfdiCuentaPredial()'
 GO
 
 --------------------------------------------------------------------------------------------------------
-IF OBJECT_ID ('dbo.fCfdiImpuestosTrasladadosXML') IS NOT NULL
-begin
-   DROP FUNCTION dbo.fCfdiImpuestosTrasladadosXML
-   print 'función fCfdiImpuestosTrasladadosXML eliminada'
-end
-GO
-
-create function dbo.fCfdiImpuestosTrasladadosXML(@p_soptype smallint, @p_sopnumbe varchar(21), @p_LNITMSEQ int, @p_esdetalle smallint)
-returns xml 
---Propósito. Obtiene los impuestos trasladados, nodo Traslados/traslado
---05/01/17 jcf Si el comprobante sólo tiene conceptos exentos, el nodo Traslados a nivel de comprobante no debe existir. GuíaAnexo20.pdf Pag. 32 
---30/05/18 jcf Si el comprobante sólo tiene conceptos exentos, el nodo Traslados a nivel de detalle no debe existir. (m chavez Getty Mex)
---
-as
-begin
-	declare @impu xml, @existeImpuestos numeric(19,6);
-	select @impu = null;
-	select @existeImpuestos = 1;
-
-	--if (@p_esdetalle = 0)
-	select @existeImpuestos = sum(tx.TXDTLPCT)
-						from sop10105 imp	--sop_tax_work_hist
-						inner join tx00201 tx
-							on tx.taxdtlid = imp.taxdtlid
- 						where imp.SOPTYPE = @p_soptype
-							and imp.SOPNUMBE = @p_sopnumbe
-							--and imp.LNITMSEQ = @p_LNITMSEQ
-							and tx.TXDTLPCT >= 0
-							;
-
-    if (isnull(@existeImpuestos, 0) > 0)
-	begin
-		WITH XMLNAMESPACES ('http://www.sat.gob.mx/cfd/3' as "cfdi")
-		select @impu = (
-			select
-				case when @p_esdetalle = 1 then cast(imp.ortxsls as numeric(19,2)) 
-					else null
-				end Base,
-				rtrim(tx.NAME) Impuesto,
-				case when tx.TXDTLPCT=0 then 'Exento' else 'Tasa' end TipoFactor, 
-				case when tx.TXDTLPCT=0 then null else cast(tx.TXDTLPCT/100 as numeric(19,6)) end TasaOCuota,
-				case when tx.TXDTLPCT=0 then null else cast(imp.orslstax as numeric(19,2)) end Importe
-			from sop10105 imp	--sop_tax_work_hist
-			inner join tx00201 tx
-				on tx.taxdtlid = imp.taxdtlid
- 			where 
-			imp.SOPTYPE = @p_soptype
-			  and imp.SOPNUMBE = @p_sopnumbe
-			  and imp.LNITMSEQ = @p_LNITMSEQ
-			  and tx.TXDTLPCT >= 0
-			FOR XML raw('cfdi:Traslado'), type, root('cfdi:Traslados')
-			)
-	end
-
-	return @impu
-end
-go
-
-IF (@@Error = 0) PRINT 'Creación exitosa de la función: fCfdiImpuestosTrasladadosXML()'
-ELSE PRINT 'Error en la creación de la función: fCfdiImpuestosTrasladadosXML()'
-GO
-
---------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.fCfdiConceptos') IS NOT NULL
    DROP FUNCTION dbo.fCfdiConceptos
 GO
@@ -445,6 +382,7 @@ as
 --05/04/18 jcf Agrega descuento a nc
 --09/05/18 jcf Agrega cuenta predial
 --27/07/18 jcf Agrega UOFMsat_descripcion
+--18/12/19 jcf Modifica llamada a nueva función que obtiene impuestos
 --
 begin
 	declare @cncp xml;
@@ -462,7 +400,8 @@ begin
 				case when Descuento = 0 then null
 					else cast(Descuento as numeric(19, 2))		
 				end								'@Descuento',
-				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos',
+				dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1),
+				--dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos',
 				case when upper(isnull(Concepto.param1, 'NO')) = 'SI' 
 					then Concepto.cpredial
 					else null
@@ -489,7 +428,8 @@ begin
 					else cast(Descuento as numeric(19, 2))		
 				end										'@Descuento',
 
-				dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
+				dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1),
+				--dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
 				case when Concepto.idExporta = @DOCID 
 					then null
@@ -890,6 +830,7 @@ as
 --16/01/18 jcf No incluir CondicionesDePago si está vacío
 --05/04/18 jcf Agrega descuento a nc
 --16/11/18 jcf Agrega usrtab09, ctrl.usrtab03. Tercera resolución de modificaciones 2.7.1.44 SAT
+--18/12/19 jcf Modifica llamada a nueva función que obtiene impuestos
 --
 begin
 	declare @cfd xml;
@@ -960,8 +901,7 @@ begin
 
 		dbo.fCfdiConceptosXML(tv.soptype, tv.sopnumbe, tv.subtotal, tv.descuento, tv.docid),
 		
-		cast(tv.impuesto as numeric(19,2))					'cfdi:Impuestos/@TotalImpuestosTrasladados',		
-		dbo.fCfdiImpuestosTrasladadosXML(tv.soptype, tv.sopnumbe, 0, 0)	'cfdi:Impuestos',
+		dbo.fCfdiNodoImpuestosXML(tv.soptype, tv.sopnumbe, 0, 0),
 
 		''													'cfdi:Complemento'
 	from dbo.vwCfdiSopTransaccionesVenta tv
