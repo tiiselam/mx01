@@ -141,23 +141,53 @@ create function dbo.fCfdiImpuestosYRetencionesTotales(@p_soptype smallint, @p_so
 returns table 
 return(
 
-    select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
-        sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
+    -- select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
+    --     sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
+    -- from dbo.vwCfdiImpuestosYRetencionesDetalle
+    -- where sopnumbe = @p_sopnumbe
+    -- and soptype = @p_soptype
+    -- and lnitmseq != 0
+	-- and @p_esdetalle = 0
+
+	-- union ALL
+
+    -- select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
+    --     sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
+    -- from dbo.vwCfdiImpuestosYRetencionesDetalle
+    -- where sopnumbe = @p_sopnumbe
+    -- and soptype = @p_soptype
+    -- and lnitmseq = @p_LNITMSEQ
+	-- and @p_esdetalle = 1
+
+    select 
+		sum(case when @p_esdetalle = 1 
+				then 
+					case when txdtlpct<0 and lnitmseq = @p_LNITMSEQ 
+						then Importe 
+						else 0 
+					end
+			    else
+					case when txdtlpct<0 and lnitmseq != 0
+						then Importe
+						else 0
+					end
+			end ) SumaRetenciones,
+        sum(case when @p_esdetalle = 1 
+				then 
+					case when txdtlpct>=0 and lnitmseq = @p_LNITMSEQ 
+						then Importe 
+						else 0
+					end	
+				else
+					case when txdtlpct>=0 and lnitmseq != 0
+						then Importe 
+						else 0 
+					end
+			end) SumaImpuestos
     from dbo.vwCfdiImpuestosYRetencionesDetalle
     where sopnumbe = @p_sopnumbe
     and soptype = @p_soptype
-    and lnitmseq != 0
-	and @p_esdetalle = 0
 
-	union ALL
-
-    select sum(case when txdtlpct<0 then Importe else 0 end) SumaRetenciones,
-        sum(case when txdtlpct>=0 then Importe else 0 end) SumaImpuestos
-    from dbo.vwCfdiImpuestosYRetencionesDetalle
-    where sopnumbe = @p_sopnumbe
-    and soptype = @p_soptype
-    and lnitmseq = @p_LNITMSEQ
-	and @p_esdetalle = 1
 )
 GO
 

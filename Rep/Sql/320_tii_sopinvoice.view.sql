@@ -22,6 +22,7 @@ ALTER VIEW [dbo].[TII_SOPINVOICE] AS
 --16/02/18 jcf El pedimento se puede ingresar en los dos primeros atributos del lote o puede ser el número de lote
 --05/04/18 jcf Ajusta parámetro de Conceptos
 --09/05/18 jcf Agrega cuenta predial
+--09/01/20 jcf Agrega retenciones
 --
 SELECT 
 		SOPHEADER.DOCSTATUS,
@@ -67,6 +68,8 @@ SELECT
 		SOPHEADER.TXRGNNUM,
 		SOPHEADER.TAXAMNT,
 		SOPHEADER.ORTAXAMT,
+		totalImpuRet.SumaImpuestos,
+		totalImpuRet.SumaRetenciones,
 		SOPHEADER.DOCAMNT,
 		CASE
 			WHEN SOPELECTINV.isocurrc = 'MXN' THEN UPPER(DBO.TII_INVOICE_AMOUNT_LETTERS(SOPHEADER.ORDOCAMT, 'PESOS ')) + ' M.N.'
@@ -291,6 +294,7 @@ FROM
 ) SOPHEADER
 
 OUTER APPLY dbo.fCfdiConceptos(SOPHEADER.soptype, SOPHEADER.sopnumbe, SOPHEADER.ORSUBTOT + SOPHEADER.ORMRKDAM, 0) SOPDETAIL
+OUTER APPLY dbo.fCfdiImpuestosYRetencionesTotales(SOPHEADER.soptype, SOPHEADER.sopnumbe, 0, 0) totalImpuRet
 
 LEFT OUTER JOIN
 
