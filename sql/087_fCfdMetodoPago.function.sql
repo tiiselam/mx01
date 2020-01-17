@@ -13,6 +13,7 @@ as
 --Requisitos. -
 --16/11/18 jcf Creación cfdi
 --04/12/19 jcf Método de pago para NC debe ser PUE
+--17/01/20 jcf Agrega forma de pago ingresado por el usuario en caso de nc
 --
 return
 ( 
@@ -37,7 +38,11 @@ return
 					else '99'
 					end
 				end
-			else @FormaPagoRel
+			else 
+				case when isnull(@FormaPagoUsr, '') = '' then 
+					@FormaPagoRel
+					else @FormaPagoUsr
+				end
 			end formaPago
 )
 go
