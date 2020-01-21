@@ -73,6 +73,26 @@ if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '08
 	insert into cfdiCatalogo(tipo, clave, descripcion)
 	values('FRPG', '08', 'Vales de despensa');
 
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '12')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPG', '12', 'Dación en pago');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '13')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPG', '13', 'Pago subrogación');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '14')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPG', '14', 'Pago consignación');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '15')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPG', '15', 'Condonación');
+
+if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '17')
+	insert into cfdiCatalogo(tipo, clave, descripcion)
+	values('FRPG', '17', 'Compensación');
+
 if not exists(select 1 from dbo.cfdiCatalogo where tipo = 'FRPG' and clave = '28')
 	insert into cfdiCatalogo(tipo, clave, descripcion)
 	values('FRPG', '28', 'Tarjeta de Débito');
