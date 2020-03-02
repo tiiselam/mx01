@@ -110,6 +110,34 @@ IF (OBJECT_ID ('dbo.vwCfdiSopLineasTrxVentas', 'V') IS NULL)
    exec('create view dbo.vwCfdiSopLineasTrxVentas as SELECT 1 as t');
 go
 
+-- select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
+-- 	dt.QUANTITY, dt.UOFM,
+-- 	case when dt.soptype = 4 then
+-- 			pa.param2
+-- 		else um.UOFMLONGDESC
+-- 	end UOFMsat,
+-- 	case when dt.soptype = 4 then
+-- 			udmnc.descripcion
+-- 		else udmfa.descripcion
+-- 	end UOFMsat_descripcion,
+-- 	um.UOFMLONGDESC, 
+-- 	case when dt.soptype = 4 then
+-- 		ISNULL(prod.descripcion, dt.ITEMDESC)
+-- 	else
+-- 		dt.ITEMDESC
+-- 	end ITEMDESC, 
+-- 	dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
+-- 	dt.QUANTITY * dt.ORUNTPRC importe, 
+-- 	isnull(ma.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
+-- 	case when dt.soptype = 4 then
+-- 			pa.param1
+-- 		else 
+-- 			case when pa.param3 = 'CATEGORIA' 
+-- 				then ma.uscatvls_6
+-- 				else pa.param3 
+-- 			end
+-- 	end ClaveProdServ,
+
 alter view dbo.vwCfdiSopLineasTrxVentas as
 --Propósito. Obtiene todas las líneas de facturas de venta SOP
 --			Incluye descuentos
@@ -118,34 +146,21 @@ alter view dbo.vwCfdiSopLineasTrxVentas as
 --05/01/18 jcf Agrega parámetro id de exportación, uscatvls_5
 --03/07/18 jcf Agrega uscatvls_4
 --12/12/19 jcf Agrega descripción del primer item en caso de nc
+--02/03/20 jcf NC puede tener más de un ítem en el detalle
 --
 select dt.soptype, dt.sopnumbe, dt.LNITMSEQ, dt.ITEMNMBR, dt.ShipToName,
 	dt.QUANTITY, dt.UOFM,
-	case when dt.soptype = 4 then
-			pa.param2
-		else um.UOFMLONGDESC
-	end UOFMsat,
-	case when dt.soptype = 4 then
-			udmnc.descripcion
-		else udmfa.descripcion
-	end UOFMsat_descripcion,
+	um.UOFMLONGDESC 	UOFMsat,
+	udmfa.descripcion 	UOFMsat_descripcion,
 	um.UOFMLONGDESC, 
-	case when dt.soptype = 4 then
-		ISNULL(prod.descripcion, dt.ITEMDESC)
-	else
-		dt.ITEMDESC
-	end ITEMDESC, 
+	dt.ITEMDESC, 
 	dt.ORUNTPRC, dt.OXTNDPRC, dt.CMPNTSEQ, 
 	dt.QUANTITY * dt.ORUNTPRC importe, 
 	isnull(ma.ITMTRKOP, 1) ITMTRKOP,		--3 lote, 2 serie, 1 nada
-	case when dt.soptype = 4 then
-			pa.param1
-		else 
-			case when pa.param3 = 'CATEGORIA' 
-				then ma.uscatvls_6
-				else pa.param3 
-			end
-	end ClaveProdServ,
+	case when pa.param3 = 'CATEGORIA' 
+		then ma.uscatvls_6
+		else pa.param3 
+	end	ClaveProdServ,
 	ma.uscatvls_4,
 	ma.uscatvls_5, 
 	ma.uscatvls_6, 
@@ -158,8 +173,8 @@ left join iv00101 ma				--iv_itm_mstr
 outer apply dbo.fCfdUofMSAT(ma.UOMSCHDL, dt.UOFM ) um
 outer apply dbo.fcfdiparametros('CLPRODSERV','CLUNIDAD','CLPRODORIGEN','CFDIEXPORTA','NA','NA','PREDETERMINADO') pa
 outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', um.UOFMLONGDESC) udmfa
-outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
-outer apply dbo.fCfdiCatalogoGetDescripcion('PROD', pa.param1) prod
+-- outer apply dbo.fCfdiCatalogoGetDescripcion('UDM', pa.param2) udmnc
+-- outer apply dbo.fCfdiCatalogoGetDescripcion('PROD', pa.param1) prod
 
 go	
 
@@ -302,12 +317,16 @@ as
 --05/04/18 jcf Agrega descuento a nc
 --09/05/18 jcf Agrega cuenta predial
 --04/06/19 jcf Agrega descripción ampliada de int_sopline_data para Getty. Se debe crear la tabla int_sopline_data previamente.
+--02/03/20 jcf NC puede tener más de un ítem en el detalle
 --
 return(
 		select Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM, 
 			Concepto.ITEMDESC, Concepto.CMPNTSEQ, Concepto.ShipToName,
 			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
-			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10)  NoIdentificacion,
+			case when @p_soptype = 3 
+				then dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMNMBR))),10)  
+				else null
+			end NoIdentificacion,
 			Concepto.quantity			Cantidad, 
 			rtrim(Concepto.UOFMsat)		ClaveUnidad, 
 			Concepto.UOFMsat_descripcion,
@@ -331,34 +350,34 @@ return(
 		where Concepto.CMPNTSEQ = 0					--a nivel kit
 		and Concepto.soptype = @p_soptype
 		and Concepto.sopnumbe = @p_sopnumbe
-		and @p_soptype = 3
-
-		union all
-
-		select top (1) Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM,
-			Concepto.ITEMDESC, Concepto.CMPNTSEQ, '' ShipToName,
-			rtrim(Concepto.ClaveProdServ) ClaveProdServ,
-			null NoIdentificacion,
-			1 Cantidad,
-			rtrim(Concepto.UOFMsat) ClaveUnidad,
-			Concepto.UOFMsat_descripcion,
-			dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
-			@p_subtotal		ValorUnitario,
-			@p_subtotal		Importe,
-			@p_descuento	Descuento,
-			Concepto.idExporta,
-			p.param1, cup.Numero cpredial
-		from vwCfdiSopLineasTrxVentas Concepto
-			outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
-			outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
-		where Concepto.CMPNTSEQ = 0					--a nivel kit
-		and Concepto.soptype = @p_soptype
-		and Concepto.sopnumbe = @p_sopnumbe
-		and @p_soptype = 4
-		order by Concepto.LNITMSEQ
 )
-
 go
+		--and @p_soptype = 3
+
+		--union all
+
+		-- select top (1) Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, Concepto.ITEMNMBR, --Concepto.SERLTNUM,
+		-- 	Concepto.ITEMDESC, Concepto.CMPNTSEQ, '' ShipToName,
+		-- 	rtrim(Concepto.ClaveProdServ) ClaveProdServ,
+		-- 	null NoIdentificacion,
+		-- 	1 Cantidad,
+		-- 	rtrim(Concepto.UOFMsat) ClaveUnidad,
+		-- 	Concepto.UOFMsat_descripcion,
+		-- 	dbo.fCfdReemplazaSecuenciaDeEspacios(ltrim(rtrim(dbo.fCfdReemplazaCaracteresNI(Concepto.ITEMDESC))), 10) Descripcion, 
+		-- 	@p_subtotal		ValorUnitario,
+		-- 	@p_subtotal		Importe,
+		-- 	@p_descuento	Descuento,
+		-- 	Concepto.idExporta,
+		-- 	p.param1, cup.Numero cpredial
+		-- from vwCfdiSopLineasTrxVentas Concepto
+		-- 	outer apply dbo.fCfdiParametros('OBLIGACPREDIAL', 'NA', 'NA', 'NA', 'NA', 'NA', 'PREDETERMINADO') p
+		-- 	outer apply dbo.fCfdiCuentaPredial(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ) cup
+		-- where Concepto.CMPNTSEQ = 0					--a nivel kit
+		-- and Concepto.soptype = @p_soptype
+		-- and Concepto.sopnumbe = @p_sopnumbe
+		-- and @p_soptype = 4
+		-- order by Concepto.LNITMSEQ
+
 
 IF (@@Error = 0) PRINT 'Creación exitosa de: fCfdiConceptos()'
 ELSE PRINT 'Error en la creación de: fCfdiConceptos()'
@@ -383,6 +402,7 @@ as
 --09/05/18 jcf Agrega cuenta predial
 --27/07/18 jcf Agrega UOFMsat_descripcion
 --18/12/19 jcf Modifica llamada a nueva función que obtiene impuestos
+--02/03/20 jcf NC puede tener más de un ítem en el detalle
 --
 begin
 	declare @cncp xml;
@@ -398,16 +418,16 @@ begin
 				cast(ValorUnitario as numeric(19,2)) '@ValorUnitario',
 				cast(Importe as numeric(19,2))	'@Importe',
 				case when Descuento = 0 then null
-					else cast(Descuento as numeric(19, 2))		
+					else cast(Descuento as numeric(19, 2))
 				end								'@Descuento',
-				dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1),
-				--dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1) 'cfdi:Impuestos',
+				dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1),
+				-- dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, 0, 1),
 				case when upper(isnull(Concepto.param1, 'NO')) = 'SI' 
 					then Concepto.cpredial
 					else null
 				end 'cfdi:CuentaPredial/@Numero'
 			from dbo.fCfdiConceptos(@p_soptype, @p_sopnumbe, @p_subtotal, @p_descuento) Concepto
-			where Concepto.importe != 0          
+			where Concepto.importe != 0
 			FOR XML path('cfdi:Concepto'), type, root('cfdi:Conceptos')
 			)
 	end
@@ -429,7 +449,6 @@ begin
 				end										'@Descuento',
 
 				dbo.fCfdiNodoImpuestosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1),
-				--dbo.fCfdiImpuestosTrasladadosXML(Concepto.soptype, Concepto.sopnumbe, Concepto.LNITMSEQ, 1) 'cfdi:Impuestos',
 
 				case when Concepto.idExporta = @DOCID 
 					then null
