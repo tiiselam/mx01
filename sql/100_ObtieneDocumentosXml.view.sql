@@ -485,19 +485,23 @@ as
 --			Si existe más de uno o ninguno, devuelve el estado: inconsistente
 --			También devuelve datos del folio y certificado asociado.
 --Requisitos. Los estados posibles para generar o no archivos xml son: no emitido, inconsistente
---24/4/12 jcf Creación cfdi
---23/5/12 jcf El id: PAC está reservado para los certificados del PAC
+--24/04/12 jcf Creación cfdi
+--23/05/12 jcf El id: PAC está reservado para los certificados del PAC
+--15/05/20 jcf Agrega mensaje cuando csd está próximo a caducar
 --
 return
 (  
-	--declare @fecha datetime
-	--select @fecha = '1/4/12'
-	select top 1 --fyc.noAprobacion, fyc.anoAprobacion, 
+	select top 1 
 			fyc.ID_Certificado, fyc.ruta_certificado, fyc.ruta_clave, fyc.contrasenia_clave, fyc.fila, 
-			case when fyc.fila > 1 then 'inconsistente' else 'no emitido' end estado
+			case when fyc.fila > 1 then 'inconsistente' else 'no emitido' end estado, 
+			case when DATEDIFF(day, getdate(), fyc.fecha_vig_hasta) < 7
+					then 'CSD caduca en ' + convert(varchar(5), DATEDIFF(day, getdate(), fyc.fecha_vig_hasta)) + ' días. ' 
+					else '' 
+			end msjCaducaEn
 	from (
 		SELECT top 2 rtrim(B.ID_Certificado) ID_Certificado, rtrim(B.ruta_certificado) ruta_certificado, rtrim(B.ruta_clave) ruta_clave, 
-				rtrim(B.contrasenia_clave) contrasenia_clave, row_number() over (order by B.ID_Certificado) fila
+				rtrim(B.contrasenia_clave) contrasenia_clave, row_number() over (order by B.ID_Certificado) fila,
+				B.fecha_vig_desde, B.fecha_vig_hasta
 		FROM cfd_CER00100 B
 		WHERE B.estado = '1'
 			and B.id_certificado <> 'PAC'	--El id PAC está reservado para el PAC

@@ -22,14 +22,17 @@ alter view dbo.vwCfdiTransaccionesDeVenta as
 --12/12/17 jcf Agrega mensaje en docs anulados
 --16/01/18 jcf Agrega fCfdiGeneraDocumentoVentaComercioExteriorXML
 --16/02/18 jcf Permite mostrar las facturas incluso si no está configurada la compañía como Emisor
+--15/05/20 jcf Agrega mensaje cuando el csd está próximo a caducar
 --
 select tv.estadoContabilizado, tv.soptype, tv.docid, tv.sopnumbe, tv.fechahora, 
 	tv.CUSTNMBR, tv.nombreCliente, tv.idImpuestoCliente, cast(tv.total as numeric(19,2)) total, tv.montoActualOriginal, tv.voidstts, 
 
 	isnull(lf.estado, isnull(fv.estado, 'inconsistente')) estado,
-	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'inconsistente' 
-		then 'folio o certificado inconsistente'
-		else ISNULL(lf.mensaje, tv.estadoContabilizado)
+	case when isnull(lf.estado, isnull(fv.estado, 'csd err')) = 'csd err' 
+			then 'El CSD ha caducado o no existe para esta factura'
+		when isnull(lf.estado, fv.estado) = 'inconsistente'
+			then 'Hay más de un CSD configurado para la misma fecha'
+		else ISNULL(lf.mensaje, fv.msjCaducaEn + tv.estadoContabilizado)
 	end mensaje,
 	case when isnull(lf.estado, isnull(fv.estado, 'inconsistente')) = 'no emitido' 
 		then 
